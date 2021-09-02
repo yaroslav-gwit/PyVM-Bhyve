@@ -46,6 +46,38 @@ This is the example output:
 │  2 │ test-vm-2 │ Running (48296) │ Encrypted    │     2 │ 1G    │      5901 │ AdDLpsolg0rqWwZO9KH1 │ 23G        │ 855M       │ 10.101.0.2 │ -               │
 ╘════╧═══════════╧═════════════════╧══════════════╧═══════╧═══════╧═══════════╧══════════════════════╧════════════╧════════════╧════════════╧═════════════════╛
 ```
+## VM start/stop/kill/restart/destroy/edit etc.
+To start your VM use:
+```
+pyvm --vmstart test-vm-1
+```
+To stop your VM use:
+```
+pyvm --vmstop test-vm-1
+```
+To restart your VM use:
+```
+pyvm --vmrestart test-vm-1
+```
+To kill (forcefully stop) your VM use:
+```
+pyvm --vmkill test-vm-1
+```
+To destroy (delete/remove) your VM use:
+```
+pyvm --vmdestroy test-vm-1
+```
+To edit VM config (to change number of CPUs, or RAM size) use:
+```
+pyvm --vmedit test-vm-1
+```
+There are also commands to support mass operations:
+```
+pyvm --vmstartall
+pyvm --vmkillall
+pyvm --vmdestroyall
+```
+
 ## VM deployment
 If you need a test machine, just run this:
 ```
