@@ -1,4 +1,5 @@
 # pyVM Main commands
+pyVM is a Bhyve VM manager. To get started type ```pyvm``` in your terminal, like the example below.
 ```
 root@hoster0101 ~# pyvm
 ╒════════════╤═══════════╤═════════════════╤══════════════╤══════════════╤═════════════╤═══════════╕
@@ -14,4 +15,4 @@ root@hoster0101 ~# pyvm
 │  2 │ test-vm-2 │ Running (48296) │ Encrypted    │     2 │ 1G    │      5901 │ AdDLpsolg0rqWwZO9KH1 │ 23G        │ 855M       │ 10.101.0.2 │ -               │
 ╘════╧═══════════╧═════════════════╧══════════════╧═══════╧═══════╧═══════════╧══════════════════════╧════════════╧════════════╧════════════╧═════════════════╛
 ```
-## ```pyvm --vmdeploy```
+## pyvm --vmdeploy
