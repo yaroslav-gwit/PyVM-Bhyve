@@ -56,4 +56,9 @@ If you'd like to deploy a proper production VM, give ```pyvm --vmdeploy``` some 
 ```
 pyvm --vmdeploy --vmname production-vm-01 --ostype ubuntu2004
 ```
-I am still working on some of the other options, like static IP addressing, custom bridges, manual MAC address etc.
+I am still working on some of the other options, like static IP addressing, custom bridges, manual MAC address etc.<br>
+Currently supported systems:
+```
+Debian 10 - debian10
+Ubuntu Focal 20.04 - ubuntu2004
+```
