@@ -57,7 +57,7 @@ This is the example output:
 
 <br>
 
-## VM start, stop, kill, restart, destroy, edit
+## VMs operations
 To start your VM use:
 ```
 pyvm --vmstart test-vm-1
