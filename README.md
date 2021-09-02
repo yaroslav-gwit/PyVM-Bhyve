@@ -6,6 +6,7 @@
   * [Currently supported Guest Operating Systems](#currently-supported-guest-operating-systems-)
 
 <br>
+
 # pyVM Main commands
 pyVM is a Bhyve VM manager. To get started type ```pyvm``` in your terminal, like in the example below.
 ```
@@ -23,7 +24,9 @@ root@hoster0101 ~# pyvm
 │  2 │ test-vm-2 │ Running (48296) │ Encrypted    │     2 │ 1G    │      5901 │ AdDLpsolg0rqWwZO9KH1 │ 23G        │ 855M       │ 10.101.0.2 │ -               │
 ╘════╧═══════════╧═════════════════╧══════════════╧═══════╧═══════╧═══════════╧══════════════════════╧════════════╧════════════╧════════════╧═════════════════╛
 ```
+
 <br>
+
 ## VM listing and host information
 To check the general host information type this:
 ```
@@ -51,7 +54,9 @@ This is the example output:
 │  2 │ test-vm-2 │ Running (48296) │ Encrypted    │     2 │ 1G    │      5901 │ AdDLpsolg0rqWwZO9KH1 │ 23G        │ 855M       │ 10.101.0.2 │ -               │
 ╘════╧═══════════╧═════════════════╧══════════════╧═══════╧═══════╧═══════════╧══════════════════════╧════════════╧════════════╧════════════╧═════════════════╛
 ```
+
 <br>
+
 ## VM start/stop/kill/restart/destroy/edit etc.
 To start your VM use:
 ```
@@ -85,6 +90,7 @@ pyvm --vmdestroyall
 ```
 
 <br>
+
 ## VM deployment
 If you need a test machine, just run this:
 ```
@@ -97,6 +103,7 @@ pyvm --vmdeploy --vmname production-vm-01 --ostype ubuntu2004
 ```
 I am still working on some of the other options, like static IP addressing, custom bridges, manual MAC address etc.<br>
 
+<br>
 
 ## Currently supported Guest Operating Systems
 ```
