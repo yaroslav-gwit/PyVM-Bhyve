@@ -51,4 +51,9 @@ If you need a test machine, just run this:
 ```
 pyvm --vmdeploy
 ```
-It will deploy the VM for you, will assign it first available IP address and will use CloudInit to provision it.
+It will deploy the VM for you (Debian 10 by default), will assign it first available IP address and will use CloudInit to provision it.<br><br>
+If you'd like to deploy a proper production VM, give ```pyvm --vmdeploy``` some more options:
+```
+pyvm --vmdeploy --vmname production-vm-01 --ostype ubuntu2004
+```
+I am still working on some of the other options, like static IP addressing, custom bridges, manual MAC address etc.
