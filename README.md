@@ -3,7 +3,7 @@
   * [VM listing and host information](#vm-listing-and-host-information)
   * [VM start/stop/kill/restart/destroy/edit etc.](#vm-start-stop-kill-restart-destroy-edit-etc)
   * [VM deployment](#vm-deployment)
-  * [Currently supported Guest Operating Systems:](#currently-supported-guest-operating-systems-)
+  * [Currently supported Guest Operating Systems](#currently-supported-guest-operating-systems-)
 
 # pyVM Main commands
 pyVM is a Bhyve VM manager. To get started type ```pyvm``` in your terminal, like in the example below.
@@ -93,7 +93,7 @@ pyvm --vmdeploy --vmname production-vm-01 --ostype ubuntu2004
 ```
 I am still working on some of the other options, like static IP addressing, custom bridges, manual MAC address etc.<br>
 
-## Currently supported Guest Operating Systems:
+## Currently supported Guest Operating Systems
 ```
 Debian 10 - debian10
 Ubuntu Focal 20.04 - ubuntu2004
