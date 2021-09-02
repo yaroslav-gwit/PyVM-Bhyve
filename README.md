@@ -35,6 +35,9 @@ Which in turn will output this table:
 There is also this command, which returns a list of VMs:
 ```
 pyvm --vmlist
+```
+This is the example output:
+```
 ╒════╤═══════════╤═════════════════╤══════════════╤═══════╤═══════╤═══════════╤══════════════════════╤════════════╤════════════╤════════════╤═════════════════╕
 │    │ Name      │ State           │ Encryption   │   CPU │ RAM   │   VncPort │ VncPassword          │ DiskSize   │ DiskUsed   │ VmIpAddr   │ VmDescription   │
 ╞════╪═══════════╪═════════════════╪══════════════╪═══════╪═══════╪═══════════╪══════════════════════╪════════════╪════════════╪════════════╪═════════════════╡
