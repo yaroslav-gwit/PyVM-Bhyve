@@ -1,6 +1,9 @@
 # Table of contents
 - [pyVM Main commands](#pyvm-main-commands)
   * [VM listing and host information](#vm-listing-and-host-information)
+  * [VM start/stop/kill/restart/destroy/edit etc.](#vm-start-stop-kill-restart-destroy-edit-etc)
+  * [VM deployment](#vm-deployment)
+  * [Currently supported Guest Operating Systems:](#currently-supported-guest-operating-systems-)
 
 # pyVM Main commands
 pyVM is a Bhyve VM manager. To get started type ```pyvm``` in your terminal, like in the example below.
