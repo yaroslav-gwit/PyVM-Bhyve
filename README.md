@@ -46,3 +46,9 @@ This is the example output:
 │  2 │ test-vm-2 │ Running (48296) │ Encrypted    │     2 │ 1G    │      5901 │ AdDLpsolg0rqWwZO9KH1 │ 23G        │ 855M       │ 10.101.0.2 │ -               │
 ╘════╧═══════════╧═════════════════╧══════════════╧═══════╧═══════╧═══════════╧══════════════════════╧════════════╧════════════╧════════════╧═════════════════╛
 ```
+## VM deployment
+If you need a test machine, just run this:
+```
+pyvm --vmdeploy
+```
+It will deploy the VM for you, will assign it first available IP address and will use CloudInit to provision it.
