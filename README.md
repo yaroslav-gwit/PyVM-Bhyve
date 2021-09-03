@@ -4,6 +4,7 @@
   * [VM operations](#vm-operations)
   * [VM deployment](#vm-deployment)
   * [Currently supported Guest Operating Systems](#currently-supported-guest-operating-systems)
+  * [Expand OS drive](#expand-os-drive)
 
 <br>
 
@@ -113,4 +114,13 @@ FreeBSD 13 UFS - freebsd13ufs  ## UFS based image
 Debian 10 - debian10
 Debian 11 - debian11
 Ubuntu Focal 20.04 - ubuntu2004
+```
+
+<br>
+
+## Expand OS drive
+To expand the main OS drive for X number of GBs, run:
+```
+# Number 10 is how much MORE space you need on a drive
+pyvm --diskexpand --size 10 --vmname test-vm-1
 ```
