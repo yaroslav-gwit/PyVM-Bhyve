@@ -108,6 +108,8 @@ I am still working on some of the other options, like static IP addressing, cust
 
 ## Currently supported Guest Operating Systems
 ```
+FreeBSD 13 - freebsd13  ## ZFS based image
 Debian 10 - debian10
+Debian 11 - debian11
 Ubuntu Focal 20.04 - ubuntu2004
 ```
