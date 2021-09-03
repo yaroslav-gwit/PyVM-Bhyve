@@ -119,8 +119,7 @@ Ubuntu Focal 20.04 - ubuntu2004
 <br>
 
 ## Expand OS drive
-To expand the main OS drive for X number of GBs, run:
+Now let's assume that you need to make VM drive bigger. Shutdown the VM first (there is a check in place to prevent running this on live VMs, because it might damage the FS on said drive), then to make the drive 10GB bigger, execute the command below:
 ```
-# Number 10 is how much MORE space you need on a drive
 pyvm --diskexpand --size 10 --vmname test-vm-1
 ```
