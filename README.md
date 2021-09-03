@@ -41,7 +41,7 @@ Which in turn will output this table:
 │ hoster0101 │ 22 GB     │ 3 hours 17 minutes │            2 │ 5023M        │ ONLINE      │ 1.75T     │ Local only     │
 ╘════════════╧═══════════╧════════════════════╧══════════════╧══════════════╧═════════════╧═══════════╧════════════════╛
 ```
-There is also this command, which returns a list of VMs:
+And this next command, will return a list of VMs:
 ```
 pyvm --vmlist
 ```
