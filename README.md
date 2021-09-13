@@ -84,9 +84,18 @@ To edit VM config (to change number of CPUs, or RAM size) use:
 ```
 pyvm --vmedit test-vm-1
 ```
+To access VM's console use (it will open a new Tmux session or connect to a current one, if it was open before):
+```
+pyvm --vmconsole test-vm-1
+```
+Snapshot the VM:
+```
+pyvm --snapshot test-vm-1 --snaptype custom
+```
 There are also commands to support mass operations:
 ```
 pyvm --vmstartall
+pyvm --vmstopall
 pyvm --vmkillall
 pyvm --vmdestroyall
 ```
