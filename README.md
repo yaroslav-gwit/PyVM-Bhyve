@@ -118,11 +118,16 @@ I am still working on some of the other options, like static IP addressing, cust
 
 ## Currently supported Guest Operating Systems
 ```
+AlmaLinux 8 - almalinux8 ## CentOS 8 Clone
+RockyLinux 8 - rockylinux8 ## CentOS 8 Clone
+Fedora 34 - fedora34
 FreeBSD 13 ZFS - freebsd13zfs  ## ZFS based image
 FreeBSD 13 UFS - freebsd13ufs  ## UFS based image
 Debian 10 - debian10
 Debian 11 - debian11
+OpenBSD 6 - openbsd6
 Ubuntu Focal 20.04 - ubuntu2004
+## Windows 10 support is coming soon!
 ```
 
 <br>
