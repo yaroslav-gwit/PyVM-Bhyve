@@ -9,7 +9,7 @@
 <br>
 
 # pyVM Main commands
-pyVM is a Bhyve VM manager. To get started type ```pyvm``` in your terminal, like in the example below.
+pyVM is a Bhyve VM manager, that was created as a tool to rapidly deploy VMs for testing or fast moving production environments. To get started type ```pyvm``` in your terminal, like in the example below.
 ```
 root@hoster0101 ~# pyvm
 ╒════════════╤═══════════╤════════════════════╤══════════════╤══════════════╤═════════════╤═══════════╤════════════════╕
