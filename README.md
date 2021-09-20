@@ -98,6 +98,8 @@ pyvm --vmstartall
 pyvm --vmstopall
 pyvm --vmkillall
 pyvm --vmdestroyall
+pyvm --vmsnapshotall
+pyvm --vmreplicateall
 ```
 
 <br>
