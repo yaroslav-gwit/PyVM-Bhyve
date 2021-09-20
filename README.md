@@ -1,5 +1,5 @@
 # Table of contents
-- [pyVM Main commands](#pyvm-main-commands)
+- [PyVM Main commands](#pyvm-main-commands)
   * [VM listing and host information](#vm-listing-and-host-information)
   * [VM operations](#vm-operations)
   * [VM deployment](#vm-deployment)
@@ -8,7 +8,7 @@
 
 <br>
 
-# pyVM Main commands
+# PyVM Main commands
 pyVM is a Bhyve VM manager, that was created as a tool to rapidly deploy VMs for testing or fast moving production environments. To get started type ```pyvm``` in your terminal, like in the example below.
 ```
 root@hoster0101 ~# pyvm
