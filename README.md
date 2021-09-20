@@ -90,7 +90,11 @@ pyvm --vmconsole test-vm-1
 ```
 Snapshot the VM:
 ```
-pyvm --snapshot test-vm-1 --snaptype custom
+pyvm --vmsnapshot test-vm-1 --snaptype custom
+```
+Replicate the VM to a backup host:
+```
+pyvm --vmreplicate test-vm-1 --endpoint 192.168.1.100
 ```
 There are also commands to support mass operations:
 ```
