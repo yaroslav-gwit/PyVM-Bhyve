@@ -141,5 +141,5 @@ Windows 10 - windows10  ## you'll need your own image, once booted change the IP
 ## Expand OS drive
 Now let's assume that you need to make VM drive bigger. Shutdown the VM first (there is a check in place to prevent running this on live VMs, because it might damage the FS on said drive), then to make the drive 10GB bigger, execute the command below:
 ```
-pyvm --diskexpand test-vm-1 --size 10
+pyvm --vmdiskexpand test-vm-1 --size 10
 ```
