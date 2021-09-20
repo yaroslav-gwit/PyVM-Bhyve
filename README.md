@@ -133,7 +133,7 @@ Debian 10 - debian10
 Debian 11 - debian11
 OpenBSD 6 - openbsd6
 Ubuntu Focal 20.04 - ubuntu2004
-## Windows 10 support is coming soon!
+Windows 10 - windows10  ## you'll need your own image, once booted change the IP address manually, windows's cloud init doesn't support this functionality at the moment
 ```
 
 <br>
