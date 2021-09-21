@@ -9,7 +9,7 @@
 <br>
 
 # PyVM Bhyve Main commands
-pyVM is a Bhyve VM manager, that was created as a tool to rapidly deploy VMs for testing or fast moving production environments. To get started type ```pyvm``` in your terminal, like in the example below.
+PyVM Bhyve is a VM manager, that was created as a tool to rapidly deploy VMs for testing or fast moving production environments. To get started type ```pyvm``` in your terminal, like in the example below.
 ```
 root@hoster0101 ~# pyvm
 ╒════════════╤═══════════╤════════════════════╤══════════════╤══════════════╤═════════════╤═══════════╤════════════════╕
@@ -139,7 +139,7 @@ windows10 - Windows 10  ## you'll need your own image, once booted change the IP
 <br>
 
 ## Expand OS drive
-Now let's assume that you need to make VM drive bigger. Shutdown the VM first (there is a check in place to prevent running this on live VMs, because it might damage the FS on said drive), then to make the drive 10GB bigger, execute the command below:
+Now let's assume that you need to make a VM drive bigger. Shutdown the VM first (there is a check in place to prevent running this on live VMs, because it might damage the FS on said drive), then to make the drive 10GB bigger, execute the command below:
 ```
 pyvm --vmdiskexpand test-vm-1 --size 10
 ```
