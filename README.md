@@ -14,7 +14,7 @@ Today, the project is in use by many for its portability, reliability, and speed
 pkg update
 pkg install git nano python3 
 # Install this as well, if you'd be deploying PyVM from the same machine:
-pkg install ansible
+pkg install py38-ansible
 ```
 3. Clone the repo:
 ```
