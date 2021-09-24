@@ -649,7 +649,8 @@ class VmDeployment():
             contents = file_object.read()
 
         tm = Template(contents)
-        msg_vmtemplate = tm.render(cpus="2", memory="1G", switch=self.host_internal_switch_name, mac_address=self.vm_macaddress, vnc_port=self.vm_vnc_port, vnc_password=random_vnc_password, ip_address=self.vm_ipaddress, os_type=self.vm_os_type)
+        live_status = "Production"
+        msg_vmtemplate = tm.render(cpus="2", memory="1G", switch=self.host_internal_switch_name, mac_address=self.vm_macaddress, vnc_port=self.vm_vnc_port, vnc_password=random_vnc_password, ip_address=self.vm_ipaddress, os_type=self.vm_os_type, live_status=live_status)
 
         with open(write_to_file, 'w') as file_object:
             file_object.write(msg_vmtemplate)
