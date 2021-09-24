@@ -145,7 +145,7 @@ class VmOperations():
                     command7 = " -s " + str(s) + ",xhci,tablet -l com1,/dev/nmdm-" + vm_name + "-1A -l bootrom,/usr/local/share/uefi-firmware/BHYVE_UEFI.fd " + vmname
                     command = command1 + command2 + command3 + command4 + command5 + command6 + command7
                 
-                command = "nohup /root/pyVM/extra/start_vm.sh " + '"' + command + '"' + " " + vmname + " > " + vm_folder + "vm.log 2>&1 &"
+                command = "nohup /root/bin/startvm " + '"' + command + '"' + " " + vmname + " > " + vm_folder + "vm.log 2>&1 &"
                 # print(command)
                 
                 shell_command = subprocess.run(command, shell=True, stderr = subprocess.DEVNULL, stdout=subprocess.DEVNULL)

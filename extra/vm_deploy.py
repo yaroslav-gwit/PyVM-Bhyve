@@ -97,7 +97,7 @@ class VmDeployment():
         #_ EOF VNC Port list _#
 
         # Read values from a given host, to support dynamic config
-        with open("/usr/local/etc/pyVM/host.info", 'r') as file_object:
+        with open("/root/bin/host.info", 'r') as file_object:
             host_info_raw = file_object.read()
         host_info_dict = ast.literal_eval(host_info_raw)
 
