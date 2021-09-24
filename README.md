@@ -8,7 +8,7 @@ With help of FreeBSD, ZFS, Bhyve, Cloud-Init, and a bit of Python I was able to 
 Today, the project is in use by many for its portability, reliability, and speed (it's a FreeBSD system after all :rocket:)
 
 # Software installation
-1. Install FreeBSD, use ZFS as a file system, enable Unbound as your local DNS resolver.
+1. Install FreeBSD, use ZFS as a file system (leave zroot as a pool name), enable Unbound as your local DNS resolver.
 2. Install required software:
 ```
 pkg update
