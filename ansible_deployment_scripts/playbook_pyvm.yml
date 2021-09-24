@@ -264,6 +264,7 @@
     notify:
     - Fix PF.CONF file run 1
     - Fix PF.CONF file run 2
+    - Reboot Host
 
   handlers:
     - name: Fix PF.CONF file run 1
