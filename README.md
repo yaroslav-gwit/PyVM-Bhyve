@@ -9,7 +9,8 @@ With help of FreeBSD, ZFS, Bhyve, Cloud Init and a small bit of Python code I wa
 Today, project is in use by many for it's portability, reliability and speed (it's a FreeBSD system after all :rocket:)
 
 # Software installation
-1. First thing first, clone the repo:
+1. Install FreeBSD, use ZFS as a file system, enable Unbound as your local DNS resolver.
+2. First thing first, clone the repo:
 ```
 mkdir /root/pyVM/ && git clone https://github.com/yaroslav-gwit/PyVM-Bhyve.git /root/pyVM/
 ```
