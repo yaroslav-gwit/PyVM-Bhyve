@@ -13,7 +13,9 @@ Today, project is in use by many for it's portability, reliability and speed (it
 2. Install required software:
 ```
 pkg update
-pkg install git nano python3 ansible
+pkg install git nano python3 
+# Install this as well, if you'd be deploying PyVM from the same machine:
+pkg install ansible
 ```
 3. Clone the repo:
 ```
