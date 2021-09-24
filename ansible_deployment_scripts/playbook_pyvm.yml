@@ -258,6 +258,12 @@
     register: nginx_config_check
     notify:
     - Copy over NGINX config
+  
+  - name: Trigger PF conf fix
+    shell: true
+    notify:
+    - Fix PF.CONF file run 1
+    - Fix PF.CONF file run 2
 
   handlers:
     - name: Fix PF.CONF file run 1
