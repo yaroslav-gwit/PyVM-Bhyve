@@ -1,0 +1,8 @@
+wheel
+uptime
+tabulate
+psutil
+jinja2
+wget
+python-generate-mac
+natsort

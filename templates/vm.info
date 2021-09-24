@@ -1,0 +1,2 @@
+ipaddress={{ ip_address }}
+os_type={{ os_type }}

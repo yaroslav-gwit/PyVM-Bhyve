@@ -1,0 +1,16 @@
+version: 2
+ethernets:
+  interface0:
+     match:
+         macaddress: "{{ mac_address }}"
+     
+     {% if vm_os_type != "freebsd13zfs" %}{% if vm_os_type != "freebsd13ufs" %}set-name: eth0{% endif %}{% endif %}
+     
+     addresses:
+     - {{ ip_address }}/24
+     
+     gateway4: {{ gateway }}
+     
+     nameservers:
+       search: [gateway-it.internal, ]
+       addresses: [{{ gateway }}, ]

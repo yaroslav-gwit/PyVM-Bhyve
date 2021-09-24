@@ -1,0 +1,2 @@
+instance-id: id-{{ random_instanse_id }}
+local-hostname: {{ vm_name }}
