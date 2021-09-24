@@ -221,7 +221,7 @@
   - name: Install/Update PYVM helper script
     copy:
       src: "pyvm_helper_scripts/pyvm.sh"
-      dest: "/root/bin/pyvm.sh"
+      dest: "/root/bin/pyvm"
       force: yes
       owner: root
       group: wheel
