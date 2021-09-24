@@ -48,7 +48,19 @@
         - cdrkit-genisoimage
       state: present
   
-  # Clone Git repo
+  - name: Download PyVM from GitHub (or update local repo)
+    shell: |
+      if [[ ! -d /root/pyVM/ ]]; then
+      mkdir /root/pyVM/
+      git clone https://github.com/yaroslav-gwit/PyVM-Bhyve.git /root/pyVM/
+      
+      else
+      cd /root/pyVM
+      git pull
+      
+      fi
+    args:
+      executable: /usr/local/bin/bash
 
   - name: Make BASH a default shell for user root
     ansible.builtin.user:
@@ -61,6 +73,13 @@
       if [[ ! -f /root/.ssh/config ]]; then touch /root/.ssh/config && chmod 600 /root/.ssh/config; fi
     args:
       executable: /usr/local/bin/bash
+
+  - name: Register SSH key for use with VMs
+    shell: |
+      cat /root/.ssh/id_rsa.pub
+    args:
+      executable: /usr/local/bin/bash
+    register: additional_ssh_key
 
   - name: Enable vm_bhyve in rc.conf if needed
     lineinfile:
