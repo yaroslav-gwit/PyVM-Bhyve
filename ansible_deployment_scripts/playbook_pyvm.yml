@@ -146,11 +146,11 @@
     blockinfile:
       dest: /boot/loader.conf
       block: |
-      fusefs_load="YES"
-      vm.kmem_size="330M"
-      vm.kmem_size_max="330M"
-      vfs.zfs.arc_max="40M"
-      vfs.zfs.vdev.cache.size="5M"
+        fusefs_load="YES"
+        vm.kmem_size="330M"
+        vm.kmem_size_max="330M"
+        vfs.zfs.arc_max="40M"
+        vfs.zfs.vdev.cache.size="5M"
 
   - name: Copy over PF.CONF if doesn't exist
     template:
