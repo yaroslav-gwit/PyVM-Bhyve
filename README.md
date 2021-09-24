@@ -9,7 +9,17 @@ With help of FreeBSD, ZFS, Bhyve, Cloud Init and a small bit of Python code I wa
 Today, project is in use by many for it's portability, reliability and speed (it's a FreeBSD system after all :rocket:)
 
 # Software installation
-I will soon publish the code itself and ansible playbooks with instructions on how to deploy everything.
+1. Install FreeBSD, use ZFS as a file system, enable Unbound as your local DNS resolver.
+2. Install required software:
+```
+pkg update
+pkg install git nano python3 ansible
+```
+3. Clone the repo:
+```
+mkdir /root/pyVM/ && git clone https://github.com/yaroslav-gwit/PyVM-Bhyve.git /root/pyVM/
+```
+
 
 # Documentation
 Would like to try out PyVM? Chech out the docs: https://github.com/yaroslav-gwit/PyVM-Bhyve/wiki
