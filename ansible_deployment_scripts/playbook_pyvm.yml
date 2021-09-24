@@ -201,7 +201,7 @@
       mode: 0750
 
   - name: Copy host info template
-    copy:
+    template::
       src: "pyvm_config_files/host.info"
       dest: "/root/bin/host.info"
       force: yes
