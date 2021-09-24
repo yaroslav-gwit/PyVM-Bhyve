@@ -237,7 +237,7 @@
       mode: 0750
 
   - name:  Start all production type VMs
-    shell: pyvm --vmstartall
+    shell: /root/bin/pyvm --vmstartall
     args:
       executable: /usr/local/bin/bash
 
