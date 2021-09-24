@@ -259,14 +259,14 @@
     notify:
     - Copy over NGINX config
   
-  - name: Trigger PF conf fix
-    shell: bash -c true
-    args:
-      executable: /usr/local/bin/bash
-    notify:
-    - Fix PF.CONF file run 1
-    - Fix PF.CONF file run 2
-    - Reboot Host
+  # - name: Trigger PF conf fix
+  #   shell: bash -c true
+  #   args:
+  #     executable: /usr/local/bin/bash
+  #   notify:
+  #   - Fix PF.CONF file run 1
+  #   - Fix PF.CONF file run 2
+  #   - Reboot Host
 
   handlers:
     - name: Fix PF.CONF file run 1
