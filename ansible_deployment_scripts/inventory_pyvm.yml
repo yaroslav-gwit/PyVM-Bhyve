@@ -5,9 +5,9 @@ all:
       hosts:
         localhost:
           host_internal_switch_name: internal
-          host_internal_switch_subnet: 10.0.0.0/24
-          host_internal_switch_partnet: 10.0.100.
-          host_internal_switch_address: 10.0.0.254
+          host_internal_switch_subnet: 10.0.101.0/24
+          host_internal_switch_partnet: 10.0.101.
+          host_internal_switch_address: 10.0.101.254
           external_interface: re0
           backup_server_endpoint: Local #Or use an IP address here, to turn on default ZFS replication location
           zfs_vm_encrypted_dataset_password: cbBss3318tZvn9QhRfWSdmTEVhXp95ddf5wRJUGdE3gARx2cbuQ8H
