@@ -13,8 +13,6 @@
       name: 
         - nano
         - bash
-        - sanoid
-        - fzf
         - bmon
         - iftop
         - mc
@@ -23,7 +21,6 @@
         - py38-pexpect
         - fish
         - nginx
-        - makepasswd
         - rsync
         - wireguard
         - wireguard-go
@@ -31,13 +28,12 @@
         - tmux
         - fping
         - atop
-        - freecolor
-        - python3
         - qemu-utils
         - htop
         - curl
         - wget
         - gtar
+        - unzip
       state: present
 
   - name: Install VM-bhyve packages
