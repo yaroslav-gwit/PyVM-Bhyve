@@ -6,7 +6,7 @@ This project was born out of necessity for fast VM deployments on a "not so mode
 
 With help of FreeBSD, ZFS, Bhyve, Cloud Init and a small bit of Python code I was able to achieve an impressive results: VM is deployed from start to end (including SSH keys, IP address, hostname, etc) within 3-4 seconds or less depending on the hardware.
 
-Today project is in use by many for it's portability, reliability and speed (it's a FreeBSD system after all :rocket:)
+Today, project is in use by many for it's portability, reliability and speed (it's a FreeBSD system after all :rocket:)
 
 # Software installation
 I will soon publish the code itself and ansible playbooks with instructions on how to deploy everything.
