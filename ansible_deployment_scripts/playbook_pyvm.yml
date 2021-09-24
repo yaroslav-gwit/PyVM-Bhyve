@@ -260,7 +260,9 @@
     - Copy over NGINX config
   
   - name: Trigger PF conf fix
-    shell: true
+    shell: bash -c true
+    args:
+      executable: /usr/local/bin/bash
     notify:
     - Fix PF.CONF file run 1
     - Fix PF.CONF file run 2
