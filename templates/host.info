@@ -1,5 +1,0 @@
-{
-    "host_switch_ip": "10.0.100.",
-    "host_gateway": "10.0.100.254",
-    "host_internal_switch": "internal",
-}
