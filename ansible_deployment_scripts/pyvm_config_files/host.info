@@ -1,0 +1,15 @@
+{ 
+  "host_internal_switch_subnet": "{{ host_internal_switch_partnet }}",
+  "host_gateway": "{{ host_internal_switch_address }}",
+  "host_internal_switch_name": "{{ host_internal_switch_name }}",
+
+  "backup_server_endpoint": "{{ backup_server_endpoint }}",
+  
+  "host_dns_acls": [
+	"{{ host_internal_switch_subnet }}",
+	],
+  
+  "host_ssh_keys": [
+    {% for ssh_pub_key in ssh_pub_keys %}"{{ ssh_pub_key }}",{% endfor %}
+	],
+}
