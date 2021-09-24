@@ -13,6 +13,7 @@
     {% if ssh_pub_keys is none -%}
     {% set ssh_pub_keys = [] -%}
     {% endif -%}
+    {% comment %} Use stdout_lines, if there is a list of values! {% endcomment -%}
     {% set tmp = ssh_pub_keys.append(additional_ssh_key.stdout) -%}
     {% for ssh_pub_key in ssh_pub_keys %}"{{ ssh_pub_key }}",
     {% endfor %}
