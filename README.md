@@ -10,9 +10,14 @@ Today, project is in use by many for it's portability, reliability and speed (it
 
 # Software installation
 1. Install FreeBSD, use ZFS as a file system, enable Unbound as your local DNS resolver.
-2. First thing first, clone the repo:
+2. Clone the repo:
 ```
 mkdir /root/pyVM/ && git clone https://github.com/yaroslav-gwit/PyVM-Bhyve.git /root/pyVM/
+```
+3. Once cloned install ansible:
+```
+pkg update
+pkg install ansible
 ```
 
 # Documentation
