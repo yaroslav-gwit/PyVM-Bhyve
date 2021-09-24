@@ -9,7 +9,10 @@ With help of FreeBSD, ZFS, Bhyve, Cloud Init and a small bit of Python code I wa
 Today, project is in use by many for it's portability, reliability and speed (it's a FreeBSD system after all :rocket:)
 
 # Software installation
-I will soon publish the code itself and ansible playbooks with instructions on how to deploy everything.
+First thing first, clone the repo:
+```
+git clone https://github.com/yaroslav-gwit/PyVM-Bhyve.git
+```
 
 # Documentation
 Would like to try out PyVM? Chech out the docs: https://github.com/yaroslav-gwit/PyVM-Bhyve/wiki
