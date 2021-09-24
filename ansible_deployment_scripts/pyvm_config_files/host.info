@@ -12,7 +12,7 @@
   "host_ssh_keys": [
     {% if len(ssh_pub_keys) == 0 -%}
     {% set ssh_pub_keys = [] -%}
-    {% ssh_pub_keys.append(additional_ssh_key) -%}
+    {% set tmp = ssh_pub_keys.append(additional_ssh_key) -%}
     {% endif -%}
     {% for ssh_pub_key in ssh_pub_keys %}"{{ ssh_pub_key }}",
     {% endfor %}
