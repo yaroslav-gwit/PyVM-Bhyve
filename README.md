@@ -4,7 +4,7 @@
 
 This project was born out of necessity for fast VM deployments on a "not so modern" hardware, be it an old Dell Optiplex PC or a used Lenovo Thinkpad -- you don't always have the means to buy all new and powerful. On one hand you have old and/or cheap hardware, on the other one there is modern and mighty hardware -- PyVM works very well with both.
 
-With help of FreeBSD, ZFS, Bhyve, Cloud Init and a small bit of Python code I was able to achieve an impressive results: VM is deployed from start to end (including SSH keys, IP address, hostname, and any custom deployment scripts) within 10 seconds or less depending on the hardware.
+With help of FreeBSD, ZFS, Bhyve, Cloud Init and a small bit of Python code I was able to achieve an impressive results: VM is deployed from start to end (including SSH keys, IP address, hostname, etc) within 3-4 seconds or less depending on the hardware.
 
 Today project is in use by many for it's portability, reliability and speed (it's a FreeBSD system after all :rocket:)
 
