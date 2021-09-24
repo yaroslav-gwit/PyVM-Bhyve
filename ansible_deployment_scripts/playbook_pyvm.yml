@@ -211,7 +211,7 @@
   
   - name: Install/Update helper script to clear key fingerprints
     copy:
-      src: "pyvm_config_files/clearfp.sh"
+      src: "pyvm_helper_scripts/clearfp.sh"
       dest: "/root/bin/clearfp"
       force: yes
       owner: root
@@ -220,7 +220,7 @@
 
   - name: Install/Update PYVM helper script
     copy:
-      src: "pyvm_config_files/pyvm.sh"
+      src: "pyvm_helper_scripts/pyvm.sh"
       dest: "/root/bin/pyvm.sh"
       force: yes
       owner: root
@@ -229,7 +229,7 @@
 
   - name: Install/Update START_VM helper script
     copy:
-      src: "pyvm_config_files/startvm.sh"
+      src: "pyvm_helper_scripts/startvm.sh"
       dest: "/root/bin/startvm"
       force: yes
       owner: root
