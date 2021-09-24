@@ -10,6 +10,7 @@
 	],
   
   "host_ssh_keys": [
-    {% for ssh_pub_key in ssh_pub_keys %}"{{ ssh_pub_key }}",{% endfor %}
+    {% for ssh_pub_key in ssh_pub_keys %}"{{ ssh_pub_key }}",
+    {% endfor %}
 	],
 }
