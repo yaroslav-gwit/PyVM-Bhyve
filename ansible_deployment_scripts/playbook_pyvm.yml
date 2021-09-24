@@ -236,6 +236,16 @@
       group: wheel
       mode: 0750
 
+  - name: Initialise python dev environment
+      shell: | 
+        cd /root/pyVM/
+        python3 -m venv .
+        source bin/activate
+        python3 -m pip install --upgrade pip
+        python3 -m pip install -r requirements.txt
+    args:
+      executable: /usr/local/bin/bash
+
   - name:  Start all production type VMs
     shell: /root/bin/pyvm --vmstartall
     args:

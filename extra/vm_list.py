@@ -50,7 +50,7 @@ def hostinfo(dryrun = False):
     shell_command = subprocess.check_output(command, shell=True)
     zfsFree = shell_command.decode("utf-8").split()[0]
     
-    command = "grep BACKUP_SERVER= /etc/crontab | sed s/BACKUP_SERVER=//"
+    command = "grep backup_server_endpoint /etc/crontab | awk '{ print $2 }'"
     shell_command = subprocess.check_output(command, shell=True)
     backupStatus = shell_command.decode("utf-8").split()[0]
 
