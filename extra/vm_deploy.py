@@ -209,6 +209,8 @@ class VmDeployment():
                     wget.download(remote_url, local_archive)
                     command = "unzip " + local_archive + " -d /root/pyVM/vm_images/"
                     subprocess.run(command, shell=True, stdout=None)
+                    command = "mv '/root/pyVM/vm_images/AlmaLinux 8.vdi' " + local_file
+                    subprocess.run(command, shell=True, stdout=None)
 
                     print("")
                 
@@ -368,6 +370,9 @@ class VmDeployment():
                     wget.download(remote_url, local_archive)
                     command = "unzip " + local_archive + " -d /root/pyVM/vm_images/"
                     subprocess.run(command, shell=True, stdout=None)
+                    command = "mv '/root/pyVM/vm_images/Debian 11 CI Image.vdi' " + local_file
+                    subprocess.run(command, shell=True, stdout=None)
+
                     print("")
                 
                 for folder in folders:
