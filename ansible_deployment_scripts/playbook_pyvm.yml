@@ -59,6 +59,8 @@
       git pull
       
       fi
+      
+      if [[ ! -f /root/pyVM/.gitignore ]]; then echo "vm_images" > .gitignore; fi
     args:
       executable: /usr/local/bin/bash
 
