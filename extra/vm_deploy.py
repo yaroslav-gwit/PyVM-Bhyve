@@ -368,7 +368,10 @@ class VmDeployment():
                     
                     remote_url = "https://github.com/yaroslav-gwit/PyVM-Bhyve/releases/download/202109/debian11.zip"
                     wget.download(remote_url, local_archive)
-                    command = "unzip " + local_archive + " -d /root/pyVM/vm_images/"
+                    print("")
+                    command = "unzip " + local_archive + " -d /root/pyVM/vm_images"
+                    subprocess.run(command, shell=True, stdout=None)
+                    command = "rm " + local_archive
                     subprocess.run(command, shell=True, stdout=None)
 
                     print("")
