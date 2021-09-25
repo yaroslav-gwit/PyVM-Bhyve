@@ -182,6 +182,7 @@
     notify:
     - Fix PF.CONF file run 1
     - Fix PF.CONF file run 2
+    - Copy over Unbound config
 
   - name: Add GATEWAY option to /etc/rc.conf if needed
     lineinfile:
@@ -309,6 +310,12 @@
         dest: "/usr/local/etc/nginx/nginx.conf"
         force: yes
       when: nginx_config_check.stdout == "0"
+
+    - name: Copy over Unbound config
+      copy:
+        src: "pyvm_config_files/unbound.conf"
+        dest: "/var/unbound/unbound.conf"
+        force: yes
 
     - name: Reboot Host
       reboot:
