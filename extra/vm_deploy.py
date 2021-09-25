@@ -296,15 +296,22 @@ class VmDeployment():
             # FreeBSD 13 UFS
             if vm_os_type == "freebsd13ufs":
                 folders = ["zroot/vm-encrypted/freebsd13ufs-template", "zroot/vm-unencrypted/freebsd13ufs-template",]
-                qcow_disk_file = "freebsd13ufs.qcow2"
+                qcow_disk_file = "freebsd13ufs.img"
                 disk_file = "disk0.img"
                 local_file = "/root/pyVM/vm_images/" + qcow_disk_file
+                local_archive = "/root/pyVM/vm_images/freebsd13ufs.zip"
                 
                 if not exists("/root/pyVM/vm_images/" + qcow_disk_file):
-                    print("Can't find FreeBSD 13 UFS image locally, downloading now!")
+                    print("Can't find FreeBSD13 image locally, downloading now!")
                     
-                    remote_url = "https://gateway-it.com/wp-content/uploads/2021/09/freebsd-13.0-ufs.qcow2"
-                    wget.download(remote_url, local_file)
+                    remote_url = "https://github.com/yaroslav-gwit/PyVM-Bhyve/releases/download/202109/debian11.zip"
+                    wget.download(remote_url, local_archive)
+                    print("")
+                    command = "unzip " + local_archive + " -d /root/pyVM/vm_images"
+                    subprocess.run(command, shell=True, stdout=None)
+                    command = "rm " + local_archive
+                    subprocess.run(command, shell=True, stdout=None)
+
                     print("")
                 
                 for folder in folders:
@@ -315,10 +322,10 @@ class VmDeployment():
                     if not exists("/" + folder + "/" + disk_file):
                         print("\nDisk image in " + folder + " was not found, copying it now!")
                         
-                        command = "qemu-img convert -p " + local_file + " /" + folder + "/" + disk_file
+                        command = "pv " + local_file + " > /" + folder + "/" + disk_file
                         subprocess.run(command, shell=True, stdout=None)
 
-                        command = "truncate -s +12G " + "/" + folder + "/" + disk_file
+                        command = "truncate -s +5G " + "/" + folder + "/" + disk_file
                         subprocess.run(command, shell=True, stdout=None)
                         
                         print("Done!")
