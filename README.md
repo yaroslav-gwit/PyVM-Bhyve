@@ -16,9 +16,10 @@ pkg install git nano python3
 # Install this as well, if you'd be deploying PyVM from the same machine:
 pkg install py38-ansible
 ```
-3. Clone the repo:
+3. Clone the repo and create inventory file for ansible to use:
 ```
 mkdir /root/pyVM/ && git clone https://github.com/yaroslav-gwit/PyVM-Bhyve.git /root/pyVM/
+cp /root/pyVM/ansible_deployment_scripts/example_inventory_pyvm.yml /root/pyVM/ansible_deployment_scripts/inventory_pyvm.yml
 ```
 
 # Documentation
