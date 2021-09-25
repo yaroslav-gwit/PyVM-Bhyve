@@ -21,11 +21,11 @@ users:
       - {{ sshkey }}
       {%- endfor %}
 
-# chpasswd:
-#   list: |
-#     root:{{ root_password }}
-#     gwitsuper:{{ debian_user_password }}
-#   expire: False
+chpasswd:
+  list: |
+    root:{{ root_password }}
+    gwitsuper:{{ debian_user_password }}
+  expire: False
 
 package_update: true
 package_upgrade: true
@@ -56,17 +56,17 @@ write_files:
       if [[ $(grep -c "@reboot root /root/provision.sh" /etc/crontab) == 0 ]]; then echo "@reboot root /root/provision.sh" >> /etc/crontab; fi
     owner: "root"
 
-  - path: /root/creds_reset.sh
-    permissions: "0700"
-    content: |
-      #!/bin/bash
-      echo -e "root:{{ root_password }}" | chpasswd
-      echo -e "gwitsuper:{{ debian_user_password }}" | chpasswd
-      fish -c "echo 'yes' | history clear"
-      rm ~/.bash_history
-      rm /root/creds_reset.sh
-    owner: "root"
+  # - path: /root/creds_reset.sh
+  #   permissions: "0700"
+  #   content: |
+  #     #!/bin/bash
+  #     echo -e "root:{{ root_password }}" | chpasswd
+  #     echo -e "gwitsuper:{{ debian_user_password }}" | chpasswd
+  #     fish -c "echo 'yes' | history clear"
+  #     rm ~/.bash_history
+  #     rm /root/creds_reset.sh
+  #   owner: "root"
 
 runcmd:
   - [ bash, -c, /root/provision.sh ]
-  - [ bash, -c, /root/creds_reset.sh ]
+  # - [ bash, -c, /root/creds_reset.sh ]
