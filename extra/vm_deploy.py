@@ -199,13 +199,17 @@ class VmDeployment():
                 folders = ["zroot/vm-encrypted/almalinux8-template", "zroot/vm-unencrypted/almalinux8-template",]
                 qcow_disk_file = "almalinux8.vdi"
                 disk_file = "disk0.img"
+                local_archive = "/root/pyVM/vm_images/almalinux8.zip"
                 local_file = "/root/pyVM/vm_images/" + qcow_disk_file
                 
                 if not exists("/root/pyVM/vm_images/" + qcow_disk_file):
                     print("Can't find AlmaLinux 8 image locally, downloading now!")
                     
-                    remote_url = "https://gateway-it.com/wp-content/uploads/2021/09/AlmaLinux-8-GenericCloud-latest.x86_64.qcow2"
-                    wget.download(remote_url, local_file)
+                    remote_url = "https://github.com/yaroslav-gwit/PyVM-Bhyve/releases/download/202109/almalinux8.zip"
+                    wget.download(remote_url, local_archive)
+                    command = "unzip " + local_archive + " -d /root/pyVM/vm_images/"
+                    subprocess.run(command, shell=True, stdout=None)
+
                     print("")
                 
                 for folder in folders:
@@ -355,12 +359,15 @@ class VmDeployment():
                 qcow_disk_file = "debian11.vdi"
                 disk_file = "disk0.img"
                 local_file = "/root/pyVM/vm_images/" + qcow_disk_file
+                local_archive = "/root/pyVM/vm_images/debian11.zip"
                 
                 if not exists("/root/pyVM/vm_images/" + qcow_disk_file):
                     print("Can't find Debian 11 image locally, downloading now!")
                     
-                    remote_url = "https://gateway-it.com/wp-content/uploads/2021/09/debian-11-generic-amd64-daily.qcow2"
-                    wget.download(remote_url, local_file)
+                    remote_url = "https://github.com/yaroslav-gwit/PyVM-Bhyve/releases/download/202109/debian11.zip"
+                    wget.download(remote_url, local_archive)
+                    command = "unzip " + local_archive + " -d /root/pyVM/vm_images/"
+                    subprocess.run(command, shell=True, stdout=None)
                     print("")
                 
                 for folder in folders:
