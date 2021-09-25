@@ -21,6 +21,20 @@ pkg install py38-ansible
 mkdir /root/pyVM/ && git clone https://github.com/yaroslav-gwit/PyVM-Bhyve.git /root/pyVM/
 cp /root/pyVM/ansible_deployment_scripts/example_inventory_pyvm.yml /root/pyVM/ansible_deployment_scripts/inventory_pyvm.yml
 ```
+4. Adjust values in the inventory file, and run ansible playbook to install PyVM Bhyve.
+```
+cd /root/pyVM/ansible_deployment_scripts/
+ansible-playbook playbook_pyvm.yml
+```
+ > NOTE! This type of installtion is not recommended, but can give you an idea of what PyVM is, and if it is something you are intererted in.
+
+### Production deployment would look something like this:
+#### 1. Prepare a machine that will control your fleet of nodes.
+This will be an Ansible "controller" machine. It might be your personal laptop, or a VM somewhere remote, just keep in mind: it will hold all of your ZFS encryption keys. If you lose it - game over, your data is gone.
+#### 2. Encrypt inventory file.
+This is self explanatory - use Ansible Vault to keep your inventory file safe, because it has all of your encryption keys in it.
+#### 3. Distribute your SSH keys and start deploying!
+Once inventory file is in order, you can start deploying PyVM Bhyve to a large fleet of machines.
 
 # Documentation
 Would like to try out PyVM? Chech out the docs: https://github.com/yaroslav-gwit/PyVM-Bhyve/wiki
