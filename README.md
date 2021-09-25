@@ -28,12 +28,12 @@ ansible-playbook playbook_pyvm.yml
 ```
  > NOTE! This type of installtion is not recommended, but can give you an idea of what PyVM is, and if it is something you are intererted in.
 
-Production deployment would look something like this:
-## 1. Prepare a machine that will control your fleet of nodes.
+### Production deployment would look something like this:
+#### 1. Prepare a machine that will control your fleet of nodes.
 This will be an Ansible "controller" machine. It might be your personal laptop, or a VM somewhere remote, just keep in mind: it will hold all of your ZFS encryption keys. If you lose it - game over, your data is gone
-## 2. Encrypt inventory file.
+#### 2. Encrypt inventory file.
 This is self explanatory - use Ansible Vault to keep your inventory file safe, because it has all of your encryption keys in it.
-## 3. Distribute your SSH keys and start deploying!
+#### 3. Distribute your SSH keys and start deploying!
 Once inventory file is in order, you can start deploying PyVM Bhyve to a large fleet of machines.
 
 # Documentation
