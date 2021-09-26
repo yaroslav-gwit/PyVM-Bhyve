@@ -59,3 +59,4 @@ Would like to try out PyVM? Chech out the docs: https://github.com/yaroslav-gwit
  - Read the book about PF, and keep up with the best practices.
  - Better PF integration: add a flag to `pyvm` to allow traffic between a group of VMs.
  - Add ACLs or gather VMs into groups (by user, group) etc. Suggestions are welcome, but the idea here is to allow certain VMs to talk to one another if they are in the same group: this will lay a great foundation for a quick deployment of isolated clusters - Kubernetes, GlusterFS, Docker Swarm, etc.
+ - FreeBSD tuning and ZFS tuning
