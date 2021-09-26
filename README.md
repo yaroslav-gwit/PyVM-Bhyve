@@ -46,6 +46,7 @@ Would like to try out PyVM? Chech out the docs: https://github.com/yaroslav-gwit
  - Clean up the `pyvm --help` values, to guide the user properly.
  - Add more "try" methods for core functions to send a correct error to the user.
  - Make a logo for the project.
+ - Describe the usecases and target audience.
  - Include some diagrams to make the documentation look more attractive.
  - Add Devuan to the supported OS list (Arch and Alpine would be great to have too, but it's just too much work to support all these OSes on my own).
  - Complete the documentation.
