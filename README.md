@@ -70,6 +70,7 @@ Would like to try out PyVM? Check out the docs: https://github.com/yaroslav-gwit
  - Intergration with HAProxy Manager, to provide an easy way to proxy HTTP/TCP/DNS traffic to the backend VMs.
  - Develop a support package offering for the "bigger players". This will allow me to dedicate more time for this project.
 
-## Nice to have (but not a priority)
+### Nice to have (but not a priority)
  - TUI for the console: it's nice to be able to navigate a terminal interface using arrows and enter/space keys, so you don't have to remember all of the commands that are involved in the process.
  - Fully featured WebUI written in React/Vue
+ - Custom FreeBSD installation image to make it easier to start with a project.
