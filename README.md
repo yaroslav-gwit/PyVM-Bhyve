@@ -49,7 +49,8 @@ Would like to try out PyVM? Chech out the docs: https://github.com/yaroslav-gwit
  - Include some diagrams to make the documentation look more attractive.
  - Add Devuan to the supported OS list (Arch and Alpine would be great to have too, but it's just too much work to support all these OSes on my own).
  - Complete the documentation.
- - Review complete project on my YT channel.
+ - Review the project on my YT channel, to bring more awareness.
+ - Document Nebula integration, to support deployments at scale.
  - Rewrite the hardcoded values (to be more flexible with ZFS pools/datasets, VM image locations, etc).
  - Gather community feedback.
  - Add support for a Global DNS, using NSD DNS server from NLnet Labs (creator of Unbound).
