@@ -59,7 +59,17 @@ Would like to try out PyVM? Check out the docs: https://github.com/yaroslav-gwit
  - Create an API, to be able to use this project at scale (based on FastAPI).
  - Create a simple web dashboard based on React, to display number and status of hosts/VMs, system health, etc.
  - Create a man-like and PDF documentation, for the offline use.
+ - ZFS pull-type replication implementation (only push-type is ready at the moment).
+ - "Distributed" backup types: spread VMs across the pool of nodes for better data protection. At the moment only simple type backups are supported - VMs from multiple nodes are replicated to one (or few) backup server(s).
+ - High availability options for the VMs or hoster nodes (something similar to CARP failover with OPNSense/pfSense).
+ - "Hot" spare backup node automatic takeover in case if one of the production nodes is down.
  - Read the book about PF, and keep up with the best practices.
  - Better PF integration: add a flag to `pyvm` to allow traffic between a group of VMs.
  - Add ACLs or gather VMs into groups (by user, group) etc. Suggestions are welcome, but the idea here is to allow certain VMs to talk to one another if they are in the same group: this will lay a great foundation for a quick deployment of isolated clusters - Kubernetes, GlusterFS, Docker Swarm, etc.
- - FreeBSD tuning and ZFS tuning
+ - FreeBSD tuning and ZFS tuning.
+ - Intergration with HAProxy Manager, to provide an easy way to proxy HTTP/TCP/DNS traffic to the backend VMs.
+ - Develop a support package offering for the "bigger players". This will allow me to dedicate more time for this project.
+
+## Nice to have (but not a priority)
+ - TUI for the console: it's nice to be able to navigate a terminal interface using arrows and enter/space keys, so you don't have to remember all of the commands that are involved in the process.
+ - Fully featured WebUI written in React/Vue
