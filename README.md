@@ -42,19 +42,20 @@ Would like to try out PyVM? Chech out the docs: https://github.com/yaroslav-gwit
 # Roadmap
  > Please keep in mind that this roadmap is not ordered. I'll be dealing with each item on this list when I have the time and/or in the mood to do so :)
 
- - Finish up the preparation of all OS images
- - Clean up the `pyvm --help` values, to guide the user properly
- - Add more "try" methods for core functions to send a correct error to the user
- - Make a logo for the project
- - Include some diagrams to make the documentation look more attractive
- - Add Devuan to the supported OS list (Arch and Alpine would be great to have too, but it's just too much work to support all these OSes on my own)
- - Complete the documentation
- - Review complete project on my YT channel
- - Rewrite the hardcoded values (to be more flexible with ZFS pools/datasets, VM image locations, etc)
- - Gather community feedback
+ - Finish up the preparation of all OS images.
+ - Clean up the `pyvm --help` values, to guide the user properly.
+ - Add more "try" methods for core functions to send a correct error to the user.
+ - Make a logo for the project.
+ - Include some diagrams to make the documentation look more attractive.
+ - Add Devuan to the supported OS list (Arch and Alpine would be great to have too, but it's just too much work to support all these OSes on my own).
+ - Complete the documentation.
+ - Review complete project on my YT channel.
+ - Rewrite the hardcoded values (to be more flexible with ZFS pools/datasets, VM image locations, etc).
+ - Gather community feedback.
  - Add support for a Global DNS, using NSD DNS server from NLnet Labs (creator of Unbound).
- - Create an API, to be able to use this project at scale (based on FastAPI)
- - Create a simple web dashboard based on React, to display number and status of hosts/VMs, system health, etc
- - Create a man-like and PDF documentation, for the offline use
- - Better PF integration: add a flag to `pyvm` to allow traffic between a group of VMs
+ - Create an API, to be able to use this project at scale (based on FastAPI).
+ - Create a simple web dashboard based on React, to display number and status of hosts/VMs, system health, etc.
+ - Create a man-like and PDF documentation, for the offline use.
+ - Read the book about PF, and keep up with the best practices.
+ - Better PF integration: add a flag to `pyvm` to allow traffic between a group of VMs.
  - Add ACLs or gather VMs into groups (by user, group) etc. Suggestions are welcome, but the idea here is to allow certain VMs to talk to one another if they are in the same group: this will lay a great foundation for a quick deployment of isolated clusters - Kubernetes, GlusterFS, Docker Swarm, etc.
