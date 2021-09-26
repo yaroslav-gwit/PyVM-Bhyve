@@ -43,7 +43,7 @@ Would like to try out PyVM? Chech out the docs: https://github.com/yaroslav-gwit
  > Please keep in mind that this roadmap is not ordered. I'll be dealing with each item on this list when I have the time and/or in the mood to do so :)
 
  - Finish up the preparation of all OS images
- - Clean up the --help values, to guide the user properly
+ - Clean up the `pyvm --help` values, to guide the user properly
  - Add more "try" methods for core functions to send a correct error to the user
  - Make a logo for the project
  - Include some diagrams to make the documentation look more attractive
