@@ -21,7 +21,7 @@ pkg install py38-ansible
 mkdir /root/pyVM/ && git clone https://github.com/yaroslav-gwit/PyVM-Bhyve.git /root/pyVM/
 cp /root/pyVM/ansible_deployment_scripts/example_inventory_pyvm.yml /root/pyVM/ansible_deployment_scripts/inventory_pyvm.yml
 ```
-4. Adjust values in the inventory file, and run ansible playbook to install PyVM Bhyve.
+4. Adjust values in the inventory file, and run the Ansible playbook to install PyVM Bhyve.
 ```
 cd /root/pyVM/ansible_deployment_scripts/
 ansible-playbook playbook_pyvm.yml
@@ -37,7 +37,7 @@ This is self explanatory - use Ansible Vault to keep your inventory file safe, b
 Once inventory file is in order, you can start deploying PyVM Bhyve to a large fleet of machines.
 
 # Documentation
-Would like to try out PyVM? Chech out the docs: https://github.com/yaroslav-gwit/PyVM-Bhyve/wiki
+Would like to try out PyVM? Check out the docs: https://github.com/yaroslav-gwit/PyVM-Bhyve/wiki
 
 # Roadmap
  > Please keep in mind that this roadmap is not ordered. I'll be dealing with each item on this list when I have the time and/or in the mood to do so :)
