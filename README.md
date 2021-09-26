@@ -38,3 +38,18 @@ Once inventory file is in order, you can start deploying PyVM Bhyve to a large f
 
 # Documentation
 Would like to try out PyVM? Chech out the docs: https://github.com/yaroslav-gwit/PyVM-Bhyve/wiki
+
+# Roadmap
+ - Finish up the preparation of all OS images
+ - Clean up the --help values, to guide the user properly
+ - Add more "try" methods for core functions to send a correct error to the user
+ - Make a logo for the project
+ - Include some diagrams to make the documentation look more attractive
+ - Add Devuan to the supported OS list (Arch and Alpine would be great to have too, but it's just too much work to support all these OSes on my own)
+ - Complete the documentation
+ - Review complete project on my YT channel
+ - Rewrite the hardcoded values (to be more flexible with ZFS pools/datasets, VM image locations, etc)
+ - Gather community feedback
+ - Create an API, to be able to use this project at scale (based on FastAPI)
+ - Create a simple web dashboard based on React, to display number and status of hosts/VMs, system health, etc
+ - Create a man-like and PDF documentation, for the offline use
