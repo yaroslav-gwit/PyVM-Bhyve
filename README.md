@@ -67,7 +67,7 @@ Would like to try out PyVM? Check out the docs: https://github.com/yaroslav-gwit
  - Better PF integration: add a flag to `pyvm` to allow traffic between a group of VMs.
  - Add ACLs or gather VMs into groups (by user, group) etc. Suggestions are welcome, but the idea here is to allow certain VMs to talk to one another if they are in the same group: this will lay a great foundation for a quick deployment of isolated clusters - Kubernetes, GlusterFS, Docker Swarm, etc.
  - FreeBSD tuning and ZFS tuning.
- - Intergration with HAProxy Manager, to provide an easy way to proxy HTTP/TCP/DNS traffic to the backend VMs.
+ - Intergration with HAProxy Manager, to provide an easy way to proxy HTTP/TCP traffic to the backend VMs.
  - Develop a support package offering for the "bigger players". This will allow me to dedicate more time for this project.
 
 ### Nice to have (but not a priority)
