@@ -47,6 +47,7 @@ Would like to try out PyVM? Check out the docs: https://github.com/yaroslav-gwit
  - Get all custom/manual flags in order: IP address, MAC address, Network Bridge, etc.
  - Add more "try" methods for core functions to send a correct error to the user.
  - Make a logo for the project.
+ - Use colorama to provide better insights from the table output.
  - Describe the usecases and target audience.
  - Include some diagrams to make the documentation look more attractive.
  - Add Devuan to the supported OS list (Arch Linux, Alpine Linux, OpenBSD, etc would be great to have too, but it's just too much work to support all these OSes on my own at the moment).
