@@ -118,7 +118,7 @@ class VmDeployment():
         for ip in range(1, 254):
             ip_address_list.append(host_internal_switch_subnet + str(ip))
 
-        vm_os_type_list = [ "debian10", "debian11", "freebsd13zfs", "freebsd13ufs", "ubuntu2004", "almalinux8", "fedora34", "openbsd6", "rockylinux8", "windows10"]
+        vm_os_type_list = [ "debian10", "debian11", "freebsd13zfs", "freebsd13ufs", "ubuntu2004", "almalinux8", "fedora34", "rockylinux8", "windows10"]
         
         if new_vm_name == "None":
             random_vm_number = 1
@@ -400,36 +400,6 @@ class VmDeployment():
                         print("Done!")
                         print("")
 
-            # OpenBSD 6
-            if vm_os_type == "openbsd6":
-                folders = ["zroot/vm-encrypted/openbsd6-template", "zroot/vm-unencrypted/openbsd6-template",]
-                qcow_disk_file = "openbsd6.raw"
-                disk_file = "disk0.img"
-                local_file = "/root/pyVM/vm_images/" + qcow_disk_file
-
-                if not exists("/root/pyVM/vm_images/" + qcow_disk_file):
-                    print("Can't find OpenBSD 6 image locally, downloading now!")
-
-                    remote_url = "https://gateway-it.com/wp-content/uploads/2021/09/openbsd-6.9.qcow2"
-                    wget.download(remote_url, local_file)
-                    print("")
-                
-                for folder in folders:
-                    if not exists("/" + folder):
-                        command = "zfs create " + folder
-                        subprocess.run(command, shell=True, stdout=None)
-                    
-                    if not exists("/" + folder + "/" + disk_file):
-                        print("\nDisk image in " + folder + " was not found, copying it now!")
-                        
-                        command = "qemu-img convert -p " + local_file + " /" + folder + "/" + disk_file
-                        subprocess.run(command, shell=True)
-
-                        command = "truncate -s +11G " + "/" + folder + "/" + disk_file
-                        subprocess.run(command, shell=True, stdout=None)
-                        
-                        print("Done!")
-                        print("")
             
             # Ubuntu 20.04
             if vm_os_type == "ubuntu2004":
@@ -567,11 +537,6 @@ class VmDeployment():
             zfs_dataset = "zroot/vm-encrypted/debian11-template"
         elif self.vm_os_type == "debian11" and self.vm_encryption == "unencrypted":
             zfs_dataset = "zroot/vm-unencrypted/debian11-template"
-
-        if self.vm_os_type == "openbsd6" and self.vm_encryption == "encrypted":
-            zfs_dataset = "zroot/vm-encrypted/openbsd6-template"
-        elif self.vm_os_type == "openbsd6" and self.vm_encryption == "unencrypted":
-            zfs_dataset = "zroot/vm-unencrypted/openbsd6-template"
 
         if self.vm_os_type == "ubuntu2004" and self.vm_encryption == "encrypted":
             zfs_dataset = "zroot/vm-encrypted/ubuntu2004-template"
