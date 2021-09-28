@@ -118,7 +118,7 @@ class VmDeployment():
         for ip in range(1, 254):
             ip_address_list.append(host_internal_switch_subnet + str(ip))
 
-        vm_os_type_list = [ "debian10", "debian11", "freebsd13zfs", "freebsd13ufs", "ubuntu2004", "almalinux8", "fedora34", "rockylinux8", "windows10"]
+        vm_os_type_list = [ "debian10", "debian11", "freebsd13ufs", "ubuntu2004", "almalinux8", "fedora34", "rockylinux8", "windows10"]
         
         if new_vm_name == "None":
             random_vm_number = 1
