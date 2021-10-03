@@ -77,3 +77,7 @@ Would like to try out PyVM? Check out the docs: https://github.com/yaroslav-gwit
  - TUI for the console: it's nice to be able to navigate a terminal interface using arrows and enter/space keys, so you don't have to remember all of the commands that are involved in the process.
  - Fully featured WebUI written in React/Vue
  - Custom FreeBSD installation image to make it easier to start with a project.
+
+# Would like to donate to directly support project development?
+You can throw few dollars at me here:
+https://www.buymeacoffee.com/yaroslavkoisa
