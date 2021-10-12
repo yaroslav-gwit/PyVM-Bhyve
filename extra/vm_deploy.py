@@ -175,7 +175,13 @@ class VmDeployment():
                     print("Can't find Rocky Linux 8 image locally, downloading now!")
                     
                     remote_url = "https://github.com/yaroslav-gwit/PyVM-Bhyve/releases/download/202109/rockylinux8.zip"
-                    wget.download(remote_url, local_file)
+                    wget.download(remote_url, local_archive)
+                    print("")
+                    command = "unzip " + local_archive + " -d /root/pyVM/vm_images"
+                    subprocess.run(command, shell=True, stdout=None)
+                    command = "rm " + local_archive
+                    subprocess.run(command, shell=True, stdout=None)
+
                     print("")
                 
                 for folder in folders:
