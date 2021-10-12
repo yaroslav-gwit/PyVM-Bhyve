@@ -166,14 +166,15 @@ class VmDeployment():
             # Rocky Linux 8 (CentOS Clone)
             if vm_os_type == "rockylinux8":
                 folders = ["zroot/vm-encrypted/rockylinux8-template", "zroot/vm-unencrypted/rockylinux8-template",]
-                qcow_disk_file = "rockylinux8.vdi"
+                qcow_disk_file = "rockylinux8.img"
                 disk_file = "disk0.img"
                 local_file = "/root/pyVM/vm_images/" + qcow_disk_file
+                local_archive = "/root/pyVM/vm_images/rockylinux8.zip"
                 
                 if not exists("/root/pyVM/vm_images/" + qcow_disk_file):
                     print("Can't find Rocky Linux 8 image locally, downloading now!")
                     
-                    remote_url = "https://gateway-it.com/wp-content/uploads/2021/09/Arch-Linux-x86_64-cloudimg-20210906.0.qcow2"
+                    remote_url = "https://github.com/yaroslav-gwit/PyVM-Bhyve/releases/download/202109/rockylinux8.zip"
                     wget.download(remote_url, local_file)
                     print("")
                 
@@ -185,7 +186,7 @@ class VmDeployment():
                     if not exists("/" + folder + "/" + disk_file):
                         print("\nDisk image in " + folder + " was not found, copying it now!")
                         
-                        command = "qemu-img convert -p " + local_file + " /" + folder + "/" + disk_file
+                        command = "pv " + local_file + " > /" + folder + "/" + disk_file
                         subprocess.run(command, shell=True, stdout=None)
 
                         command = "truncate -s +5G " + "/" + folder + "/" + disk_file
