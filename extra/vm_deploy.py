@@ -197,7 +197,7 @@ class VmDeployment():
             # AlmaLinux 8 (CentOS Clone)
             if vm_os_type == "almalinux8":
                 folders = ["zroot/vm-encrypted/almalinux8-template", "zroot/vm-unencrypted/almalinux8-template",]
-                qcow_disk_file = "almalinux8.vdi"
+                qcow_disk_file = "almalinux8.img"
                 disk_file = "disk0.img"
                 local_archive = "/root/pyVM/vm_images/almalinux8.zip"
                 local_file = "/root/pyVM/vm_images/" + qcow_disk_file
@@ -207,9 +207,10 @@ class VmDeployment():
                     
                     remote_url = "https://github.com/yaroslav-gwit/PyVM-Bhyve/releases/download/202109/almalinux8.zip"
                     wget.download(remote_url, local_archive)
-                    command = "unzip " + local_archive + " -d /root/pyVM/vm_images/"
+                    print("")
+                    command = "unzip " + local_archive + " -d /root/pyVM/vm_images"
                     subprocess.run(command, shell=True, stdout=None)
-                    command = "mv '/root/pyVM/vm_images/AlmaLinux 8.vdi' " + local_file
+                    command = "rm " + local_archive
                     subprocess.run(command, shell=True, stdout=None)
 
                     print("")
@@ -222,7 +223,7 @@ class VmDeployment():
                     if not exists("/" + folder + "/" + disk_file):
                         print("\nDisk image in " + folder + " was not found, copying it now!")
                         
-                        command = "qemu-img convert -p " + local_file + " /" + folder + "/" + disk_file
+                        command = "pv " + local_file + " > /" + folder + "/" + disk_file
                         subprocess.run(command, shell=True, stdout=None)
 
                         command = "truncate -s +5G " + "/" + folder + "/" + disk_file
