@@ -443,16 +443,13 @@ class VmDeployment():
             # Windows 10
             if vm_os_type == "windows10":
                 folders = ["zroot/vm-encrypted/windows10-template", "zroot/vm-unencrypted/windows10-template",]
-                qcow_disk_file = "windows10.vdi"
+                qcow_disk_file = "windows10.img"
                 disk_file = "disk0.img"
                 local_file = "/root/pyVM/vm_images/" + qcow_disk_file
 
                 if not exists("/root/pyVM/vm_images/" + qcow_disk_file):
-                    print("Can't find Windows 10 image locally, downloading now!")
-
-                    remote_url = "https://gateway-it.com/wp-content/uploads/2021/09/focal-server-cloudimg-amd64.vmdk"
-                    wget.download(remote_url, local_file)
-                    print("")
+                    print("Can't find Windows 10 image. Please place your image in the correct directory and format: /root/pyVM/vm_images/windows10.img")
+                    exit(1)
                 
                 for folder in folders:
                     if not exists("/" + folder):
@@ -462,11 +459,11 @@ class VmDeployment():
                     if not exists("/" + folder + "/" + disk_file):
                         print("\nDisk image in " + folder + " was not found, copying it now!")
                         
-                        command = "qemu-img convert -p " + local_file + " /" + folder + "/" + disk_file
-                        subprocess.run(command, shell=True)
+                        command = "pv " + local_file + " > /" + folder + "/" + disk_file
+                        subprocess.run(command, shell=True, stdout=None)
 
-                        # command = "truncate -s +20G " + "/" + folder + "/" + disk_file
-                        # subprocess.run(command, shell=True, stdout=None)
+                        command = "truncate -s +5G " + "/" + folder + "/" + disk_file
+                        subprocess.run(command, shell=True, stdout=None)
                         
                         print("Done!")
                         print("")
