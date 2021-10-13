@@ -96,7 +96,7 @@ class VmOperations():
                     tap_interface_list.append(tap_interface)
                 
 
-                command1 = "bhyve -AHP -s 0:0,hostbridge -s 31,lpc "
+                command1 = "bhyve -HAw -s 0:0,hostbridge -s 31,lpc "
 
                 s1 = 2
                 s2 = 0
