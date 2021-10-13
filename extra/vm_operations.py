@@ -96,7 +96,7 @@ class VmOperations():
                     tap_interface_list.append(tap_interface)
                 
 
-                command1 = "bhyve -AHP -s 0:0,hostbridge -s 1:0,lpc "
+                command1 = "bhyve -AHP -s 0:0,hostbridge -s 31,lpc "
 
                 s1 = 2
                 s2 = 0
@@ -134,15 +134,14 @@ class VmOperations():
                 command4 = " -s " + str(s) + ":0,ahci-cd," + vm_folder + "seed.iso"
                 command5 = " -c " + vm_info_dict["cpus"] + " -m " + vm_info_dict["memory"]
                 s = s + 1
-                command6 = " -s " + str(s) + ",fbuf,tcp=0.0.0.0:" + vm_info_dict["vnc_port"] + ",w=800,h=600,password=" + vm_info_dict["vnc_password"]
+                command6 = " -s " + str(s) + ":" + str(s2) + ",fbuf,tcp=0.0.0.0:" + vm_info_dict["vnc_port"] + ",w=1280,h=1024,password=" + vm_info_dict["vnc_password"]
                 s = s + 1
 
                 if vm_info_dict["loader"] == "bios":
-                    command7 = " -s " + str(s) + ",xhci,tablet -l com1,/dev/nmdm-" + vm_name + "-1A -l bootrom,/usr/local/share/uefi-firmware/BHYVE_UEFI_CSM.fd " + vmname + " > " + vm_folder + "vm.log 2>&1 &"
+                    command7 = " -s " + str(s) + ":" + str(s2) + ",xhci,tablet -l com1,/dev/nmdm-" + vm_name + "-1A -l bootrom,/usr/local/share/uefi-firmware/BHYVE_UEFI_CSM.fd -u " + vmname
                     command = command1 + command2 + command3 + command4 + command5 + command6 + command7
-                    # command = command1 + command2 + command3 + command4 + command5 + command7
                 else:
-                    command7 = " -s " + str(s) + ",xhci,tablet -l com1,/dev/nmdm-" + vm_name + "-1A -l bootrom,/usr/local/share/uefi-firmware/BHYVE_UEFI.fd " + vmname
+                    command7 = " -s " + str(s) + ",xhci,tablet -l com1,/dev/nmdm-" + vm_name + "-1A -l bootrom,/usr/local/share/uefi-firmware/BHYVE_UEFI.fd -u " + vmname
                     command = command1 + command2 + command3 + command4 + command5 + command6 + command7
                 
                 command = "nohup /root/bin/startvm " + '"' + command + '"' + " " + vmname + " > " + vm_folder + "vm.log 2>&1 &"
