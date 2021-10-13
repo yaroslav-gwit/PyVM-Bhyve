@@ -132,7 +132,13 @@ class VmOperations():
                 command3 = disk_final
                 s = s + 1
                 command4 = " -s " + str(s) + ":0,ahci-cd," + vm_folder + "seed.iso"
-                command5 = " -c " + vm_info_dict["cpus"] + " -m " + vm_info_dict["memory"]
+                
+                vm_os_type = vm_info_dict["os_type"]
+                if vm_os_type == "windows10":
+                    command5 = " -c sockets=1,cores=" + vm_info_dict["cpus"] + " -m " + vm_info_dict["memory"]
+                else:
+                    command5 = " -c " + vm_info_dict["cpus"] + " -m " + vm_info_dict["memory"]
+
                 s = s + 1
                 command6 = " -s " + str(s) + ":" + str(s2) + ",fbuf,tcp=0.0.0.0:" + vm_info_dict["vnc_port"] + ",w=1280,h=1024,password=" + vm_info_dict["vnc_password"]
                 s = s + 1
