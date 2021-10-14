@@ -243,10 +243,19 @@ def vmlist(dryrun = False):
     vmColumnOsType = ["AlmaLinux 8" if var == "almalinux8" else var for var in vmColumnOsType]
     vmColumnOsType = ["RockyLinux 8" if var == "rockylinux8" else var for var in vmColumnOsType]
     vmColumnOsType = ["Fedora 34" if var == "fedora34" else var for var in vmColumnOsType]
-    vmColumnOsType = ["OpenBSD 6" if var == "openbsd6" else var for var in vmColumnOsType]
     vmColumnOsType = ["Windows 10" if var == "windows10" else var for var in vmColumnOsType]
 
     
+    vmColumnUptime = []
+    for vm_name in vmColumnNames:
+        if vm_name in runningVMs:
+            command = "ps -auxo etime | grep 'bhyve: " + vm_name + "' | grep -v grep | awk '{print $(NF)}'"
+            shell_command = subprocess.check_output(command, shell=True)
+            vm_uptime = shell_command.decode("utf-8").split()[0]
+            vmColumnUptime.append(vm_uptime)
+        else:
+            vmColumnUptime.append("-")
+
     vmColumnDescription = []
     for vm_name in vmColumnNames:
         if exists("/zroot/vm-encrypted/" + vm_name + "/vm.config"):
@@ -263,10 +272,10 @@ def vmlist(dryrun = False):
             vmColumnDescription.append("-")
 
 
-    vmTableHeader = [["Name", "State", "Encryption", "CPUs", "RAM", "VncPort", "VncPassword", "DiskSize", "DiskUsed", "VmIpAddr", "OsType", "VmDescription", ]]
+    vmTableHeader = [["Name", "State", "Encryption", "CPUs", "RAM", "VncPort", "VncPassword", "DiskSize", "DiskUsed", "VmIpAddr", "OsType", "VmUptime", "VmDescription", ]]
 
     for vm_index in range(len(vmColumnNames)):
-        vmTableHeader.append([vmColumnNames[vm_index], vmColumnStates[vm_index], vmColumnEncryption[vm_index], vmColumnCPU[vm_index], vmColumnRAM[vm_index], vmColumnVncPort[vm_index], vmColumnVncPassword[vm_index], vmColumnDiskSize[vm_index], vmColumnDiskUsed[vm_index], vmColumnIpAddress[vm_index], vmColumnOsType[vm_index], vmColumnDescription[vm_index]])
+        vmTableHeader.append([ vmColumnNames[vm_index], vmColumnStates[vm_index], vmColumnEncryption[vm_index], vmColumnCPU[vm_index], vmColumnRAM[vm_index], vmColumnVncPort[vm_index], vmColumnVncPassword[vm_index], vmColumnDiskSize[vm_index], vmColumnDiskUsed[vm_index], vmColumnIpAddress[vm_index], vmColumnOsType[vm_index], vmColumnUptime[vm_index], vmColumnDescription[vm_index], ])
 
     return tabulate(vmTableHeader, headers="firstrow", tablefmt="fancy_grid", showindex=range(1, len(vmColumnNames) + 1))
     ### EOF_VM_TABLE ###
