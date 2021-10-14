@@ -249,8 +249,9 @@ def vmlist(dryrun = False):
     vmColumnUptime = []
     for vm_name in vmColumnNames:
         if vm_name in runningVMs:
-            # command = "ps -auxo etime | grep 'bhyve: " + vm_name + "' | grep -v grep | awk '{print $(NF)}'"
-            command = "ps axwww -o etime,command | grep 'bhyve: " + vm_name + "' | grep -v grep | awk '{print $1}'"
+            command = "ps axwww -o etime,command > /tmp/bhyve_vms_uptime.txt"
+            subprocess.run(command, shell=True)
+            command = "grep 'bhyve: " + vm_name + "' /tmp/bhyve_vms_uptime.txt | grep -v grep | awk '{print $1}'"
             shell_command = subprocess.check_output(command, shell=True)
             vm_uptime = shell_command.decode("utf-8").split()[0]
             vmColumnUptime.append(vm_uptime)
