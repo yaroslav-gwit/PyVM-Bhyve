@@ -251,7 +251,7 @@ def vmlist(dryrun = False):
         if vm_name in runningVMs:
             command = "ps -auxo etime | grep 'bhyve: " + vm_name + "' | grep -v grep | awk '{print $(NF)}'"
             shell_command = subprocess.check_output(command, shell=True)
-            vm_uptime = shell_command.decode("utf-8").split()[0]
+            vm_uptime = shell_command.decode("utf-8").split()
             vmColumnUptime.append(vm_uptime)
         else:
             vmColumnUptime.append("-")
