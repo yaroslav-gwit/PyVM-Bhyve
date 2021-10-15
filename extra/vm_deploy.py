@@ -272,34 +272,36 @@ class VmDeployment():
             
             # FreeBSD 13 ZFS
             if vm_os_type == "freebsd13zfs":
-                folders = ["zroot/vm-encrypted/freebsd13zfs-template", "zroot/vm-unencrypted/freebsd13zfs-template",]
-                qcow_disk_file = "freebsd13zfs.qcow2"
-                disk_file = "disk0.img"
-                local_file = "/root/pyVM/vm_images/" + qcow_disk_file
+                print("Sorry, this image is not available yet :(")
+                exit(0)
+                # folders = ["zroot/vm-encrypted/freebsd13zfs-template", "zroot/vm-unencrypted/freebsd13zfs-template",]
+                # qcow_disk_file = "freebsd13zfs.qcow2"
+                # disk_file = "disk0.img"
+                # local_file = "/root/pyVM/vm_images/" + qcow_disk_file
                 
-                if not exists("/root/pyVM/vm_images/" + qcow_disk_file):
-                    print("Can't find FreeBSD 13 ZFS image locally, downloading now!")
+                # if not exists("/root/pyVM/vm_images/" + qcow_disk_file):
+                #     print("Can't find FreeBSD 13 ZFS image locally, downloading now!")
                     
-                    remote_url = "https://gateway-it.com/wp-content/uploads/2021/09/freebsd-13.0-zfs.qcow2"
-                    wget.download(remote_url, local_file)
-                    print("")
+                #     remote_url = "https://gateway-it.com/wp-content/uploads/2021/09/freebsd-13.0-zfs.qcow2"
+                #     wget.download(remote_url, local_file)
+                #     print("")
                 
-                for folder in folders:
-                    if not exists("/" + folder):
-                        command = "zfs create " + folder
-                        subprocess.run(command, shell=True, stdout=None)
+                # for folder in folders:
+                #     if not exists("/" + folder):
+                #         command = "zfs create " + folder
+                #         subprocess.run(command, shell=True, stdout=None)
                     
-                    if not exists("/" + folder + "/" + disk_file):
-                        print("\nDisk image in " + folder + " was not found, copying it now!")
+                #     if not exists("/" + folder + "/" + disk_file):
+                #         print("\nDisk image in " + folder + " was not found, copying it now!")
                         
-                        command = "qemu-img convert -p " + local_file + " /" + folder + "/" + disk_file
-                        subprocess.run(command, shell=True, stdout=None)
+                #         command = "qemu-img convert -p " + local_file + " /" + folder + "/" + disk_file
+                #         subprocess.run(command, shell=True, stdout=None)
 
-                        command = "truncate -s +12G " + "/" + folder + "/" + disk_file
-                        subprocess.run(command, shell=True, stdout=None)
+                #         command = "truncate -s +12G " + "/" + folder + "/" + disk_file
+                #         subprocess.run(command, shell=True, stdout=None)
                         
-                        print("Done!")
-                        print("")
+                #         print("Done!")
+                #         print("")
 
             # FreeBSD 13 UFS
             if vm_os_type == "freebsd13ufs":
