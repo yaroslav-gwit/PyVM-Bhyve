@@ -21,6 +21,10 @@ from natsort import natsorted
 # Own functions
 import time_date_converter
 
+with open("/root/bin/host.info", 'r') as file_object:
+    host_info_raw = file_object.read()
+host_info_dict = ast.literal_eval(host_info_raw)
+
 def hostinfo(dryrun = False):
     # if dryrun == False:
         # print("PRODUCTION!!!")
@@ -50,11 +54,13 @@ def hostinfo(dryrun = False):
     shell_command = subprocess.check_output(command, shell=True)
     zfsFree = shell_command.decode("utf-8").split()[0]
     
-    command = "grep backup_server_endpoint /root/bin/host.info | awk '{ print $2 }'"
-    shell_command = subprocess.check_output(command, shell=True)
-    backupStatus = shell_command.decode("utf-8").split()[0]
+    # command = "grep backup_server_endpoint /root/bin/host.info | awk '{ print $2 }'"
+    # shell_command = subprocess.check_output(command, shell=True)
+    # backupStatus = shell_command.decode("utf-8").split()[0]
 
-    if re.match(r"^no_sync", backupStatus):
+    backupStatus = host_info_dict["backup_server_endpoint"]
+
+    if re.match(r"^Local", backupStatus):
         backupStatus = "Local only"
     else:
         backupStatus = "Remote and local. Server: " + backupStatus
