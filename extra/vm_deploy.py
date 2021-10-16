@@ -314,7 +314,7 @@ class VmDeployment():
                 if not exists("/root/pyVM/vm_images/" + qcow_disk_file):
                     print("Can't find FreeBSD13 image locally, downloading now!")
                     
-                    remote_url = "https://github.com/yaroslav-gwit/PyVM-Bhyve/releases/download/202109/debian11.zip"
+                    remote_url = "https://github.com/yaroslav-gwit/PyVM-Bhyve/releases/download/202109/freebsd13ufs.zip"
                     wget.download(remote_url, local_archive)
                     print("")
                     command = "unzip " + local_archive + " -d /root/pyVM/vm_images"
