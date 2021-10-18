@@ -42,6 +42,7 @@ Would like to try out PyVM? Check out the docs: https://github.com/yaroslav-gwit
 # Roadmap
  > Please keep in mind that this roadmap is not ordered. I'll be dealing with each item on this list when I have the time and/or in the mood to do so :)
 
+ - Simplify Windows type image deployments: create a script that reads IP address and hostname values from the text file (cloud-init config file preferably) and applies these values to the system.
  - Finish up the preparation of all OS images.
  - Switch from argparse to Typer: will make a help output cleaner, autocomplete for fish, and easier to read/maintain source code.
  - Get all custom/manual flags in order: IP address, MAC address, Network Bridge, etc.
