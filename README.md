@@ -1,5 +1,5 @@
 # Welcome to the PyVM Bhyve community!
- > WARNING! Software is in alpha release state. Use at your own risk and don't blame me if something breaks :) This is my first Python project, and there are a lot of hardcoded values, mainly Python dev environment and system paths. Keep these default, for now, I'll clean up everything eventually.
+ > WARNING! Software is in alpha release state. Use at your own risk and don't blame me if something breaks :) This is my first Python project, and there are a lot of hardcoded values, mainly Python dev environment and system paths. Keep these default for now, I'll clean up everything eventually.
 
 This project was born out of necessity for fast VM deployments on a "not so modern" hardware, be it an old Dell Optiplex PC or a used Lenovo Thinkpad -- you don't always have the means to buy all new and powerful. On one hand, you have old and/or cheap hardware, on the other one, there is modern and mighty hardware -- PyVM works very well with both.
 
