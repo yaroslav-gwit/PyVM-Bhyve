@@ -56,7 +56,7 @@ Would like to try out PyVM? Check out the docs: https://github.com/yaroslav-gwit
  - Complete the documentation.
  - Decouple VM image download and deployment code from the VM_DEPLOY class, to allow user defined VM images and/or custom OS types.
  - Review the project on my YT channel, to bring more awareness.
- - Document Nebula integration, to support deployments at scale.
+ - Document tinc+FRR(OSPF) integration, to support deployments at a large scale.
  - Rewrite the hardcoded values (to be more flexible with ZFS pools/datasets, VM image locations, etc).
  - Gather community feedback.
  - Add support for a Global DNS, using NSD DNS server from NLnet Labs (creator of Unbound).
