@@ -514,56 +514,6 @@ class VmDeployment():
         elif self.vm_encryption == "unencrypted":
             zfs_dataset_vm = "zroot/vm-unencrypted/"
             zfs_dataset = "zroot/vm-unencrypted/" + self.vm_os_type + "-template"
-        
-        # if self.vm_os_type == "rockylinux8" and self.vm_encryption == "encrypted":
-        #     zfs_dataset = "zroot/vm-encrypted/rockylinux8-template"
-        # elif self.vm_os_type == "rockylinux8" and self.vm_encryption == "unencrypted":
-        #     zfs_dataset = "zroot/vm-unencrypted/rockylinux8-template"
-
-        # if self.vm_os_type == "fedora34" and self.vm_encryption == "encrypted":
-        #     zfs_dataset = "zroot/vm-encrypted/fedora34-template"
-        # elif self.vm_os_type == "fedora34" and self.vm_encryption == "unencrypted":
-        #     zfs_dataset = "zroot/vm-unencrypted/fedora34-template"
-
-        # if self.vm_os_type == "almalinux8" and self.vm_encryption == "encrypted":
-        #     zfs_dataset = "zroot/vm-encrypted/almalinux8-template"
-        # elif self.vm_os_type == "almalinux8" and self.vm_encryption == "unencrypted":
-        #     zfs_dataset = "zroot/vm-unencrypted/almalinux8-template"
-
-        # if self.vm_os_type == "freebsd13ufs" and self.vm_encryption == "encrypted":
-        #     zfs_dataset = "zroot/vm-encrypted/freebsd13ufs-template"
-        # elif self.vm_os_type == "freebsd13ufs" and self.vm_encryption == "unencrypted":
-        #     zfs_dataset = "zroot/vm-unencrypted/freebsd13ufs-template"
-
-        # if self.vm_os_type == "freebsd13zfs" and self.vm_encryption == "encrypted":
-        #     zfs_dataset = "zroot/vm-encrypted/freebsd13zfs-template"
-        # elif self.vm_os_type == "freebsd13zfs" and self.vm_encryption == "unencrypted":
-        #     zfs_dataset = "zroot/vm-unencrypted/freebsd13zfs-template"
-
-        # if self.vm_os_type == "debian10" and self.vm_encryption == "encrypted":
-        #     zfs_dataset = "zroot/vm-encrypted/debian10-template"
-        # elif self.vm_os_type == "debian10" and self.vm_encryption == "unencrypted":
-        #     zfs_dataset = "zroot/vm-unencrypted/debian10-template"
-
-        # if self.vm_os_type == "debian11" and self.vm_encryption == "encrypted":
-        #     zfs_dataset = "zroot/vm-encrypted/debian11-template"
-        # elif self.vm_os_type == "debian11" and self.vm_encryption == "unencrypted":
-        #     zfs_dataset = "zroot/vm-unencrypted/debian11-template"
-
-        # if self.vm_os_type == "ubuntu2004" and self.vm_encryption == "encrypted":
-        #     zfs_dataset = "zroot/vm-encrypted/ubuntu2004-template"
-        # elif self.vm_os_type == "ubuntu2004" and self.vm_encryption == "unencrypted":
-        #     zfs_dataset = "zroot/vm-unencrypted/ubuntu2004-template"
-
-        # if self.vm_os_type == "windows10" and self.vm_encryption == "encrypted":
-        #     zfs_dataset = "zroot/vm-encrypted/windows10-template"
-        # elif self.vm_os_type == "windows10" and self.vm_encryption == "unencrypted":
-        #     zfs_dataset = "zroot/vm-unencrypted/windows10-template"
-
-        # if self.vm_encryption == "encrypted":
-        #     zfs_dataset_vm = "zroot/vm-encrypted/"
-        # else:
-        #     zfs_dataset_vm = "zroot/vm-unencrypted/"
 
         random_snapshot_name = self.new_vm_name + "_" + VmDeployment.password_generator()
         random_vnc_password = VmDeployment.password_generator(20, "yes")
