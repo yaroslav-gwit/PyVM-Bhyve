@@ -27,7 +27,6 @@
         - gnu-watch
         - tmux
         - fping
-        - atop
         - qemu-utils
         - htop
         - curl
@@ -35,6 +34,7 @@
         - gtar
         - unzip
         - pv
+        - sanoid
       state: present
 
   - name: Install VM-bhyve packages

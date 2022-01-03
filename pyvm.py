@@ -40,6 +40,7 @@ parser.add_argument("--vmconsole", type=str, help="Connects you to VM console in
 parser.add_argument("--vmsnapshot", action="store_true", help="Snapshots your VM")
 parser.add_argument("--vmsnapshotall", action="store_true", help="Snapshots all your VMs")
 parser.add_argument("--snaptype", type=str, help="Sets the type of the snapshot")
+parser.add_argument("--snapstokeep", type=int, help="Sets the number of snapshots to keep")
 parser.add_argument("--vmreplicate", action="store_true", help="Replicates your VM to a backup server")
 parser.add_argument("--vmreplicateall", action="store_true", help="Replicates all of your VMs to a backup server")
 parser.add_argument("--endpoint", type=str, help="Sets replication endpoint")
@@ -156,7 +157,9 @@ if args.vmsnapshot:
         snapshot_type = args.snaptype
     else:
         snapshot_type = "custom"
-    vm_snapshot(vmname=vmname, snapshot_type=snapshot_type)
+    if args.snapstokeep:
+        snapshots_to_keep = snapshots_to_keep
+    vm_snapshot(vmname=vmname, snapshot_type=snapshot_type, snapshots_to_keep=snapshots_to_keep)
 
 if args.vmsnapshotall:
     if args.snaptype:

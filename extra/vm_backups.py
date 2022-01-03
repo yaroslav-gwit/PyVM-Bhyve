@@ -5,7 +5,7 @@ from os import listdir
 import re
 
 class VmSnapshot():
-    def __init__(self, vmname="None", snapshot_type="custom", snapshot_list=False):
+    def __init__(self, vmname="None", snapshot_type="custom", snapshot_list=False, snapshots_to_keep="None"):
         snapshot_type_list = [ "replication", "custom", "hourly", "daily", "weekly", "monthly", "yearly"]
         vm_exclude_list = []
         self.vmname = vmname
@@ -16,7 +16,7 @@ class VmSnapshot():
             self.snapshot_type = "custom"
         
         self.snapshot_list = snapshot_list
-        
+
 
         vmColumnNames = []
         vmZfsDatasets = []
@@ -38,8 +38,17 @@ class VmSnapshot():
         snapshot_name = self.snapshot_type + "_" + date_now
         zfs_dataset = vmZfsDatasets[vmColumnNames.index(vmname)]
 
-        command = "zfs snapshot " + zfs_dataset + "@" + snapshot_name
-        subprocess.run(command, shell=True, stderr = subprocess.DEVNULL, stdout=subprocess.DEVNULL)
+        # If snapshots to keep was specified, delete the snapshots that are exceeding the number that was set
+        if isinstance(snapshots_to_keep, int) and self.snapshot_type != "custom":
+            self.snapshots_to_keep = snapshots_to_keep
+            # Get the snapshot list
+            command = "zfs list -r -t snapshot " + vmZfsDatasets[vmColumnNames.index(vmname)] + " | tail +2 | awk '{ print $1 }'"
+            shell_command = subprocess.check_output(command, shell=True)
+            vm_zfs_snapshot_list = shell_command.decode("utf-8").split()
+            print(vm_zfs_snapshot_list)
+        else:
+            command = "zfs snapshot " + zfs_dataset + "@" + snapshot_name
+            subprocess.run(command, shell=True, stderr = subprocess.DEVNULL, stdout=subprocess.DEVNULL)
         # if debug == True:
             # print(command)
 
