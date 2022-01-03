@@ -75,7 +75,7 @@ class VmMassOperations():
         
         elif operation == "vmsnapshotall":
             for vm in vmColumnNames:
-                vm_snapshot(vmname=vm, snapshot_type=snapshot_type)
+                vm_snapshot(vmname=vm, snapshot_type=snapshot_type, snapshots_to_keep=snapshots_to_keep)
         
         elif operation == "vmreplicateall":
             for vm in vmColumnNames:
