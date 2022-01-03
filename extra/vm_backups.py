@@ -41,7 +41,7 @@ class VmSnapshot():
         subprocess.run(command, shell=True, stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
         
         # If snapshots to keep was specified, delete the snapshots that are exceeding the number that was set
-        if isinstance(snapshots_to_keep, int) and self.snapshot_type != "custom":
+        if isinstance(snapshots_to_keep, int) and snapshots_to_keep > 0 and self.snapshot_type != "custom":
             self.snapshots_to_keep = snapshots_to_keep
             # Get the snapshot list
             command = "zfs list -r -t snapshot " + vmZfsDatasets[vmColumnNames.index(vmname)] + " | tail +2 | awk '{ print $1 }'"
