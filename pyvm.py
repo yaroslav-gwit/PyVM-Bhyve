@@ -158,7 +158,7 @@ if args.vmsnapshot:
     else:
         snapshot_type = "custom"
     if args.snapstokeep:
-        snapshots_to_keep = snapshots_to_keep
+        snapshots_to_keep = args.snapstokeep
     vm_snapshot(vmname=vmname, snapshot_type=snapshot_type, snapshots_to_keep=snapshots_to_keep)
 
 if args.vmsnapshotall:
