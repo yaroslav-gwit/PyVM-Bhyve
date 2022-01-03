@@ -17,7 +17,7 @@ class VmSnapshot():
         
         self.snapshot_list = snapshot_list
 
-
+        # Generate zfs dataset list
         vmColumnNames = []
         vmZfsDatasets = []
         zfs_datasets = ["zroot/vm-encrypted", "zroot/vm-unencrypted"]
@@ -33,6 +33,7 @@ class VmSnapshot():
             print("Can't find such VM on this system")
             exit(1)
 
+        # Generate snapshot name, and take the new snapshot
         date_now = strftime("%Y-%m-%d_%H-%M-%S", localtime())
         snapshot_name = self.snapshot_type + "_" + date_now
         zfs_dataset = vmZfsDatasets[vmColumnNames.index(vmname)]
