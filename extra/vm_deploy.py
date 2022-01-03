@@ -558,7 +558,7 @@ class VmDeployment():
         else:
             zfs_dataset_vm = "zroot/vm-unencrypted/"
 
-        random_snapshot_name = VmDeployment.password_generator()
+        random_snapshot_name = self.new_vm_name + "_" + VmDeployment.password_generator()
         random_vnc_password = VmDeployment.password_generator(20, "yes")
 
         command = "zfs snapshot " + zfs_dataset + "@" + random_snapshot_name
