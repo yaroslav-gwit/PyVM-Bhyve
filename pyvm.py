@@ -59,25 +59,6 @@ parser.add_argument("--newvm", type=str, help="New VM name")
 
 args = parser.parse_args()
 
-### Argument errors ###
-# Throw an error when there are no args passed
-# if (not args.hostinfo) and (not args.vmlist) and (not args.vmstart) and (not args.vmstop) and (not args.vmkill) and (not args.vm):
-    # print("Please pass some parameters, like this:\npyvm --vmlist")
-    # exit(0)
-
-# Throw an error if there are not compatible args passed #
-if args.vmstart and (args.dryrun or args.vmlist or args.hostinfo):
-    print("Cannot be used with --vmstart")
-    exit(0)
-
-if args.vmstop and (args.dryrun or args.vmlist or args.hostinfo):
-    print("Cannot be used with --vmstop")
-    exit(0)
-
-if args.vmkill and (args.dryrun or args.vmlist or args.hostinfo):
-    print("Cannot be used with --vmkill")
-    exit(0)
-
 
 ### Print out info ###
 # Print host info
