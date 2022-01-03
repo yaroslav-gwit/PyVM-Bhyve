@@ -44,7 +44,7 @@ class VmSnapshot():
         if isinstance(snapshots_to_keep, int) and snapshots_to_keep > 0 and self.snapshot_type != "custom":
             self.snapshots_to_keep = snapshots_to_keep
             # Get the snapshot list
-            command = "zfs list -r -t snapshot " + vmZfsDatasets[vmColumnNames.index(vmname)] + " | tail +2 | awk '{ print $1 }'"
+            command = "zfs list -r -t snapshot " + vmZfsDatasets[vmColumnNames.index(vmname)] + " | tail +2 | awk '{ print $1 }' | grep " + self.snapshot_type
             shell_command = subprocess.check_output(command, shell=True, stderr=subprocess.DEVNULL)
             vm_zfs_snapshot_list = shell_command.decode("utf-8").split()
             
