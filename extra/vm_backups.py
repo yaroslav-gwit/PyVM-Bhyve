@@ -9,12 +9,12 @@ class VmSnapshot():
         snapshot_type_list = [ "replication", "custom", "hourly", "daily", "weekly", "monthly", "yearly" ]
         vm_exclude_list = []
         self.vmname = vmname
-        
+
         if snapshot_type in snapshot_type_list:
             self.snapshot_type = snapshot_type
         else:
             self.snapshot_type = "custom"
-        
+
         self.snapshot_list = snapshot_list
 
         # Generate zfs dataset list
@@ -40,7 +40,7 @@ class VmSnapshot():
 
         command = "zfs snapshot " + zfs_dataset + "@" + snapshot_name
         subprocess.run(command, shell=True, stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
-        
+
         # If snapshots to keep was specified, delete the snapshots that are exceeding the number that was set
         if isinstance(snapshots_to_keep, int) and snapshots_to_keep > 0 and self.snapshot_type != "custom":
             self.snapshots_to_keep = snapshots_to_keep
@@ -48,7 +48,7 @@ class VmSnapshot():
             command = "zfs list -r -t snapshot " + vmZfsDatasets[vmColumnNames.index(vmname)] + " | tail +2 | awk '{ print $1 }' | grep " + self.snapshot_type
             shell_command = subprocess.check_output(command, shell=True, stderr=subprocess.DEVNULL)
             vm_zfs_snapshot_list = shell_command.decode("utf-8").split()
-            
+
             # Generate list of snapshots to delete
             vm_zfs_snapshots_to_delete = vm_zfs_snapshot_list.copy()
             if len(vm_zfs_snapshots_to_delete) > 0 and len(vm_zfs_snapshots_to_delete) > snapshots_to_keep:
@@ -61,7 +61,7 @@ class VmSnapshot():
                     print("Snapshot " + vm_zfs_snapshot_to_delete + " was removed")
             else:
                 print("VM " + self.vmname + " doesn't have any snapshots to delete")
-        
+
 
 class VmReplication():
     def __init__(self, vmname="None", endpoint="None"):
@@ -81,9 +81,8 @@ class VmReplication():
                     if exists("/" + dataset + "/" + vm_name + "/vm.config"):
                         vmColumnNames.append(vm_name)
                         vmZfsDatasets.append(dataset + "/" + vm_name)
-        
+
         endpoint_dataset = vmZfsDatasets[vmColumnNames.index(vmname)]
-        # print(endpoint_dataset)
 
         if self.vmname not in vmColumnNames:
             print("Can't find such VM on this system")
@@ -92,7 +91,7 @@ class VmReplication():
         else:
             # Create temporary replication snapshot
             VmSnapshot(vmname=vmname, snapshot_type="replication")
-            
+
             # Local snapshot list
             command = "zfs list -r -t snapshot " + vmZfsDatasets[vmColumnNames.index(vmname)] + " | tail +2 | awk '{ print $1 }'"
             shell_command = subprocess.check_output(command, shell=True)
@@ -149,7 +148,7 @@ class VmReplication():
                         vm_zfs_snapshot_list.remove(remote_zfs_snapshot)
             # print("Updated snapshot list: " + str(vm_zfs_snapshot_list))
             # print()
-        
+
         if len(remote_zfs_snapshot_list) >= 1:
             for snapshot in range(0, len(vm_zfs_snapshot_list)-1):
                 command = "zfs send -vi " + vm_zfs_snapshot_list[snapshot] + " " + vm_zfs_snapshot_list[snapshot + 1] + " | ssh " + endpoint + " zfs receive " + endpoint_dataset
