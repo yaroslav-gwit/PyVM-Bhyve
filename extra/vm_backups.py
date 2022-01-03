@@ -33,7 +33,6 @@ class VmSnapshot():
             print("Can't find such VM on this system")
             exit(1)
 
-
         date_now = strftime("%Y-%m-%d_%H-%M-%S", localtime())
         snapshot_name = self.snapshot_type + "_" + date_now
         zfs_dataset = vmZfsDatasets[vmColumnNames.index(vmname)]
@@ -54,13 +53,17 @@ class VmSnapshot():
                 # Remove the old snapshots
                 for vm_zfs_snapshot_to_delete in vm_zfs_snapshots_to_delete:
                     command = "zfs destroy " + vm_zfs_snapshot_to_delete
-                    print(command)
+                    subprocess.run(command, shell=True)
+                    print("Snapshot " + vm_zfs_snapshot_to_delete + " was removed")
             else:
                 print("VM " + self.vmname + " doesn't have any snapshots to delete")
-
+            
+            command = "zfs snapshot " + zfs_dataset + "@" + snapshot_name
+            subprocess.run(command, shell=True, stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
+        
         else:
             command = "zfs snapshot " + zfs_dataset + "@" + snapshot_name
-            subprocess.run(command, shell=True, stderr = subprocess.DEVNULL, stdout=subprocess.DEVNULL)
+            subprocess.run(command, shell=True, stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
 
 class VmReplication():
     def __init__(self, vmname="None", endpoint="None"):
