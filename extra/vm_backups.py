@@ -43,7 +43,7 @@ class VmSnapshot():
             self.snapshots_to_keep = snapshots_to_keep
             # Get the snapshot list
             command = "zfs list -r -t snapshot " + vmZfsDatasets[vmColumnNames.index(vmname)] + " | tail +2 | awk '{ print $1 }'"
-            shell_command = subprocess.check_output(command, shell=True, stdout=subprocess.DEVNULL)
+            shell_command = subprocess.check_output(command, shell=True, stderr=subprocess.DEVNULL)
             vm_zfs_snapshot_list = shell_command.decode("utf-8").split()
             
             # Generate list of snapshots to delete
@@ -55,6 +55,8 @@ class VmSnapshot():
                 for vm_zfs_snapshot_to_delete in vm_zfs_snapshots_to_delete:
                     command = "zfs destroy " + vm_zfs_snapshot_to_delete
                     print(command)
+            else:
+                print("VM " + self.vmname + " doesn't have any snapshots to delete")
 
         else:
             command = "zfs snapshot " + zfs_dataset + "@" + snapshot_name
