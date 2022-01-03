@@ -50,7 +50,7 @@ class VmSnapshot():
             
             # Generate list of snapshots to delete
             vm_zfs_snapshots_to_delete = vm_zfs_snapshot_list.copy()
-            if len(vm_zfs_snapshots_to_delete) > 0:
+            if len(vm_zfs_snapshots_to_delete) > 0 and len(vm_zfs_snapshots_to_delete) > snapshots_to_keep:
                 for zfs_snapshot in range(0, snapshots_to_keep):
                     del vm_zfs_snapshots_to_delete[-1]
                 # Remove the old snapshots
