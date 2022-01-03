@@ -11,7 +11,7 @@ from vm_backups import VmSnapshot as vm_snapshot
 from vm_backups import VmReplication as vm_replicate
 
 class VmMassOperations():
-    def __init__(self, operation="None", snapshot_type="None", endpoint="None"):
+    def __init__(self, operation="None", snapshot_type="None", endpoint="None", snapshots_to_keep="None"):
         self.operation = operation
         
         if snapshot_type == "None":
