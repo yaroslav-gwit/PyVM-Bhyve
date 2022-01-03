@@ -6,7 +6,7 @@ import re
 
 class VmSnapshot():
     def __init__(self, vmname="None", snapshot_type="custom", snapshot_list=False, snapshots_to_keep="None"):
-        snapshot_type_list = [ "replication", "custom", "hourly", "daily", "weekly", "monthly", "yearly"]
+        snapshot_type_list = [ "replication", "custom", "hourly", "daily", "weekly", "monthly", "yearly" ]
         vm_exclude_list = []
         self.vmname = vmname
         
