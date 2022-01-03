@@ -168,7 +168,11 @@ if args.vmsnapshotall:
         snapshot_type = args.snaptype
     else:
         snapshot_type = "custom"
-    vm_mass_operations(operation = "vmsnapshotall", snapshot_type=snapshot_type)
+    if args.snapstokeep:
+        snapshots_to_keep = args.snapstokeep
+    else:
+        snapshots_to_keep = "None"
+    vm_mass_operations(operation = "vmsnapshotall", snapshot_type=snapshot_type, snapshots_to_keep=snapshots_to_keep)
     print("DONE!")
 
 # VM replication
