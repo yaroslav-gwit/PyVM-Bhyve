@@ -5,7 +5,7 @@ This project was born out of necessity for fast VM deployments on a "not so mode
 
 With help of FreeBSD, ZFS, Bhyve, Cloud-Init, and a bit of Python I was able to achieve impressive results: VM is deployed from start to finish (including SSH keys, IP address, hostname, etc) within 3-4 seconds or less depending on the hardware.
 
-Today, the project is in use by many for its portability, reliability, and deployment speed (it's a FreeBSD system after all :rocket:).
+Today, the project is in use for its portability, reliability, and deployment speed (it's a FreeBSD system after all :rocket:).
 
 # Software installation
 1. Install FreeBSD, use ZFS as a file system (leave zroot as a pool name), enable Unbound as your local DNS resolver.
