@@ -62,7 +62,7 @@ Would like to try out PyVM? Check out the docs: https://github.com/yaroslav-gwit
  - Add support for a Global DNS, using NSD DNS server from NLnet Labs (creator of Unbound).
  - Create an API, to be able to use this project at scale (based on FastAPI).
  - Create a simple web dashboard based on React, to display number and status of hosts/VMs, system health, etc.
- - Create a man-like and PDF documentation, for the offline use.
+ - Create a man-like documentation, for the offline use.
  - ZFS pull-type replication implementation (only push-type is ready at the moment).
  - "Distributed" backup types: spread VMs across the pool of nodes for better data protection. At the moment only simple type backups are supported - VMs from multiple nodes are replicated to one (or few) backup server(s).
  - High availability options for the VMs or hoster nodes (something similar to CARP failover with OPNSense/pfSense).
