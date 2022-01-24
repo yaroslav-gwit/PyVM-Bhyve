@@ -67,10 +67,10 @@ Would like to try out PyVM? Check out the docs: https://github.com/yaroslav-gwit
  - "Distributed" backup types: spread VMs across the pool of nodes for better data protection. At the moment only simple type backups are supported - VMs from multiple nodes are replicated to one (or few) backup server(s).
  - High availability options for the VMs or hoster nodes (something similar to CARP failover with OPNSense/pfSense).
  - "Hot" spare backup node automatic takeover in case if one of the production nodes is down.
- - Read the book about PF, and keep up with the best practices.
- - Better PF integration: add a flag to `pyvm` to allow traffic between a group of VMs.
- - Add ACLs or gather VMs into groups (by user, group) etc. Suggestions are welcome, but the idea here is to allow certain VMs to talk to one another if they are in the same group: this will lay a great foundation for a quick deployment of isolated clusters - Kubernetes, GlusterFS, Docker Swarm, etc.
- - FreeBSD tuning and ZFS tuning.
+ - Learn more about PF, and keep up with the best practices.
+ - Better PF integration: add a flag to `pyvm` to allow traffic between a group of VMs. Add ACLs or gather VMs into groups (by user, group) etc. Suggestions are welcome, but the idea here is to allow certain VMs to talk to one another if they are in the same group: this will lay a great foundation for a quick deployment of isolated clusters - Kubernetes, GlusterFS, Docker Swarm, etc.
+ - FreeBSD tuning.
+ - ZFS tuning.
  - Intergration with HAProxy Manager, to provide an easy way to proxy HTTP/TCP traffic to the backend VMs.
  - Develop a support package offering for the "bigger players". This will allow me to dedicate more time for this project.
 
