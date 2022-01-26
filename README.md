@@ -73,6 +73,7 @@ Would like to try out PyVM? Check out the docs: https://github.com/yaroslav-gwit
  - ZFS tuning.
  - Intergration with HAProxy Manager, to provide an easy way to proxy HTTP/TCP traffic to the backend VMs.
  - Develop a support package offering for the "bigger players". This will allow me to dedicate more time for this project.
+ - Jail support will be coming at some point this year too.
 
 ### Nice to have (but not a priority)
  - TUI for the console: it's nice to be able to navigate a terminal interface using arrows and enter/space keys, so you don't have to remember all of the commands that are involved in the process.
