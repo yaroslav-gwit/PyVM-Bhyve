@@ -61,11 +61,13 @@ def hostinfo(dryrun = False):
     backupStatus = host_info_dict["backup_server_endpoint"]
 
     if re.match(r"^Local", backupStatus):
-        backupStatus = "Local only"
+        backupStatus = "Local only\nAsdf"
     else:
         backupStatus = "Remote and local. Server: " + backupStatus
 
-    hostTable = [["HostName", "FreeRAM", "Uptime", "RunningVMs", "ZfsArcSize", "ZfsStatus", "ZfsFree", "BackupStatus", ], [HostName, FreeRam, Uptime, numberOfRunningVMs, arcSize, zfsStatus, zfsFree, backupStatus, ]]
+    hostTable = [   ["HostName", "FreeRAM", "Uptime", "RunningVMs", "ZfsArcSize", "ZfsStatus", "ZfsFree", "BackupStatus", ],
+                    [HostName, FreeRam, Uptime, numberOfRunningVMs, arcSize, zfsStatus, zfsFree, backupStatus, ]
+                ]
     return tabulate(hostTable, headers="firstrow", tablefmt="fancy_grid", )
     ### EOF_HOST_TABLE ###
 
