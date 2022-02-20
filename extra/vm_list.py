@@ -61,7 +61,7 @@ def hostinfo(dryrun = False):
     backupStatus = host_info_dict["backup_server_endpoint"]
 
     if re.match(r"^Local", backupStatus):
-        backupStatus = "Local only\nAsdf"
+        backupStatus = "Local only"
     else:
         backupStatus = "Remote and local. Server: " + backupStatus
 
