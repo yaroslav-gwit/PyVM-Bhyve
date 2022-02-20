@@ -28,31 +28,32 @@ host_info_dict = ast.literal_eval(host_info_raw)
 def hostinfo():
     ### HOST_TABLE ###
     HostName = os.uname()[1]
-    # FreeRam = str(round((((psutil.virtual_memory()[1]) / 1024) / 1024) / 1024)) + " GB"
+    # RAM
     TotalRam = round(psutil.virtual_memory().total / 1024 / 1024 / 1024)
     FreeRam = round(psutil.virtual_memory().used / 1024 / 1024 / 1024)
     FinalRam = str(FreeRam) + "G/" + str(TotalRam) + "G"
+    # Uptime
     Uptime = time_date_converter.function(uptime._uptime_posix())
-
+    # Number of running VMs
     if exists("/dev/vmm/"):
         command = "ls /dev/vmm/"
         shell_command = subprocess.check_output(command, shell=True)
         numberOfRunningVMs = len(shell_command.decode("utf-8").split())
     else:
         numberOfRunningVMs = "0"
-
+    # ARC size
     command = "top | grep -i arc | awk '{ print $2 }'"
     shell_command = subprocess.check_output(command, shell=True)
     arcSize = shell_command.decode("utf-8").split()[0]
-
+    # Zpool status
     command = "zpool status | grep zroot | grep -v pool | awk '{ print $2 }'"
     shell_command = subprocess.check_output(command, shell=True)
     zfsStatus = shell_command.decode("utf-8").split()[0]
-
+    # Datasets free space
     command = "zfs list | grep -G 'zroot/ROOT' | head -1 | awk '{ print $3 }'"
     shell_command = subprocess.check_output(command, shell=True)
     zfsFree = shell_command.decode("utf-8").split()[0]
-    
+    # Backup status
     backupStatus = host_info_dict["backup_server_endpoint"]
 
     if re.match(r"^Local", backupStatus):
