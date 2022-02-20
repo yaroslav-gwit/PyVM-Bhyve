@@ -29,8 +29,9 @@ def hostinfo():
     ### HOST_TABLE ###
     HostName = os.uname()[1]
     # FreeRam = str(round((((psutil.virtual_memory()[1]) / 1024) / 1024) / 1024)) + " GB"
-    
-    FreeRam = psutil.virtual_memory()
+    TotalRam = psutil.virtual_memory().total
+    FreeRam = psutil.virtual_memory().available
+    FinalRam = str(FreeRam) + "G/" + str(TotalRam) + "G"
     Uptime = time_date_converter.function(uptime._uptime_posix())
 
     if exists("/dev/vmm/"):
@@ -59,8 +60,8 @@ def hostinfo():
     else:
         backupStatus = "Remote and local. Server: " + backupStatus
 
-    hostTable = [   ["HostName", "FreeRAM", "Uptime", "RunningVMs", "ZfsArcSize", "ZfsStatus", "ZfsFree", "BackupStatus", ],
-                    [HostName, FreeRam, Uptime, numberOfRunningVMs, arcSize, zfsStatus, zfsFree, backupStatus, ]
+    hostTable = [   ["HostName", "RAM", "Uptime", "RunningVMs", "ZfsArcSize", "ZfsStatus", "ZfsFree", "BackupStatus", ],
+                    [HostName, FinalRam, Uptime, numberOfRunningVMs, arcSize, zfsStatus, zfsFree, backupStatus, ]
                 ]
     return tabulate(hostTable, headers="firstrow", tablefmt="fancy_grid", )
     ### EOF_HOST_TABLE ###
