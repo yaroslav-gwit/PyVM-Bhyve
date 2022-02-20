@@ -29,8 +29,8 @@ def hostinfo():
     ### HOST_TABLE ###
     HostName = os.uname()[1]
     # FreeRam = str(round((((psutil.virtual_memory()[1]) / 1024) / 1024) / 1024)) + " GB"
-    TotalRam = psutil.virtual_memory().total
-    FreeRam = psutil.virtual_memory().available
+    TotalRam = psutil.virtual_memory().total / 1024 / 1024 / 1024
+    FreeRam = psutil.virtual_memory().used / 1024 / 1024 / 1024
     FinalRam = str(FreeRam) + "G/" + str(TotalRam) + "G"
     Uptime = time_date_converter.function(uptime._uptime_posix())
 
