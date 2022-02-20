@@ -25,14 +25,11 @@ with open("/root/bin/host.info", 'r') as file_object:
     host_info_raw = file_object.read()
 host_info_dict = ast.literal_eval(host_info_raw)
 
-def hostinfo(dryrun = False):
-    # if dryrun == False:
-        # print("PRODUCTION!!!")
-        # subprocess.run("bash ./bashHelpers/preRunHost.sh", shell=True, stdout=None)
-
+def hostinfo():
     ### HOST_TABLE ###
     HostName = os.uname()[1]
-    FreeRam = str(round((((psutil.virtual_memory()[1]) / 1024) / 1024) / 1024)) + " GB"
+    # FreeRam = str(round((((psutil.virtual_memory()[1]) / 1024) / 1024) / 1024)) + " GB"
+    FreeRam = psutil.virtual_memory()
     Uptime = time_date_converter.function(uptime._uptime_posix())
 
     if exists("/dev/vmm/"):
@@ -54,14 +51,10 @@ def hostinfo(dryrun = False):
     shell_command = subprocess.check_output(command, shell=True)
     zfsFree = shell_command.decode("utf-8").split()[0]
     
-    # command = "grep backup_server_endpoint /root/bin/host.info | awk '{ print $2 }'"
-    # shell_command = subprocess.check_output(command, shell=True)
-    # backupStatus = shell_command.decode("utf-8").split()[0]
-
     backupStatus = host_info_dict["backup_server_endpoint"]
 
     if re.match(r"^Local", backupStatus):
-        backupStatus = "Local only\nAsdf"
+        backupStatus = "Local only"
     else:
         backupStatus = "Remote and local. Server: " + backupStatus
 
@@ -71,11 +64,7 @@ def hostinfo(dryrun = False):
     return tabulate(hostTable, headers="firstrow", tablefmt="fancy_grid", )
     ### EOF_HOST_TABLE ###
 
-def vmlist(dryrun = False):
-    # if dryrun == False:
-        # print("PRODUCTION!!!")
-        # subprocess.run("bash ./bashHelpers/preRunVm.sh", shell=True, stdout=None)
-
+def vmlist():
     ### VM_TABLE ###
     vmColumnNames = []
     zfs_datasets = ["zroot/vm-encrypted", "zroot/vm-unencrypted"]
