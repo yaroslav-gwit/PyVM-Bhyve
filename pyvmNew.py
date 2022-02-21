@@ -10,13 +10,11 @@ import subprocess
 # from extra import vm_mass_operations
 # from extra import vm_deploy
 # from extra import vm_backups
-import cli.vm.list as vm_list_cli
-import cli.vm.deploy as vm_deploy_cli
+from cli.vm import vm
 
 """ Section below is responsible for the CLI input/output """
 app = typer.Typer(context_settings=dict(max_content_width=800))
-app.add_typer(vm_list_cli.app, name="users")
-app.add_typer(vm_deploy_cli.app, name="items")
+app.add_typer(vm.app, name="vm")
 
 
 # @app.command()

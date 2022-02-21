@@ -1,1 +1,3 @@
 .idea/
+cli/__pycache__/
+cli/vm/__pycache__/
