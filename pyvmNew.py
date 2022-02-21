@@ -21,7 +21,7 @@ def vmlist(json: bool = typer.Option(False, help="Output json instead of a table
     Example: hoster vmlist
     """
 
-    print("Hello from few pyvm!")
+    print("Hello this is VM List!")
 
 
 @app.command()
@@ -30,7 +30,7 @@ def vmdeploy(quick: bool = typer.Option(True, help="Clone existing template ZFS 
     Example: hoster vmdeploy
     """
 
-    print("Hello from few pyvm!")
+    print("Hello this is VM Deploy")
 
 
 
