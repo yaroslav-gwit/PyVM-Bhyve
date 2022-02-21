@@ -2,7 +2,6 @@ import typer
 
 app = typer.Typer()
 
-
 @app.command()
 def create(item: str):
     typer.echo(f"Creating item: {item}")
