@@ -27,53 +27,53 @@ with open("/root/bin/host.info", 'r') as file_object:
 host_info_dict = ast.literal_eval(host_info_raw)
 
 
-class HostInfoTable:
+class HostInfo:
     def __init__(self):
-        print("This will be a VmListTable class")
+        # Hostname
+        self.hostName = os.uname()[1]
 
-    def tableOutput():
-        ### HOST_TABLE ###
-        HostName = os.uname()[1]
         # RAM
-        TotalRam = round(psutil.virtual_memory().total / 1024 / 1024 / 1024)
-        FreeRam = round(psutil.virtual_memory().used / 1024 / 1024 / 1024)
-        FinalRam = str(FreeRam) + "G/" + str(TotalRam) + "G"
+        self.totalRam = round(psutil.virtual_memory().total / 1024 / 1024 / 1024)
+        self.freeRam = round(psutil.virtual_memory().used / 1024 / 1024 / 1024)
+        self.finalRam = str(FreeRam) + "G/" + str(TotalRam) + "G"
+
         # Uptime
-        Uptime = time_date_converter.function(uptime._uptime_posix())
+        self.uptime = time_date_converter.function(uptime._uptime_posix())
+
         # Number of running VMs
         if exists("/dev/vmm/"):
             command = "ls /dev/vmm/"
             shell_command = subprocess.check_output(command, shell=True)
-            numberOfRunningVMs = len(shell_command.decode("utf-8").split())
+            self.numberOfRunningVMs = len(shell_command.decode("utf-8").split())
         else:
-            numberOfRunningVMs = "0"
+            self.numberOfRunningVMs = "0"
+
         # ARC size
         command = "top | grep -i arc | awk '{ print $2 }'"
         shell_command = subprocess.check_output(command, shell=True)
-        arcSize = shell_command.decode("utf-8").split()[0]
+        self.arcSize = shell_command.decode("utf-8").split()[0]
+
         # Zpool status
         command = "zpool status | grep zroot | grep -v pool | awk '{ print $2 }'"
         shell_command = subprocess.check_output(command, shell=True)
-        zfsStatus = shell_command.decode("utf-8").split()[0]
+        self.zfsStatus = shell_command.decode("utf-8").split()[0]
+
         # Datasets free space
         command = "zfs list | grep -G 'zroot/ROOT' | head -1 | awk '{ print $3 }'"
         shell_command = subprocess.check_output(command, shell=True)
-        zfsFree = shell_command.decode("utf-8").split()[0]
+        self.zfsFree = shell_command.decode("utf-8").split()[0]
 
+
+    def tableOutput(self):
         hostTable = [   ["HostName", "RAM", "Uptime", "RunningVMs", "ZfsArcSize", "ZfsStatus", "ZfsFree", ],
-                        [HostName, FinalRam, Uptime, numberOfRunningVMs, arcSize, zfsStatus, zfsFree, ]
+                        [self.hostName, self.finalRam, self.uptime, self.numberOfRunningVMs, self.arcSize, self.zfsStatus, self.zfsFree, ]
                     ]
         # return tabulate(hostTable, headers="firstrow", tablefmt="fancy_grid", )
         print(tabulate(hostTable, headers="firstrow", tablefmt="fancy_grid", ))
 
-
-
-class HostInfoJson:
-    def __init__(self):
-        print("This will be VmListJson class")
-    
-    def jsonOutput():
+    def jsonOutput(self):
         print("This would be a JSON output")
+
 
 
 """ Section below is responsible for the CLI input/output """
@@ -85,9 +85,9 @@ def info(json: bool = typer.Option(False, help="Output json instead of a table")
     Example: hoster host info
     """
     if json:
-        HostInfoJson.jsonOutput()
+        HostInfo.jsonOutput()
     else:
-        HostInfoTable.tableOutput()
+        HostInfo.tableOutput()
 
 """ If this file is executed from the command line, activate Typer """
 if __name__ == "__main__":
