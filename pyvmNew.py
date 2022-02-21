@@ -11,10 +11,12 @@ import subprocess
 # from extra import vm_deploy
 # from extra import vm_backups
 from cli.vm import vm
+from cli.host import host
 
 """ Section below is responsible for the CLI input/output """
 app = typer.Typer(context_settings=dict(max_content_width=800))
 app.add_typer(vm.app, name="vm")
+app.add_typer(host.app, name="host")
 
 
 # @app.command()
