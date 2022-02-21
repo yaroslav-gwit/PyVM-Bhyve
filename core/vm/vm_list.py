@@ -19,7 +19,7 @@ from tabulate import tabulate
 from natsort import natsorted
 
 # Own functions
-import time_date_converter
+from core import time_date_converter
 from core.dataset import dataset_list
 
 with open("/root/bin/host.info", 'r') as file_object:
