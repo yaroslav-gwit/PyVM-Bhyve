@@ -5,11 +5,11 @@ import os
 import subprocess
 
 # Own libraries
-from extra import vm_list
-from extra import vm_operations
-from extra import vm_mass_operations
-from extra import vm_deploy
-from extra import vm_backups
+# from extra import vm_list
+# from extra import vm_operations
+# from extra import vm_mass_operations
+# from extra import vm_deploy
+# from extra import vm_backups
 
 """ Section below is responsible for the CLI input/output """
 app = typer.Typer(context_settings=dict(max_content_width=800))
