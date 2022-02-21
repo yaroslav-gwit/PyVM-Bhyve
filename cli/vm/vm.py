@@ -14,7 +14,10 @@ def list(json: bool = typer.Option(False, help="Output json instead of a table")
     """
     Example: hoster vm list
     """
-    vm_list
+    if json:
+        vm_list.VmListJson()
+    else:
+        vm_list.VmListTable()
 
 """ If this file is executed from the command line, activate Typer """
 if __name__ == "__main__":
