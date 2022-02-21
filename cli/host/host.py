@@ -63,8 +63,8 @@ class HostInfoTable:
         hostTable = [   ["HostName", "RAM", "Uptime", "RunningVMs", "ZfsArcSize", "ZfsStatus", "ZfsFree", ],
                         [HostName, FinalRam, Uptime, numberOfRunningVMs, arcSize, zfsStatus, zfsFree, ]
                     ]
-        return tabulate(hostTable, headers="firstrow", tablefmt="fancy_grid", )
-        ### EOF_HOST_TABLE ###
+        # return tabulate(hostTable, headers="firstrow", tablefmt="fancy_grid", )
+        print(tabulate(hostTable, headers="firstrow", tablefmt="fancy_grid", ))
 
 
 
