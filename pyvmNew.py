@@ -21,3 +21,9 @@ def vmlist(json: bool = typer.Option(False, help="Output json instead of a table
     """
 
     print("Hello from few pyvm!")
+
+
+
+""" If this file is executed from the command line, activate Typer """
+if __name__ == "__main__":
+    app()
