@@ -22,8 +22,8 @@ from tabulate import tabulate
 from natsort import natsorted
 
 # Own functions
-from core import time_date_converter
-from core.dataset import dataset_list
+# from core import time_date_converter
+# from core.dataset import dataset_list
 
 with open("/root/bin/host.info", 'r') as file_object:
     host_info_raw = file_object.read()
