@@ -95,7 +95,7 @@ class VmList:
             if exists("/" + ds + "/"):
                 _dataset_listing = listdir("/" + ds + "/")
                 for vm_directory in _dataset_listing:
-                    if exists("/" + ds + "/" + vm_directory + "/vm.config"):
+                    if exists("/" + ds + "/" + vm_directory + "/vm_config.json"):
                         vmColumnNames.append(vm_directory)
             else:
                 print("Please create 2 zfs datasets: " + zfs_datasets_list)
