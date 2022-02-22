@@ -99,9 +99,9 @@ class VmList:
             else:
                 state = "🔴"
             if CoreChecks(vm_name).vm_is_encrypted():
-                state = state + " 🔒"
+                state = state + "🔒"
             if CoreChecks(vm_name).vm_in_production():
-                state = state + " 🔁 📀 💾"
+                state = state + "🔁💾"
             vmColumnState.append(state)
 
 
