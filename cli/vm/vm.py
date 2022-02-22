@@ -165,14 +165,14 @@ class VmList:
                 disk_size = shell_command_size.decode("utf-8").split()[0]
                 disk_used = shell_command_used.decode("utf-8").split()[0]
                 final_output = disk_used + "/" + disk_size
-                vmColumnDiskSize.append(final_output)
+                vmColumnOsDisk.append(final_output)
             # elif exists("/zroot/vm-unencrypted/" + vm_name + "/disk0.img"):
             #     command = "ls -ahl /zroot/vm-unencrypted/" + vm_name + "/ | grep disk0.img | awk '{ print $5 }'"
             #     shell_command = subprocess.check_output(command, shell=True)
             #     disk_size = shell_command.decode("utf-8").split()[0]
             #     vmColumnDiskSize.append(disk_size)
             else:
-                vmColumnDiskSize.append("-")
+                vmColumnOsDisk.append("-")
     
     
         vmColumnDiskUsed = []
