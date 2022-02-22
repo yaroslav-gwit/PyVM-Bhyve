@@ -85,9 +85,9 @@ def info(json: bool = typer.Option(False, help="Output json instead of a table")
     Example: hoster host info
     """
     if json:
-        HostInfo.jsonOutput()
+        HostInfo().jsonOutput()
     else:
-        HostInfo.tableOutput()
+        HostInfo().tableOutput()
 
 """ If this file is executed from the command line, activate Typer """
 if __name__ == "__main__":
