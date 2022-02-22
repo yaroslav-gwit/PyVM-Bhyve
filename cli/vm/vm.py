@@ -33,21 +33,21 @@ host_info_dict = ast.literal_eval(host_info_raw)
 class VmList:
     def __init__(self):
         self.zfs_datasets = dataset.DatasetList().datasets
+        
         vmColumnNames = []
-        zfs_datasets = []
+        zfs_datasets_list = []
         for dataset in self.zfs_datasets["datasets"]:
             if dataset["type"] == "zfs":
-                zfs_datasets.append(dataset["zfs_path"])
+                zfs_datasets_list.append(dataset["zfs_path"])
 
-        # zfs_datasets = ["zroot/vm-encrypted", "zroot/vm-unencrypted"]
-        for dataset in zfs_datasets:
+        for dataset in zfs_datasets_list:
             if exists("/" + dataset + "/"):
                 _dataset_listing = listdir("/" + dataset + "/")
                 for vm_directory in _dataset_listing:
                     if exists("/" + dataset + "/" + vm_directory + "/vm.config"):
                         vmColumnNames.append(vm_directory)
             else:
-                print("Please create 2 zfs datasets: " + zfs_datasets)
+                print("Please create 2 zfs datasets: " + zfs_datasets_list)
                 sys.exit(1)
             
         self.vmColumnNames = natsorted(vmColumnNames)
