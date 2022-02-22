@@ -74,7 +74,7 @@ class VmConfigs:
                 vm_info_dict = json.loads(vm_info_raw)
                 continue        
             elif ds == self.zfs_datasets["datasets"][-1] and not exists(vm_config):
-                print("Sorry, config file was not found for " + self.vm_name)
+                print("Sorry, config file was not found for " + self.vm_name + " path: " + vm_config)
                 sys.exit(1)
         
         return vm_info_dict
