@@ -77,7 +77,7 @@ class VmList:
             runningVMs = []
         for vm in vmColumnNames:
             if vm in runningVMs:
-                vmColumnStates.append("🟢")
+                vmColumnStates.append("🟢🔒")
             else:
                 vmColumnStates.append("🔴")
             
