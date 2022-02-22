@@ -29,7 +29,6 @@ with open("/root/bin/host.info", 'r') as file_object:
     host_info_raw = file_object.read()
 host_info_dict = ast.literal_eval(host_info_raw)
 
-tabulate.WIDE_CHARS_MODE = False
 
 class VmList:
     def __init__(self):
