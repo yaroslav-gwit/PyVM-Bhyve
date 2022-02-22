@@ -15,9 +15,6 @@ from tabulate import tabulate
 # Own libs
 from cli import time_date_converter
 
-with open("/root/bin/host.info", 'r') as file_object:
-    host_info_raw = file_object.read()
-host_info_dict = ast.literal_eval(host_info_raw)
 
 
 class HostInfo:
