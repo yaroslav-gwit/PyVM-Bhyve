@@ -4,13 +4,14 @@
     "loader": "uefi",
     "live_status": "production",
     "os_type": "freebsd13ufs",
+    "os_comment": "FreeBSD 13",
     "owner": "Yaroslav",
 
     "networks": [
         {
             "network_adaptor_type": "virtio-net",
             "network_bridge": "internal",
-            "network_macs": "58:9c:fc:5d:1c:71",
+            "network_mac": "58:9c:fc:5d:1c:71",
             "ip_address": "10.0.101.4",
             "comment": "Internal Network"
         }

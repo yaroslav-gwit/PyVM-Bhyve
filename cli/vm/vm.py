@@ -260,6 +260,7 @@ class VmList:
 
         return tabulate(vmTableHeader, headers="firstrow", tablefmt="fancy_grid", showindex=range(1, len(vmColumnNames) + 1))
 
+    
     def json_output(self):
         vm_list_dict = {}
         vm_list_dict["vm_list"] = self.vmColumnNames
