@@ -155,18 +155,22 @@ class VmList:
                 vmColumnVncPassword.append("-")
 
 
-        vmColumnDiskSize = []
+        vmColumnOsDisk = []
         for vm_name in vmColumnNames:
             if exists("/zroot/vm-encrypted/" + vm_name + "/disk0.img"):
-                command = "ls -ahl /zroot/vm-encrypted/" + vm_name + "/ | grep disk0.img | awk '{ print $5 }'"
-                shell_command = subprocess.check_output(command, shell=True)
-                disk_size = shell_command.decode("utf-8").split()[0]
-                vmColumnDiskSize.append(disk_size)
-            elif exists("/zroot/vm-unencrypted/" + vm_name + "/disk0.img"):
-                command = "ls -ahl /zroot/vm-unencrypted/" + vm_name + "/ | grep disk0.img | awk '{ print $5 }'"
-                shell_command = subprocess.check_output(command, shell=True)
-                disk_size = shell_command.decode("utf-8").split()[0]
-                vmColumnDiskSize.append(disk_size)
+                command_size = "ls -ahl /zroot/vm-encrypted/" + vm_name + "/ | grep disk0.img | awk '{ print $5 }'"
+                command_used = "du -h /zroot/vm-encrypted/" + vm_name + "/disk0.img | awk '{ print $1 }'"
+                shell_command_size = subprocess.check_output(command_size, shell=True)
+                shell_command_used = subprocess.check_output(command_used, shell=True)
+                disk_size = shell_command_size.decode("utf-8").split()[0]
+                disk_used = shell_command_used.decode("utf-8").split()[0]
+                final_output = disk_used + "/" + disk_size
+                vmColumnDiskSize.append(final_output)
+            # elif exists("/zroot/vm-unencrypted/" + vm_name + "/disk0.img"):
+            #     command = "ls -ahl /zroot/vm-unencrypted/" + vm_name + "/ | grep disk0.img | awk '{ print $5 }'"
+            #     shell_command = subprocess.check_output(command, shell=True)
+            #     disk_size = shell_command.decode("utf-8").split()[0]
+            #     vmColumnDiskSize.append(disk_size)
             else:
                 vmColumnDiskSize.append("-")
     
@@ -256,10 +260,10 @@ class VmList:
                 vmColumnDescription.append("-")
 
 
-        vmTableHeader = [["Name", "State", "CPUs", "RAM", "VncPort", "VncPassword", "DiskSize", "DiskUsed", "VmIpAddr", "OsType", "VmUptime", "VmDescription", ]]
+        vmTableHeader = [["Name", "State", "CPUs", "RAM", "VncPort", "VncPassword", "OS Disk", "VmIpAddr", "OsType", "VmUptime", "VmDescription", ]]
 
         for vm_index in range(len(vmColumnNames)):
-            vmTableHeader.append([ vmColumnNames[vm_index], vmColumnState[vm_index], vmColumnCPU[vm_index], vmColumnRAM[vm_index], vmColumnVncPort[vm_index], vmColumnVncPassword[vm_index], vmColumnDiskSize[vm_index], vmColumnDiskUsed[vm_index], vmColumnIpAddress[vm_index], vmColumnOsType[vm_index], vmColumnUptime[vm_index], vmColumnDescription[vm_index], ])
+            vmTableHeader.append([ vmColumnNames[vm_index], vmColumnState[vm_index], vmColumnCPU[vm_index], vmColumnRAM[vm_index], vmColumnVncPort[vm_index], vmColumnVncPassword[vm_index], vmColumnOsDisk[vm_index], vmColumnIpAddress[vm_index], vmColumnOsType[vm_index], vmColumnUptime[vm_index], vmColumnDescription[vm_index], ])
 
         return tabulate(vmTableHeader, headers="firstrow", tablefmt="fancy_grid", showindex=range(1, len(vmColumnNames) + 1))
 
