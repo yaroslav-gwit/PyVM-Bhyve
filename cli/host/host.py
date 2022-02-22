@@ -84,7 +84,7 @@ class HostInfo:
         jsonOutputDict["zfs_free"] = self.zfsFree
 
         #return json.dumps(jsonOutputDict)
-        print(json.dumps(jsonOutputDict))
+        print(json.dumps(jsonOutputDict, ident=4))
 
 
 """ Section below is responsible for the CLI input/output """
