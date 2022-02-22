@@ -50,6 +50,20 @@ class CoreChecks:
             if exists(ds["mount_path"]+self.vm_name):
                 return ds["encrypted"]
 
+    
+    def vm_in_production(self):
+        for ds in self.zfs_datasets["datasets"]:
+            vm_config = ds["mount_path"]+self.vm_name+"/vm.config"
+            if exists(vm_config):
+                with open(vm_config, 'r') as file:
+                    vm_info_raw = file.read()
+                vm_info_dict = ast.literal_eval(vm_info_raw)
+        
+        if vm_info_dict["live_status"] == "Production" or vm_info_dict["live_status"] == "production":
+            return True
+        else:
+            return False
+
 
 class VmList:
     def __init__(self):
@@ -88,6 +102,8 @@ class VmList:
                 state = "🔴"
             if CoreChecks(vm_name).vm_is_encrypted():
                 state = state + "🔒"
+            if CoreChecks(vm_name).vm_in_production():
+                state = state + "🚀"
             vmColumnState.append(state)
 
 

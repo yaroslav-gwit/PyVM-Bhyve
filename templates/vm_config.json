@@ -4,6 +4,7 @@
     "loader": "uefi",
     "live_status": "production",
     "os_type": "freebsd13ufs",
+    "owner": "Yaroslav",
 
     "networks": [
         {
