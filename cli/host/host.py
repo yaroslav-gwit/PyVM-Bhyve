@@ -1,16 +1,9 @@
 #!bin/python
 
 # Native Python functions
-import sys
 import os
 import subprocess
-import copy
-import socket
-import platform
-import re
 from os.path import exists
-from os import listdir
-import ast
 import json
 
 # Installed packages/modules
@@ -18,7 +11,6 @@ import typer
 import uptime
 import psutil
 from tabulate import tabulate
-from natsort import natsorted
 
 # Own libs
 from cli import time_date_converter
