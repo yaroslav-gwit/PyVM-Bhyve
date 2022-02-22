@@ -72,10 +72,12 @@ class VmConfigs:
                 with open(vm_config, 'r') as file:
                     vm_info_raw = file.read()
                 vm_info_dict = json.loads(vm_info_raw)
-                return vm_info_dict
-            else:
+                continue        
+            elif ds == self.zfs_datasets["datasets"][-1] and not exists(vm_config):
                 print("Sorry, config file was not found for " + self.vm_name)
                 sys.exit(1)
+        
+        return vm_info_dict
     
     
     def vm_config_wrire(self):
