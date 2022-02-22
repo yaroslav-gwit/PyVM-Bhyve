@@ -1,9 +1,7 @@
 #!bin/python
-import typer
-from cli.vm import vmdeploy
 
-##########################################################
 # Native Python functions
+import typer
 import sys
 import os
 import subprocess
@@ -23,6 +21,7 @@ from tabulate import tabulate
 from natsort import natsorted
 
 # Own functions
+from cli.vm import vmdeploy
 from cli.host import dataset
 
 with open("/root/bin/host.info", 'r') as file_object:
@@ -58,7 +57,6 @@ class CoreChecks:
                 with open(vm_config, 'r') as file:
                     vm_info_raw = file.read()
                 vm_info_dict = ast.literal_eval(vm_info_raw)
-        
         if vm_info_dict["live_status"] == "Production" or vm_info_dict["live_status"] == "production":
             return True
         else:
@@ -103,7 +101,7 @@ class VmList:
             if CoreChecks(vm_name).vm_is_encrypted():
                 state = state + "🔒"
             if CoreChecks(vm_name).vm_in_production():
-                state = state + "🚀"
+                state = state + "🏁"
             vmColumnState.append(state)
 
 
@@ -182,31 +180,10 @@ class VmList:
                 disk_used = shell_command_used.decode("utf-8").split()[0]
                 final_output = disk_used + "/" + disk_size
                 vmColumnOsDisk.append(final_output)
-            # elif exists("/zroot/vm-unencrypted/" + vm_name + "/disk0.img"):
-            #     command = "ls -ahl /zroot/vm-unencrypted/" + vm_name + "/ | grep disk0.img | awk '{ print $5 }'"
-            #     shell_command = subprocess.check_output(command, shell=True)
-            #     disk_size = shell_command.decode("utf-8").split()[0]
-            #     vmColumnDiskSize.append(disk_size)
             else:
                 vmColumnOsDisk.append("-")
     
     
-        vmColumnDiskUsed = []
-        for vm_name in vmColumnNames:
-            if exists("/zroot/vm-encrypted/" + vm_name + "/disk0.img"):
-                command = "du -h /zroot/vm-encrypted/" + vm_name + "/disk0.img | awk '{ print $1 }'"
-                shell_command = subprocess.check_output(command, shell=True)
-                disk_size = shell_command.decode("utf-8").split()[0]
-                vmColumnDiskUsed.append(disk_size)
-            elif exists("/zroot/vm-unencrypted/" + vm_name + "/disk0.img"):
-                command = "du -h /zroot/vm-encrypted/" + vm_name + "/disk0.img | awk '{ print $1 }'"
-                shell_command = subprocess.check_output(command, shell=True)
-                disk_size = shell_command.decode("utf-8").split()[0]
-                vmColumnDiskUsed.append(disk_size)
-            else:
-                vmColumnDiskUsed.append("-")
-
-        
         vmColumnIpAddress = []
         for vm_name in vmColumnNames:
             if exists("/zroot/vm-encrypted/" + vm_name + "/vm.config"):
