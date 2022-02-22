@@ -69,8 +69,8 @@ class HostInfo:
         hostTable = [   ["HostName", "RAM", "Uptime", "RunningVMs", "ZfsArcSize", "ZfsStatus", "ZfsFree", ],
                         [self.hostName, self.finalRam, self.uptime, self.numberOfRunningVMs, self.arcSize, self.zfsStatus, self.zfsFree, ]
                     ]
-        # return tabulate(hostTable, headers="firstrow", tablefmt="fancy_grid", )
-        print(tabulate(hostTable, headers="firstrow", tablefmt="fancy_grid", ))
+        return tabulate(hostTable, headers="firstrow", tablefmt="fancy_grid", )
+
 
     def jsonOutput(self):
         jsonOutputDict = {}
@@ -83,8 +83,8 @@ class HostInfo:
         jsonOutputDict["zfs_status"] = self.zfsStatus
         jsonOutputDict["zfs_free"] = self.zfsFree
 
-        #return json.dumps(jsonOutputDict)
-        print(json.dumps(jsonOutputDict, indent=4))
+        return json.dumps(jsonOutputDict, indent=4)
+
 
 
 """ Section below is responsible for the CLI input/output """
@@ -96,9 +96,9 @@ def info(json: bool = typer.Option(False, help="Output json instead of a table")
     Example: hoster host info
     """
     if json:
-        HostInfo().jsonOutput()
+        print(HostInfo().jsonOutput())
     else:
-        HostInfo().tableOutput()
+        print(HostInfo().tableOutput())
 
 """ If this file is executed from the command line, activate Typer """
 if __name__ == "__main__":
