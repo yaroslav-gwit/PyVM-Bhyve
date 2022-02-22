@@ -33,8 +33,6 @@ host_info_dict = ast.literal_eval(host_info_raw)
 class VmList:
     def __init__(self):
         self.zfs_datasets = dataset.DatasetList().datasets
-
-    def table_output(self):
         vmColumnNames = []
         zfs_datasets = []
         for dataset in self.zfs_datasets["datasets"]:
@@ -50,8 +48,12 @@ class VmList:
                         vmColumnNames.append(vm_directory)
             else:
                 print("Please create 2 zfs datasets: " + zfs_datasets)
+                sys.exit(1)
             
-        vmColumnNames = natsorted(vmColumnNames)
+        self.vmColumnNames = natsorted(vmColumnNames)
+
+    def table_output(self):
+        vmColumnNames = self.vmColumnNames
 
         if len(vmColumnNames) < 1:
             print("\nThere are no VMs on this system. To deploy one, use:\n pyvm --vmdeploy\n")
@@ -253,9 +255,11 @@ class VmList:
         return tabulate(vmTableHeader, headers="firstrow", tablefmt="fancy_grid", showindex=range(1, len(vmColumnNames) + 1))
 
     def json_output(self):
-        print("blah")
+        vm_list_dict = {}
+        vm_list_dict["vm_list"] = self.vmColumnNames
+        vm_list_json = json.dumps(vm_list_dict, indent=2)
+        return vm_list_json
 
-##############################################################
 
 """ Section below is responsible for the CLI input/output """
 app = typer.Typer(context_settings=dict(max_content_width=800))
@@ -268,7 +272,7 @@ def list(json: bool = typer.Option(False, help="Output json instead of a table")
     Example: hoster vm list
     """
     if json:
-        vm_list.VmListJson()
+        print(VmList().json_output())
     else:
         print(VmList().table_output())
 
