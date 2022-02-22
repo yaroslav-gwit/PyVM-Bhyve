@@ -51,17 +51,35 @@ class CoreChecks:
 
     
     def vm_in_production(self):
-        for ds in self.zfs_datasets["datasets"]:
-            vm_config = ds["mount_path"]+self.vm_name+"/vm.config"
-            if exists(vm_config):
-                with open(vm_config, 'r') as file:
-                    vm_info_raw = file.read()
-                vm_info_dict = ast.literal_eval(vm_info_raw)
+        vm_info_dict = VmConfigs(self.vm_name).vm_config_read()
         if vm_info_dict["live_status"] == "Production" or vm_info_dict["live_status"] == "production":
             return True
         else:
             return False
 
+
+class VmConfigs:
+    def __init__(self, vm_name):
+        self.vm_name = vm_name
+        self.zfs_datasets = dataset.DatasetList().datasets
+        self.vm_config = "vm_config.json"
+
+    
+    def vm_config_read(self):
+        for ds in self.zfs_datasets["datasets"]:
+            vm_config = ds["mount_path"]+self.vm_name+self.vm_config
+            if exists(vm_config):
+                with open(vm_config, 'r') as file:
+                    vm_info_raw = file.read()
+                vm_info_dict = json.loads(vm_info_raw)
+                return vm_info_dict
+            else:
+                print("Sorry, config file was not found for " + self.vm_name)
+                sys.exit(1)
+    
+    
+    def vm_config_wrire(self):
+        print("This function will write config files to the required directories")
 
 class VmList:
     def __init__(self):
