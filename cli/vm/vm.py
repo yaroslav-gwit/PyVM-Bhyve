@@ -260,7 +260,7 @@ class VmList:
                 vmColumnDescription.append("-")
 
 
-        vmTableHeader = [["Name", "State", "CPUs", "RAM", "VncPort", "VncPassword", "OS Disk", "VmIpAddr", "OsType", "VmUptime", "VmDescription", ]]
+        vmTableHeader = [["Name", "State", "CPUs", "RAM", "VNC Port", "VNC Password", "OS Disk", "Main IP", "OS Type", "Uptime", "Description", ]]
 
         for vm_index in range(len(vmColumnNames)):
             vmTableHeader.append([ vmColumnNames[vm_index], vmColumnState[vm_index], vmColumnCPU[vm_index], vmColumnRAM[vm_index], vmColumnVncPort[vm_index], vmColumnVncPassword[vm_index], vmColumnOsDisk[vm_index], vmColumnIpAddress[vm_index], vmColumnOsType[vm_index], vmColumnUptime[vm_index], vmColumnDescription[vm_index], ])
