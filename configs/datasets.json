@@ -10,7 +10,7 @@
             "type": "zfs",
             "mount_path": "/zroot/vm-unencrypted/",
             "zfs_path": "zroot/vm-unencrypted",
-            "encrypted": true
+            "encrypted": false
         }
     ]
 }

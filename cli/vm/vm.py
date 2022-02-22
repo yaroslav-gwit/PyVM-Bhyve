@@ -29,6 +29,27 @@ with open("/root/bin/host.info", 'r') as file_object:
     host_info_raw = file_object.read()
 host_info_dict = ast.literal_eval(host_info_raw)
 
+class CoreChecks:
+    def __init__(self, vm_name):
+        if not vm_name:
+            print("Please supply a VM name!")
+            sys.exit(1)
+        self.vm_name = vm_name
+        self.zfs_datasets = dataset.DatasetList().datasets
+
+
+    def vm_is_live(self):
+        if exists("/dev/vmm/" + self.vm_name):
+            return True
+        else:
+            return False
+    
+
+    def vm_is_encrypted(self):
+        for ds in self.zfs_datasets["datasets"]:
+            if exists(ds["mount_path"]+self.vm_name):
+                return ds["encrypted"]
+
 
 class VmList:
     def __init__(self):
@@ -59,28 +80,16 @@ class VmList:
             print("\nThere are no VMs on this system. To deploy one, use:\n pyvm --vmdeploy\n")
             exit(0)
 
-        
-        vmColumnEncryption = []
+        vmColumnState = []
         for vm_name in vmColumnNames:
-            if exists("/zroot/vm-encrypted/" + vm_name):
-                vmColumnEncryption.append("Encrypted")
+            if CoreChecks(vm_name).vm_is_live():
+                state = "🟢"
             else:
-                vmColumnEncryption.append("Not encrypted")
+                state = "🔴"
+            if CoreChecks(vm_name).vm_is_encrypted():
+                state = state + "🔒"
+            vmColumnState.append(state)
 
-        
-        vmColumnStates = []
-        if exists("/dev/vmm/"):
-            command = "ls /dev/vmm/ || true"
-            shell_command = subprocess.check_output(command, shell=True)
-            runningVMs = shell_command.decode("utf-8").split()
-        else:
-            runningVMs = []
-        for vm in vmColumnNames:
-            if vm in runningVMs:
-                vmColumnStates.append("🟢🔒")
-            else:
-                vmColumnStates.append("🔴")
-            
 
         vmColumnCPU = []
         for vm_name in vmColumnNames:
@@ -247,10 +256,10 @@ class VmList:
                 vmColumnDescription.append("-")
 
 
-        vmTableHeader = [["Name", "State", "Encryption", "CPUs", "RAM", "VncPort", "VncPassword", "DiskSize", "DiskUsed", "VmIpAddr", "OsType", "VmUptime", "VmDescription", ]]
+        vmTableHeader = [["Name", "State", "CPUs", "RAM", "VncPort", "VncPassword", "DiskSize", "DiskUsed", "VmIpAddr", "OsType", "VmUptime", "VmDescription", ]]
 
         for vm_index in range(len(vmColumnNames)):
-            vmTableHeader.append([ vmColumnNames[vm_index], vmColumnStates[vm_index], vmColumnEncryption[vm_index], vmColumnCPU[vm_index], vmColumnRAM[vm_index], vmColumnVncPort[vm_index], vmColumnVncPassword[vm_index], vmColumnDiskSize[vm_index], vmColumnDiskUsed[vm_index], vmColumnIpAddress[vm_index], vmColumnOsType[vm_index], vmColumnUptime[vm_index], vmColumnDescription[vm_index], ])
+            vmTableHeader.append([ vmColumnNames[vm_index], vmColumnState[vm_index], vmColumnCPU[vm_index], vmColumnRAM[vm_index], vmColumnVncPort[vm_index], vmColumnVncPassword[vm_index], vmColumnDiskSize[vm_index], vmColumnDiskUsed[vm_index], vmColumnIpAddress[vm_index], vmColumnOsType[vm_index], vmColumnUptime[vm_index], vmColumnDescription[vm_index], ])
 
         return tabulate(vmTableHeader, headers="firstrow", tablefmt="fancy_grid", showindex=range(1, len(vmColumnNames) + 1))
 
