@@ -36,15 +36,15 @@ class VmList:
         
         vmColumnNames = []
         zfs_datasets_list = []
-        for dataset in self.zfs_datasets["datasets"]:
-            if dataset["type"] == "zfs":
-                zfs_datasets_list.append(dataset["zfs_path"])
+        for ds in self.zfs_datasets["datasets"]:
+            if ds["type"] == "zfs":
+                zfs_datasets_list.append(ds["zfs_path"])
 
-        for dataset in zfs_datasets_list:
-            if exists("/" + dataset + "/"):
-                _dataset_listing = listdir("/" + dataset + "/")
+        for ds in zfs_datasets_list:
+            if exists("/" + ds + "/"):
+                _dataset_listing = listdir("/" + ds + "/")
                 for vm_directory in _dataset_listing:
-                    if exists("/" + dataset + "/" + vm_directory + "/vm.config"):
+                    if exists("/" + ds + "/" + vm_directory + "/vm.config"):
                         vmColumnNames.append(vm_directory)
             else:
                 print("Please create 2 zfs datasets: " + zfs_datasets_list)
