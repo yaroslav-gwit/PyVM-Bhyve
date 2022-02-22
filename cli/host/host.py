@@ -11,6 +11,7 @@ import re
 from os.path import exists
 from os import listdir
 import ast
+import json
 
 # Installed packages/modules
 import typer
@@ -72,8 +73,18 @@ class HostInfo:
         print(tabulate(hostTable, headers="firstrow", tablefmt="fancy_grid", ))
 
     def jsonOutput(self):
-        print("This would be a JSON output")
+        jsonOutputDict = {}
+        jsonOutputDict["hostname"] = self.hostName
+        jsonOutputDict["free_ram"] = self.freeRam
+        jsonOutputDict["total_ram"] = self.totalRam
+        jsonOutputDict["uptime"] = self.uptime
+        jsonOutputDict["number_of_running_vms"] = self.numberOfRunningVMs
+        jsonOutputDict["zfs_acr_size"] = self.arcSize
+        jsonOutputDict["zfs_status"] = self.zfsStatus
+        jsonOutputDict["zfs_free"] = self.zfsFree
 
+        #return json.dumps(jsonOutputDict)
+        print(json.dumps(jsonOutputDict))
 
 
 """ Section below is responsible for the CLI input/output """
