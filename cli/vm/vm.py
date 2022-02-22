@@ -77,9 +77,9 @@ class VmList:
             runningVMs = []
         for vm in vmColumnNames:
             if vm in runningVMs:
-                vmColumnStates.append("Running")
+                vmColumnStates.append("🟢")
             else:
-                vmColumnStates.append("Stopped")
+                vmColumnStates.append("🔴")
             
 
         vmColumnCPU = []
