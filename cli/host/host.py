@@ -16,7 +16,6 @@ from tabulate import tabulate
 from cli import time_date_converter
 
 
-
 class HostInfo:
     def __init__(self):
         # Hostname
@@ -53,15 +52,15 @@ class HostInfo:
         shell_command = subprocess.check_output(command, shell=True)
         self.zfsFree = shell_command.decode("utf-8").split()[0]
 
-
-    def tableOutput(self):
+    
+    def table_output(self):
         hostTable = [   ["HostName", "RAM", "Uptime", "RunningVMs", "ZfsArcSize", "ZfsStatus", "ZfsFree", ],
                         [self.hostName, self.finalRam, self.uptime, self.numberOfRunningVMs, self.arcSize, self.zfsStatus, self.zfsFree, ]
                     ]
         return tabulate(hostTable, headers="firstrow", tablefmt="fancy_grid", )
 
 
-    def jsonOutput(self):
+    def json_output(self):
         jsonOutputDict = {}
         jsonOutputDict["hostname"] = self.hostName
         jsonOutputDict["free_ram"] = str(self.freeRam) + "G"
@@ -75,9 +74,9 @@ class HostInfo:
         return json.dumps(jsonOutputDict, indent=4)
 
 
-
 """ Section below is responsible for the CLI input/output """
 app = typer.Typer(context_settings=dict(max_content_width=800))
+
 
 @app.command()
 def info(json: bool = typer.Option(False, help="Output json instead of a table")):
@@ -85,9 +84,10 @@ def info(json: bool = typer.Option(False, help="Output json instead of a table")
     Example: hoster host info
     """
     if json:
-        print(HostInfo().jsonOutput())
+        print(HostInfo().json_output())
     else:
-        print(HostInfo().tableOutput())
+        print(HostInfo().table_output())
+
 
 """ If this file is executed from the command line, activate Typer """
 if __name__ == "__main__":
