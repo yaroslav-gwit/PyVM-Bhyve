@@ -75,7 +75,7 @@ class VmConfigs:
                 return vm_info_dict
             elif ds == self.zfs_datasets["datasets"][-1] and not exists(vm_config):
                 print("Sorry, config file was not found for " + self.vm_name + " path: " + vm_config)
-                sys.exit(1)
+                # sys.exit(1)
         
     
     def vm_config_wrire(self):
