@@ -119,7 +119,8 @@ class VmList:
             if CoreChecks(vm_name).vm_is_encrypted():
                 state = state + "🔒"
             if CoreChecks(vm_name).vm_in_production():
-                state = state + "🔁💾"
+                state = state + "🔁"
+                
             vmColumnState.append(state)
 
 
@@ -288,8 +289,8 @@ class VmList:
 
 """ Section below is responsible for the CLI input/output """
 app = typer.Typer(context_settings=dict(max_content_width=800))
-# app.add_typer(vmlist.app, name="list")
 app.add_typer(vmdeploy.app, name="deploy", help="Manage users in the app.")
+# app.add_typer(vmlist.app, name="list")
 
 @app.command()
 def list(json: bool = typer.Option(False, help="Output json instead of a table")):
@@ -300,6 +301,18 @@ def list(json: bool = typer.Option(False, help="Output json instead of a table")
         print(VmList().json_output())
     else:
         print(VmList().table_output())
+
+@app.command()
+def info(vmname: str = typer.Argument(..., help="Print VM config file to the screen")):
+    """
+    Example: hoster vm info test-vm-1
+    """
+    if json:
+        print(VmList().json_output())
+    else:
+        print(VmList().table_output())
+
+
 
 """ If this file is executed from the command line, activate Typer """
 if __name__ == "__main__":
