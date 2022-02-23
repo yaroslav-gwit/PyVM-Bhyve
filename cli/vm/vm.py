@@ -108,7 +108,7 @@ class VmList:
 
         if len(vmColumnNames) < 1:
             print("\nThere are no VMs on this system. To deploy one, use:\n pyvm --vmdeploy\n")
-            exit(0)
+            sys.exit(0)
 
         vmColumnState = []
         for vm_name in vmColumnNames:
