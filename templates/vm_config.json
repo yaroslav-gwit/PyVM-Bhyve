@@ -6,6 +6,7 @@
     "os_type": "freebsd13ufs",
     "os_comment": "FreeBSD 13",
     "owner": "Yaroslav",
+    "parent_host": "hoster-test-0102",
 
     "networks": [
         {
