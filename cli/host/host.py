@@ -53,10 +53,13 @@ class HostInfo:
         shell_command = subprocess.check_output(command, shell=True)
         self.zfsFree = shell_command.decode("utf-8").split()[0]
 
+        # Average Load %
+        self.averageLoad = psutil.getloadavg()[-1] / psutil.cpu_count() * 100
+
     
     def table_output(self):
-        hostTable = [   ["HostName", "RAM", "Uptime", "RunningVMs", "ZfsArcSize", "ZfsStatus", "ZfsFree", ],
-                        [self.hostName, self.finalRam, self.uptime, self.numberOfRunningVMs, self.arcSize, self.zfsStatus, self.zfsFree, ]
+        hostTable = [   ["HostName", "RAM", "Uptime", "RunningVMs", "ZfsArcSize", "ZfsStatus", "ZfsFree", "Average Load"],
+                        [self.hostName, self.finalRam, self.uptime, self.numberOfRunningVMs, self.arcSize, self.zfsStatus, self.zfsFree, self.averageLoad]
                     ]
         return tabulate(hostTable, headers="firstrow", tablefmt="fancy_grid", )
 
@@ -72,6 +75,7 @@ class HostInfo:
         jsonOutputDict["zfs_acr_size"] = self.arcSize
         jsonOutputDict["zfs_status"] = self.zfsStatus
         jsonOutputDict["zfs_free"] = self.zfsFree
+        jsonOutputDict["average_load"] = self.averageLoad
 
         return json.dumps(jsonOutputDict, indent=2)
 
