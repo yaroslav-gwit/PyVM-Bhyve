@@ -73,7 +73,7 @@ class HostInfo:
         jsonOutputDict["zfs_status"] = self.zfsStatus
         jsonOutputDict["zfs_free"] = self.zfsFree
 
-        return json.dumps(jsonOutputDict, indent=4)
+        return json.dumps(jsonOutputDict, indent=2)
 
 
 """ Section below is responsible for the CLI input/output """
