@@ -54,7 +54,7 @@ class HostInfo:
         self.zfsFree = shell_command.decode("utf-8").split()[0]
 
         # Average Load %
-        self.averageLoad = round(psutil.getloadavg()[-1] / psutil.cpu_count() * 100)
+        self.averageLoad = str(round(psutil.getloadavg()[-1] / psutil.cpu_count() * 100)) + "%"
 
     
     def table_output(self):
