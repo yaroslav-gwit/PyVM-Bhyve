@@ -3,3 +3,4 @@ cli/__pycache__/
 cli/vm/__pycache__/
 core/vm/__pycache__/
 core/__pycache__/
+.vscode/
