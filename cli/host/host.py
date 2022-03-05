@@ -64,8 +64,9 @@ class HostInfo:
     def json_output(self):
         jsonOutputDict = {}
         jsonOutputDict["hostname"] = self.hostName
-        jsonOutputDict["free_ram"] = str(self.freeRam) + "G"
         jsonOutputDict["total_ram"] = str(self.totalRam) + "G"
+        jsonOutputDict["used_ram"] = str(self.usedRam) + "G"
+        jsonOutputDict["free_ram"] = str(self.freeRam) + "G"
         jsonOutputDict["uptime"] = self.uptime
         jsonOutputDict["number_of_running_vms"] = self.numberOfRunningVMs
         jsonOutputDict["zfs_acr_size"] = self.arcSize
