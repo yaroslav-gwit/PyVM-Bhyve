@@ -23,7 +23,7 @@ class HostInfo:
 
         # RAM
         self.totalRam = round(psutil.virtual_memory().total / 1024 / 1024 / 1024)
-        self.freeRam = round(psutil.virtual_memory().active / 1024 / 1024 / 1024)
+        self.freeRam = round(psutil.virtual_memory().available / 1024 / 1024 / 1024)
         self.finalRam = str(self.freeRam) + "G/" + str(self.totalRam) + "G"
 
         # Uptime
