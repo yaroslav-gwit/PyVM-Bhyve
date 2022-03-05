@@ -14,22 +14,13 @@ app.add_typer(vm.app, name="vm", help="List, Create, Remove and any do any other
 app.add_typer(host.app, name="host", help="Show or modify the host related information")
 
 
-# @app.command()
-# def vmlist(json: bool = typer.Option(False, help="Output json instead of a table")):
-#     """
-#     Example: hoster vmlist
-#     """
+@app.command()
+def version(json: bool = typer.Option(False, help="JSON output")):
+    """
+    Example: hoster version
+    """
 
-#     print("Hello this is VM List!")
-
-
-# @app.command()
-# def vmdeploy(quick: bool = typer.Option(True, help="Clone existing template ZFS dataset instead of copying over VM image")):
-#     """
-#     Example: hoster vmdeploy
-#     """
-
-#     print("Hello this is VM Deploy")
+    print("Version: development-0.1-alpha")
 
 
 
