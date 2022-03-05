@@ -17,7 +17,7 @@ app.add_typer(host.app, name="host", help="Show or modify the host related infor
 @app.command()
 def version(json: bool = typer.Option(False, help="JSON output")):
     """
-    Example: hoster version
+    Show version and exit
     """
 
     print("Version: development-0.1-alpha")
