@@ -23,8 +23,9 @@ class HostInfo:
 
         # RAM
         self.totalRam = round(psutil.virtual_memory().total / 1024 / 1024 / 1024)
+        self.usedRam = round((psutil.virtual_memory().total-psutil.virtual_memory().available)/ 1024 / 1024 / 1024)
         self.freeRam = round(psutil.virtual_memory().available / 1024 / 1024 / 1024)
-        self.finalRam = str(self.freeRam) + "G/" + str(self.totalRam) + "G"
+        self.finalRam = str(self.usedRam) + "G/" + str(self.totalRam) + "G"
 
         # Uptime
         self.uptime = time_date_converter.function(uptime._uptime_posix())
