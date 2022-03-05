@@ -5,18 +5,13 @@ import os
 import subprocess
 
 # Own libraries
-# from extra import vm_list
-# from extra import vm_operations
-# from extra import vm_mass_operations
-# from extra import vm_deploy
-# from extra import vm_backups
 from cli.vm import vm
 from cli.host import host
 
 """ Section below is responsible for the CLI input/output """
 app = typer.Typer(context_settings=dict(max_content_width=800))
-app.add_typer(vm.app, name="vm", help="This is help for vm")
-app.add_typer(host.app, name="host", help="This is help for host")
+app.add_typer(vm.app, name="vm", help="List, Create, Remove and any do any other VM related operations")
+app.add_typer(host.app, name="host", help="Show or modify the host related information")
 
 
 # @app.command()
