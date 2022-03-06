@@ -29,12 +29,13 @@ with open("/root/bin/host.info", 'r') as file_object:
 host_info_dict = ast.literal_eval(host_info_raw)
 
 class CoreChecks:
-    def __init__(self, vm_name):
+    def __init__(self, vm_name, disk_image_name="disk0.img"):
         if not vm_name:
             print("Please supply a VM name!")
             sys.exit(1)
         self.vm_name = vm_name
         self.zfs_datasets = dataset.DatasetList().datasets
+        self.disk_image_name = disk_image_name
 
 
     def vm_is_live(self):
@@ -56,6 +57,18 @@ class CoreChecks:
             return True
         else:
             return False
+    
+    
+    def disk_exists(self):
+        for ds in self.zfs_datasets["datasets"]:
+            if exists(ds["mount_path"]+self.vm_name+"/"+self.disk_image_name):
+                return True
+    
+    def disk_location(self):
+        for ds in self.zfs_datasets["datasets"]:
+            image_path = ds["mount_path"]+self.vm_name+"/"+self.disk_image_name
+            if exists(image_path):
+                return image_path
 
 
 class VmConfigs:
@@ -156,19 +169,19 @@ class VmList:
         for vm_name in vmColumnNames:
             vm_config = VmConfigs(vm_name).vm_config_read()
             vm_config = vm_config.get("disks", "-")
-            vm_config = vm_config[0].get("disk_image", "-")
-            vmColumnOsDisk.append(vm_config)
-            # if exists("/zroot/vm-encrypted/" + vm_name + "/disk0.img"):
-            #     command_size = "ls -ahl /zroot/vm-encrypted/" + vm_name + "/ | grep disk0.img | awk '{ print $5 }'"
-            #     command_used = "du -h /zroot/vm-encrypted/" + vm_name + "/disk0.img | awk '{ print $1 }'"
-            #     shell_command_size = subprocess.check_output(command_size, shell=True)
-            #     shell_command_used = subprocess.check_output(command_used, shell=True)
-            #     disk_size = shell_command_size.decode("utf-8").split()[0]
-            #     disk_used = shell_command_used.decode("utf-8").split()[0]
-            #     final_output = disk_used + "/" + disk_size
-            #     vmColumnOsDisk.append(final_output)
-            # else:
-            #     vmColumnOsDisk.append("-")
+            disk_image_name = vm_config[0].get("disk_image", "-")
+            if CoreChecks(vm_name, disk_image_name).disk_exists():
+                image_path = CoreChecks(vm_name, disk_image_name).disk_location()
+                command_size = "ls -ahl " + image_path + " | awk '{ print $5 }'"
+                command_used = "du -h " + image_path + " | awk '{ print $1 }'"
+                shell_command_size = subprocess.check_output(command_size, shell=True)
+                shell_command_used = subprocess.check_output(command_used, shell=True)
+                disk_size = shell_command_size.decode("utf-8").split()[0]
+                disk_used = shell_command_used.decode("utf-8").split()[0]
+                final_output = disk_used + "/" + disk_size
+                vmColumnOsDisk.append(final_output)
+            else:
+                vmColumnOsDisk.append("-")
     
     
         vmColumnIpAddress = []
