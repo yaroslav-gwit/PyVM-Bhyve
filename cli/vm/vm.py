@@ -221,7 +221,8 @@ class VmList:
                 command = "grep 'bhyve: " + vm_name + "' /tmp/bhyve_vms_uptime.txt | grep -v grep | awk '{print $1}'"
                 shell_command = subprocess.check_output(command, shell=True)
                 vm_uptime = shell_command.decode("utf-8").split()[0]
-                vmColumnUptime.append(vm_uptime)
+                # vmColumnUptime.append(vm_uptime)
+                vmColumnUptime.append(timestamp)
             else:
                 vmColumnUptime.append("-")
 
