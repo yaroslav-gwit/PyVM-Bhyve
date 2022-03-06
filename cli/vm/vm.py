@@ -171,8 +171,8 @@ class VmList:
         for vm_name in vmColumnNames:
             vm_config = VmConfigs(vm_name).vm_config_read()
             vm_config = vm_config.get("networks", "-")
-            vm_config = vm_config[0].get("ip_address", "-")
-            vmColumnVncPassword.append(vm_config)
+            # vm_config = vm_config[0].get("ip_address", "-")
+            vmColumnIpAddress.append(vm_config)
 
         
         vmColumnOsType = []
