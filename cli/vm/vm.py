@@ -136,9 +136,9 @@ class VmList:
         for vm_name in vmColumnNames:
             vm_config = VmConfigs(vm_name).vm_config_read()
             vm_config = vm_config.get("memory", "-")
-            vmColumnCPU.append(vm_config)
+            vmColumnRAM.append(vm_config)
         
-        
+
         vmColumnVncPort = []
         for vm_name in vmColumnNames:
             if exists("/zroot/vm-encrypted/" + vm_name + "/vm.config"):
