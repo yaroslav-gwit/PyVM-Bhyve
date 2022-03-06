@@ -141,35 +141,15 @@ class VmList:
 
         vmColumnVncPort = []
         for vm_name in vmColumnNames:
-            if exists("/zroot/vm-encrypted/" + vm_name + "/vm.config"):
-                with open("/zroot/vm-encrypted/" + vm_name + "/vm.config", 'r') as file_object:
-                    vm_info_raw = file_object.read()
-                vm_info_dict = ast.literal_eval(vm_info_raw)
-                vmColumnVncPort.append(vm_info_dict["vnc_port"])
-            elif exists("/zroot/vm-unencrypted/" + vm_name + "/vm.config"):
-                with open("/zroot/vm-unencrypted/" + vm_name + "/vm.config", 'r') as file_object:
-                    vm_info_raw = file_object.read()
-                vm_info_dict = ast.literal_eval(vm_info_raw)
-                vmColumnVncPort.append(vm_info_dict["vnc_port"])
-            else:
-                vmColumnVncPort.append("-")
-        
+            vm_config = VmConfigs(vm_name).vm_config_read()
+            vm_config = vm_config.get("vnc_port", "-")
+            vmColumnVncPort.append(vm_config)
         
         vmColumnVncPassword = []
         for vm_name in vmColumnNames:
-            if exists("/zroot/vm-encrypted/" + vm_name + "/vm.config"):
-                with open("/zroot/vm-encrypted/" + vm_name + "/vm.config", 'r') as file_object:
-                    vm_info_raw = file_object.read()
-                vm_info_dict = ast.literal_eval(vm_info_raw)
-                vmColumnVncPassword.append(vm_info_dict["vnc_password"])
-            elif exists("/zroot/vm-unencrypted/" + vm_name + "/vm.config"):
-                with open("/zroot/vm-unencrypted/" + vm_name + "/vm.config", 'r') as file_object:
-                    vm_info_raw = file_object.read()
-                vm_info_dict = ast.literal_eval(vm_info_raw)
-                vmColumnVncPassword.append(vm_info_dict["vnc_password"])
-            else:
-                vmColumnVncPassword.append("-")
-
+            vm_config = VmConfigs(vm_name).vm_config_read()
+            vm_config = vm_config.get("vnc_password", "-")
+            vmColumnVncPassword.append(vm_config)
 
         vmColumnOsDisk = []
         for vm_name in vmColumnNames:
