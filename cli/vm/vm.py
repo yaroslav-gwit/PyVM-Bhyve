@@ -180,18 +180,6 @@ class VmList:
             vm_config = VmConfigs(vm_name).vm_config_read()
             vm_config = vm_config.get("os_comment", "-")
             vmColumnOsType.append(vm_config)
-        #     if exists("/zroot/vm-encrypted/" + vm_name + "/vm.config"):
-        #         with open("/zroot/vm-encrypted/" + vm_name + "/vm.config", 'r') as file_object:
-        #             vm_info_raw = file_object.read()
-        #         vm_info_dict = ast.literal_eval(vm_info_raw)
-        #         vmColumnOsType.append(vm_info_dict["os_type"])
-        #     elif exists("/zroot/vm-unencrypted/" + vm_name + "/vm.config"):
-        #         with open("/zroot/vm-unencrypted/" + vm_name + "/vm.config", 'r') as file_object:
-        #             vm_info_raw = file_object.read()
-        #         vm_info_dict = ast.literal_eval(vm_info_raw)
-        #         vmColumnOsType.append(vm_info_dict["os_type"])
-        #     else:
-        #         vmColumnOsType.append("-")
         # vmColumnOsType = ["Debian 10" if var == "debian10" else var for var in vmColumnOsType]
         # vmColumnOsType = ["Debian 11" if var == "debian11" else var for var in vmColumnOsType]
         # vmColumnOsType = ["Ubuntu 20.04" if var == "ubuntu2004" else var for var in vmColumnOsType]
@@ -215,20 +203,12 @@ class VmList:
             else:
                 vmColumnUptime.append("-")
 
+
         vmColumnDescription = []
         for vm_name in vmColumnNames:
-            if exists("/zroot/vm-encrypted/" + vm_name + "/vm.config"):
-                with open("/zroot/vm-encrypted/" + vm_name + "/vm.config", 'r') as file_object:
-                    vm_info_raw = file_object.read()
-                vm_info_dict = ast.literal_eval(vm_info_raw)
-                vmColumnDescription.append(vm_info_dict["description"])
-            elif exists("/zroot/vm-unencrypted/" + vm_name + "/vm.config"):
-                with open("/zroot/vm-unencrypted/" + vm_name + "/vm.config", 'r') as file_object:
-                    vm_info_raw = file_object.read()
-                vm_info_dict = ast.literal_eval(vm_info_raw)
-                vmColumnDescription.append(vm_info_dict["description"])
-            else:
-                vmColumnDescription.append("-")
+            vm_config = VmConfigs(vm_name).vm_config_read()
+            vm_config = vm_config.get("description", "-")
+            vmColumnDescription.append(vm_config)
 
 
         vmTableHeader = [["Name", "State", "CPUs", "RAM", "Main IP", "VNC Port", "VNC Password", "OS Disk", "OS Comment", "Uptime", "Description", ]]
