@@ -126,18 +126,22 @@ class VmList:
 
         vmColumnCPU = []
         for vm_name in vmColumnNames:
-            if exists("/zroot/vm-encrypted/" + vm_name + "/vm.config"):
-                with open("/zroot/vm-encrypted/" + vm_name + "/vm.config", 'r') as file_object:
-                    vm_info_raw = file_object.read()
-                vm_info_dict = ast.literal_eval(vm_info_raw)
-                vmColumnCPU.append(vm_info_dict["cpus"])
-            elif exists("/zroot/vm-unencrypted/" + vm_name + "/vm.config"):
-                with open("/zroot/vm-unencrypted/" + vm_name + "/vm.config", 'r') as file_object:
-                    vm_info_raw = file_object.read()
-                vm_info_dict = ast.literal_eval(vm_info_raw)
-                vmColumnCPU.append(vm_info_dict["cpus"])
-            else:
-                vmColumnCPU.append("-")
+            # if exists("/zroot/vm-encrypted/" + vm_name + "/vm.config"):
+            #     with open("/zroot/vm-encrypted/" + vm_name + "/vm.config", 'r') as file_object:
+            #         vm_info_raw = file_object.read()
+            #     vm_info_dict = ast.literal_eval(vm_info_raw)
+            #     vmColumnCPU.append(vm_info_dict["cpus"])
+            # elif exists("/zroot/vm-unencrypted/" + vm_name + "/vm.config"):
+            #     with open("/zroot/vm-unencrypted/" + vm_name + "/vm.config", 'r') as file_object:
+            #         vm_info_raw = file_object.read()
+            #     vm_info_dict = ast.literal_eval(vm_info_raw)
+            #     vmColumnCPU.append(vm_info_dict["cpus"])
+            # else:
+            #     vmColumnCPU.append("-")
+            vm_config = VmConfigs(vm_name).vm_config_read()
+            vm_config = vm_config.get("cpus", "-")
+            vmColumnCPU.append(vm_config)
+
 
         
         vmColumnRAM = []
