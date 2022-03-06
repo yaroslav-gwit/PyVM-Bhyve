@@ -171,33 +171,36 @@ class VmList:
         for vm_name in vmColumnNames:
             vm_config = VmConfigs(vm_name).vm_config_read()
             vm_config = vm_config.get("networks", "-")
-            vm_config = vm_config[0].get("ip_address", "1")
+            vm_config = vm_config[0].get("ip_address", "-")
             vmColumnIpAddress.append(vm_config)
 
         
         vmColumnOsType = []
         for vm_name in vmColumnNames:
-            if exists("/zroot/vm-encrypted/" + vm_name + "/vm.config"):
-                with open("/zroot/vm-encrypted/" + vm_name + "/vm.config", 'r') as file_object:
-                    vm_info_raw = file_object.read()
-                vm_info_dict = ast.literal_eval(vm_info_raw)
-                vmColumnOsType.append(vm_info_dict["os_type"])
-            elif exists("/zroot/vm-unencrypted/" + vm_name + "/vm.config"):
-                with open("/zroot/vm-unencrypted/" + vm_name + "/vm.config", 'r') as file_object:
-                    vm_info_raw = file_object.read()
-                vm_info_dict = ast.literal_eval(vm_info_raw)
-                vmColumnOsType.append(vm_info_dict["os_type"])
-            else:
-                vmColumnOsType.append("-")
-        vmColumnOsType = ["Debian 10" if var == "debian10" else var for var in vmColumnOsType]
-        vmColumnOsType = ["Debian 11" if var == "debian11" else var for var in vmColumnOsType]
-        vmColumnOsType = ["Ubuntu 20.04" if var == "ubuntu2004" else var for var in vmColumnOsType]
-        vmColumnOsType = ["FreeBSD 13 ZFS" if var == "freebsd13zfs" else var for var in vmColumnOsType]
-        vmColumnOsType = ["FreeBSD 13 UFS" if var == "freebsd13ufs" else var for var in vmColumnOsType]
-        vmColumnOsType = ["AlmaLinux 8" if var == "almalinux8" else var for var in vmColumnOsType]
-        vmColumnOsType = ["RockyLinux 8" if var == "rockylinux8" else var for var in vmColumnOsType]
-        vmColumnOsType = ["Fedora 34" if var == "fedora34" else var for var in vmColumnOsType]
-        vmColumnOsType = ["Windows 10" if var == "windows10" else var for var in vmColumnOsType]
+            vm_config = VmConfigs(vm_name).vm_config_read()
+            vm_config = vm_config.get("os_comment", "-")
+            vmColumnOsType.append(vm_config)
+        #     if exists("/zroot/vm-encrypted/" + vm_name + "/vm.config"):
+        #         with open("/zroot/vm-encrypted/" + vm_name + "/vm.config", 'r') as file_object:
+        #             vm_info_raw = file_object.read()
+        #         vm_info_dict = ast.literal_eval(vm_info_raw)
+        #         vmColumnOsType.append(vm_info_dict["os_type"])
+        #     elif exists("/zroot/vm-unencrypted/" + vm_name + "/vm.config"):
+        #         with open("/zroot/vm-unencrypted/" + vm_name + "/vm.config", 'r') as file_object:
+        #             vm_info_raw = file_object.read()
+        #         vm_info_dict = ast.literal_eval(vm_info_raw)
+        #         vmColumnOsType.append(vm_info_dict["os_type"])
+        #     else:
+        #         vmColumnOsType.append("-")
+        # vmColumnOsType = ["Debian 10" if var == "debian10" else var for var in vmColumnOsType]
+        # vmColumnOsType = ["Debian 11" if var == "debian11" else var for var in vmColumnOsType]
+        # vmColumnOsType = ["Ubuntu 20.04" if var == "ubuntu2004" else var for var in vmColumnOsType]
+        # vmColumnOsType = ["FreeBSD 13 ZFS" if var == "freebsd13zfs" else var for var in vmColumnOsType]
+        # vmColumnOsType = ["FreeBSD 13 UFS" if var == "freebsd13ufs" else var for var in vmColumnOsType]
+        # vmColumnOsType = ["AlmaLinux 8" if var == "almalinux8" else var for var in vmColumnOsType]
+        # vmColumnOsType = ["RockyLinux 8" if var == "rockylinux8" else var for var in vmColumnOsType]
+        # vmColumnOsType = ["Fedora 34" if var == "fedora34" else var for var in vmColumnOsType]
+        # vmColumnOsType = ["Windows 10" if var == "windows10" else var for var in vmColumnOsType]
 
         
         vmColumnUptime = []
