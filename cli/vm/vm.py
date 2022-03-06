@@ -110,6 +110,7 @@ class VmList:
             print("\nThere are no VMs on this system. To deploy one, use:\n pyvm --vmdeploy\n")
             sys.exit(0)
 
+        
         vmColumnState = []
         for vm_name in vmColumnNames:
             if CoreChecks(vm_name).vm_is_live():
@@ -126,39 +127,17 @@ class VmList:
 
         vmColumnCPU = []
         for vm_name in vmColumnNames:
-            # if exists("/zroot/vm-encrypted/" + vm_name + "/vm.config"):
-            #     with open("/zroot/vm-encrypted/" + vm_name + "/vm.config", 'r') as file_object:
-            #         vm_info_raw = file_object.read()
-            #     vm_info_dict = ast.literal_eval(vm_info_raw)
-            #     vmColumnCPU.append(vm_info_dict["cpus"])
-            # elif exists("/zroot/vm-unencrypted/" + vm_name + "/vm.config"):
-            #     with open("/zroot/vm-unencrypted/" + vm_name + "/vm.config", 'r') as file_object:
-            #         vm_info_raw = file_object.read()
-            #     vm_info_dict = ast.literal_eval(vm_info_raw)
-            #     vmColumnCPU.append(vm_info_dict["cpus"])
-            # else:
-            #     vmColumnCPU.append("-")
             vm_config = VmConfigs(vm_name).vm_config_read()
             vm_config = vm_config.get("cpus", "-")
             vmColumnCPU.append(vm_config)
 
-
         
         vmColumnRAM = []
         for vm_name in vmColumnNames:
-            if exists("/zroot/vm-encrypted/" + vm_name + "/vm.config"):
-                with open("/zroot/vm-encrypted/" + vm_name + "/vm.config", 'r') as file_object:
-                    vm_info_raw = file_object.read()
-                vm_info_dict = ast.literal_eval(vm_info_raw)
-                vmColumnRAM.append(vm_info_dict["memory"])
-            elif exists("/zroot/vm-unencrypted/" + vm_name + "/vm.config"):
-                with open("/zroot/vm-unencrypted/" + vm_name + "/vm.config", 'r') as file_object:
-                    vm_info_raw = file_object.read()
-                vm_info_dict = ast.literal_eval(vm_info_raw)
-                vmColumnRAM.append(vm_info_dict["memory"])
-            else:
-                vmColumnRAM.append("-")
-
+            vm_config = VmConfigs(vm_name).vm_config_read()
+            vm_config = vm_config.get("memory", "-")
+            vmColumnCPU.append(vm_config)
+        
         
         vmColumnVncPort = []
         for vm_name in vmColumnNames:
