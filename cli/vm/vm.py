@@ -217,7 +217,7 @@ class VmList:
                 timestamp = time.mktime((datetime.datetime.now() + timedelta(seconds=10)).timetuple())
                 if timestamp < os.path.getmtime("/tmp/bhyve_vms_uptime.txt"):
                     command = "ps axwww -o etime,command > /tmp/bhyve_vms_uptime.txt"
-                subprocess.run(command, shell=True)
+                    subprocess.run(command, shell=True)
                 command = "grep 'bhyve: " + vm_name + "' /tmp/bhyve_vms_uptime.txt | grep -v grep | awk '{print $1}'"
                 shell_command = subprocess.check_output(command, shell=True)
                 vm_uptime = shell_command.decode("utf-8").split()[0]
