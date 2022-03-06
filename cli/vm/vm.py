@@ -222,7 +222,7 @@ class VmList:
                 shell_command = subprocess.check_output(command, shell=True)
                 vm_uptime = shell_command.decode("utf-8").split()[0]
                 # vmColumnUptime.append(vm_uptime)
-                vmColumnUptime.append(timestamp)
+                vmColumnUptime.append(os.path.getmtime("/tmp/bhyve_vms_uptime.txt"))
             else:
                 vmColumnUptime.append("-")
 
