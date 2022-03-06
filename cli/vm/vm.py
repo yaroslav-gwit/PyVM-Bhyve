@@ -261,15 +261,13 @@ def list(json: bool = typer.Option(False, help="Output json instead of a table")
         print(VmList().table_output())
 
 @app.command()
-def info(vmname: str = typer.Argument(..., help="Print VM config file to the screen")):
+def info(vm_name: str = typer.Argument(..., help="Print VM config file to the screen")):
     """
     Example: hoster vm info test-vm-1
     """
-    if json:
-        print(VmList().json_output())
-    else:
-        print(VmList().table_output())
-
+    vm_info_dict = VmConfigs(vm_name).vm_config_read()
+    vm_info_json = json.dumps(vm_info_dict, indent=2)
+    print(vm_info_json)
 
 
 """ If this file is executed from the command line, activate Typer """
