@@ -170,8 +170,8 @@ class VmList:
         vmColumnIpAddress = []
         for vm_name in vmColumnNames:
             vm_config = VmConfigs(vm_name).vm_config_read()
-            vm_config = vm_config.get("networks"[0], "-")
-            vm_config = vm_config.get("ip_address", "-")
+            vm_config = vm_config.get("networks", "-")
+            vm_config = vm_config[0].get("ip_address", "-")
             vmColumnVncPassword.append(vm_config)
 
         
