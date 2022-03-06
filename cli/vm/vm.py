@@ -215,7 +215,7 @@ class VmList:
         for vm_name in vmColumnNames:
             if CoreChecks(vm_name).vm_is_live():
                 timestamp = time.mktime((datetime.datetime.now() + timedelta(seconds=10)).timetuple())
-                if timestamp > os.path.getmtime("/tmp/bhyve_vms_uptime.txt"):
+                if timestamp < os.path.getmtime("/tmp/bhyve_vms_uptime.txt"):
                     command = "ps axwww -o etime,command > /tmp/bhyve_vms_uptime.txt"
                 subprocess.run(command, shell=True)
                 command = "grep 'bhyve: " + vm_name + "' /tmp/bhyve_vms_uptime.txt | grep -v grep | awk '{print $1}'"
