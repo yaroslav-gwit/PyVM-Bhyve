@@ -154,17 +154,21 @@ class VmList:
 
         vmColumnOsDisk = []
         for vm_name in vmColumnNames:
-            if exists("/zroot/vm-encrypted/" + vm_name + "/disk0.img"):
-                command_size = "ls -ahl /zroot/vm-encrypted/" + vm_name + "/ | grep disk0.img | awk '{ print $5 }'"
-                command_used = "du -h /zroot/vm-encrypted/" + vm_name + "/disk0.img | awk '{ print $1 }'"
-                shell_command_size = subprocess.check_output(command_size, shell=True)
-                shell_command_used = subprocess.check_output(command_used, shell=True)
-                disk_size = shell_command_size.decode("utf-8").split()[0]
-                disk_used = shell_command_used.decode("utf-8").split()[0]
-                final_output = disk_used + "/" + disk_size
-                vmColumnOsDisk.append(final_output)
-            else:
-                vmColumnOsDisk.append("-")
+            vm_config = VmConfigs(vm_name).vm_config_read()
+            vm_config = vm_config.get("disks", "-")
+            vm_config = vm_config[0].get("disk_image", "-")
+            vmColumnOsDisk.append(vm_config)
+            # if exists("/zroot/vm-encrypted/" + vm_name + "/disk0.img"):
+            #     command_size = "ls -ahl /zroot/vm-encrypted/" + vm_name + "/ | grep disk0.img | awk '{ print $5 }'"
+            #     command_used = "du -h /zroot/vm-encrypted/" + vm_name + "/disk0.img | awk '{ print $1 }'"
+            #     shell_command_size = subprocess.check_output(command_size, shell=True)
+            #     shell_command_used = subprocess.check_output(command_used, shell=True)
+            #     disk_size = shell_command_size.decode("utf-8").split()[0]
+            #     disk_used = shell_command_used.decode("utf-8").split()[0]
+            #     final_output = disk_used + "/" + disk_size
+            #     vmColumnOsDisk.append(final_output)
+            # else:
+            #     vmColumnOsDisk.append("-")
     
     
         vmColumnIpAddress = []
