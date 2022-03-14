@@ -25,9 +25,7 @@ from natsort import natsorted
 from cli.vm import vmdeploy
 from cli.host import dataset
 
-with open("/root/bin/host.info", 'r') as file_object:
-    host_info_raw = file_object.read()
-host_info_dict = ast.literal_eval(host_info_raw)
+
 
 class CoreChecks:
     def __init__(self, vm_name, disk_image_name="disk0.img"):
@@ -72,6 +70,7 @@ class CoreChecks:
                 return image_path
 
 
+
 class VmConfigs:
     def __init__(self, vm_name):
         self.vm_name = vm_name
@@ -90,10 +89,23 @@ class VmConfigs:
             elif ds == self.zfs_datasets["datasets"][-1] and not exists(vm_config):
                 print("Sorry, config file was not found for " + self.vm_name + " path: " + vm_config)
                 sys.exit(1)
-        
+    
+    
+    def vm_config_manual_edit(self):
+        for ds in self.zfs_datasets["datasets"]:
+            vm_config = ds["mount_path"]+self.vm_name+self.vm_config
+            if exists(vm_config):
+                command = "nano " + vm_config
+                shell_command = subprocess.run(command, shell=True)
+            elif ds == self.zfs_datasets["datasets"][-1] and not exists(vm_config):
+                print("Sorry, config file was not found for " + self.vm_name + " path: " + vm_config)
+                sys.exit(1)
+    
     
     def vm_config_wrire(self):
         print("This function will write config files to the required directories")
+
+
 
 class VmList:
     def __init__(self):
@@ -268,6 +280,13 @@ def info(vm_name: str = typer.Argument(..., help="Print VM config file to the sc
     vm_info_dict = VmConfigs(vm_name).vm_config_read()
     vm_info_json = json.dumps(vm_info_dict, indent=2)
     print(vm_info_json)
+
+@app.command()
+def edit(vm_name: str = typer.Argument(..., help="Edit VM config file with nano")):
+    """
+    Example: hoster vm edit test-vm-1
+    """
+    VmConfigs(vm_name).vm_config_manual_edit()
 
 
 """ If this file is executed from the command line, activate Typer """
