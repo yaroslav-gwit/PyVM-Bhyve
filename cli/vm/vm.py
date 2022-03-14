@@ -257,36 +257,41 @@ class VmList:
         return vm_list_json
 
 
+
 """ Section below is responsible for the CLI input/output """
 app = typer.Typer(context_settings=dict(max_content_width=800))
 app.add_typer(vmdeploy.app, name="deploy", help="Manage users in the app.")
 # app.add_typer(vmlist.app, name="list")
 
+
 @app.command()
 def list(json: bool = typer.Option(False, help="Output json instead of a table")):
     """
-    Example: hoster vm list
+    List the VMs using table or JSON output
     """
     if json:
         print(VmList().json_output())
     else:
         print(VmList().table_output())
 
+
 @app.command()
 def info(vm_name: str = typer.Argument(..., help="Print VM config file to the screen")):
     """
-    Example: hoster vm info test-vm-1
+    Show VM info in the form of JSON output
     """
     vm_info_dict = VmConfigs(vm_name).vm_config_read()
     vm_info_json = json.dumps(vm_info_dict, indent=2)
     print(vm_info_json)
 
+
 @app.command()
 def edit(vm_name: str = typer.Argument(..., help="Edit VM config file with nano")):
     """
-    Example: hoster vm edit test-vm-1
+    Manually edit the VM's config file
     """
     VmConfigs(vm_name).vm_config_manual_edit()
+
 
 
 """ If this file is executed from the command line, activate Typer """
