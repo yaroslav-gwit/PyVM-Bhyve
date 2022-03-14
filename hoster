@@ -10,7 +10,7 @@ from cli.host import host
 
 """ Section below is responsible for the CLI input/output """
 app = typer.Typer(context_settings=dict(max_content_width=800))
-app.add_typer(vm.app, name="vm", help="List, Create, Remove and any do any other VM related operations")
+app.add_typer(vm.app, name="vm", help="List, Create, Remove or any other VM related operations")
 app.add_typer(host.app, name="host", help="Show or modify the host related information")
 
 
