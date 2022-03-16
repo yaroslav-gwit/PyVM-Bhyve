@@ -5,19 +5,12 @@ import typer
 import sys
 import os
 import subprocess
-import copy
-import socket
-import platform
-import re
 from os.path import exists
 from os import listdir
-import ast
 import json
 import time
 
 # Installed packages/modules
-import uptime
-import psutil
 from tabulate import tabulate
 from natsort import natsorted
 
@@ -260,7 +253,7 @@ class VmList:
 
 """ Section below is responsible for the CLI input/output """
 app = typer.Typer(context_settings=dict(max_content_width=800))
-app.add_typer(vmdeploy.app, name="deploy", help="Manage users in the app.")
+# app.add_typer(vmdeploy.app, name="deploy", help="Manage users in the app.")
 # app.add_typer(vmlist.app, name="list")
 
 
