@@ -244,8 +244,9 @@ class VmList:
 
     
     def json_output(self):
-        vm_list_dict = {}
-        vm_list_dict["vm_list"] = self.vmColumnNames
+        # vm_list_dict = {}
+        # vm_list_dict["vm_list"] = self.vmColumnNames
+        vm_list_dict = self.vmColumnNames
         vm_list_json = json.dumps(vm_list_dict, indent=2)
         return vm_list_json
 
