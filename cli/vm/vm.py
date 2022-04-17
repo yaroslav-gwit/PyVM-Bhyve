@@ -295,7 +295,7 @@ def diskexpand(vm_name:str = typer.Argument(..., help="Expand one of VM's disks"
     """
     Expand one of VM's disks
     """
-    VmConfigs(vm_name).vm_config_manual_edit()
+    sys.exit("Sorry, this function hasn't been implemented yet")
 
 
 """ If this file is executed from the command line, activate Typer """
