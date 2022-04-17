@@ -295,7 +295,10 @@ def diskexpand(vm_name:str = typer.Argument(..., help="Expand one of VM's disks"
     """
     Expand one of VM's disks
     """
-    sys.exit("Sorry, this function hasn't been implemented yet")
+    if vm_name in VmList().json_output():
+        print("All good. VM exists!")
+    else:
+        sys.exit("Sorry, could not find the VM with such name: " + vm_name)
 
 
 """ If this file is executed from the command line, activate Typer """
