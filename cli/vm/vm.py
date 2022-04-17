@@ -259,7 +259,7 @@ app = typer.Typer(context_settings=dict(max_content_width=800))
 
 
 @app.command()
-def list(json: bool = typer.Option(False, help="Output json instead of a table")):
+def list(json:bool = typer.Option(False, help="Output json instead of a table")):
     """
     List the VMs using table or JSON output
     """
@@ -270,7 +270,7 @@ def list(json: bool = typer.Option(False, help="Output json instead of a table")
 
 
 @app.command()
-def info(vm_name: str = typer.Argument(..., help="Print VM config file to the screen")):
+def info(vm_name:str = typer.Argument(..., help="Print VM config file to the screen")):
     """
     Show VM info in the form of JSON output
     """
@@ -280,12 +280,22 @@ def info(vm_name: str = typer.Argument(..., help="Print VM config file to the sc
 
 
 @app.command()
-def edit(vm_name: str = typer.Argument(..., help="Edit VM config file with nano")):
+def edit(vm_name:str = typer.Argument(..., help="Edit VM config file with nano")):
     """
     Manually edit the VM's config file
     """
     VmConfigs(vm_name).vm_config_manual_edit()
 
+
+@app.command()
+def diskexpand(vm_name:str = typer.Argument(..., help="Expand one of VM's disks"),
+        size:int = typer.Option(10, help="Number or Gigabytes to add"),
+        disk:str = typer.Option("disk0.img", help="Disk image file name"),
+    ):
+    """
+    Expand one of VM's disks
+    """
+    VmConfigs(vm_name).vm_config_manual_edit()
 
 
 """ If this file is executed from the command line, activate Typer """
