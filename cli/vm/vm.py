@@ -297,7 +297,7 @@ def diskexpand(vm_name:str = typer.Argument(..., help="Expand one of VM's disks"
     """
     if vm_name in VmList().json_output():
         print("All good. VM exists.")
-        if CoreChecks(vm_name).disk_exists(disk):
+        if CoreChecks(vm_name=vm_name, disk_image_name=disk).disk_exists():
             print("All good. Disk exists.")
         else:
             sys.exit("Sorry, could not find the disk: " + vm_name)
