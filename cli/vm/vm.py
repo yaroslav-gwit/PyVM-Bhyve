@@ -288,12 +288,12 @@ def edit(vm_name:str = typer.Argument(..., help="Edit VM config file with nano")
 
 
 @app.command()
-def diskexpand(vm_name:str = typer.Argument(..., help="Expand one of VM's disks"),
+def diskexpand(vm_name:str = typer.Argument(..., help="VM name"),
         size:int = typer.Option(10, help="Number or Gigabytes to add"),
         disk:str = typer.Option("disk0.img", help="Disk image file name"),
     ):
     """
-    Expand one of VM's disks
+    Expand one of VM's disks. Example: hoster vm diskexpand test_vm_1 --disk disk1.img --size 100
     """
     if vm_name in VmList().json_output():
         print("All good. VM exists.")
