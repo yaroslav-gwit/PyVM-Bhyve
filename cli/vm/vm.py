@@ -65,7 +65,7 @@ class CoreChecks:
     def vm_location(self):
         for ds in self.zfs_datasets["datasets"]:
             if exists(ds["mount_path"]+self.vm_name):
-                vm_location = ds["zfs_path"] + self.vm_name
+                vm_location = ds["zfs_path"] + "/" + self.vm_name
                 return vm_location
             elif ds == len(self.zfs_datasets["datasets"]) and not exists(ds["mount_path"]+self.vm_name):
                 sys.exit("VM doesn't exist!")
