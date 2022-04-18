@@ -383,7 +383,7 @@ def snapshot(vm_name:str = typer.Argument(..., help="VM Name"),
         subprocess.run(command, shell=True, stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
         # DEBUG
         # print(command)
-        print("The snapshot was taken for the VM: " + vm_name)
+        print("New snapshot was taken: " + command)
     else:
         sys.exit("VM doesn't exist on this system.")
         
@@ -403,7 +403,7 @@ def snapshot(vm_name:str = typer.Argument(..., help="VM Name"),
             for vm_zfs_snapshot_to_delete in vm_zfs_snapshots_to_delete:
                 command = "zfs destroy " + vm_zfs_snapshot_to_delete
                 subprocess.run(command, shell=True)
-                print("Snapshot " + vm_zfs_snapshot_to_delete + " was removed")
+                print("Old snapshot was removed: " + command)
         else:
             print("VM " + vm_name + " doesn't have any snapshots to delete")
 
