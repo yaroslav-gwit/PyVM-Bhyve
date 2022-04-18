@@ -409,6 +409,16 @@ def snapshot(vm_name:str = typer.Argument(..., help="VM Name"),
             print("VM " + vm_name + " doesn't have any snapshots to delete")
 
 
+def snapshot_all(type:str = typer.Option("custom", help="Snapshot type: daily, weekly, etc"),
+    keep:int = typer.Option(3, help="How many snapshots to keep")
+    ):
+    """
+    Snapshot all VMs
+    """
+    for vm_name in VmList().json_output():
+        snapshot(vm_name=vm_name, keep=keep, type=type)
+
+
 @app.command()
 def kill(vm_name:str = typer.Argument(..., help="VM Name")):
     """
