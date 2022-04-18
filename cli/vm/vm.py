@@ -372,7 +372,7 @@ def snapshot(vm_name:str = typer.Argument(..., help="VM Name"),
     ):
     """
     Snapshot the VM (RAM snapshots are not supported). Snapshot will be taken at the storage level: ZFS or GlusterFS.
-    \nExample: hoster vm snapshot test-vm-1 --type weekly --keep 5
+    Example: hoster vm snapshot test-vm-1 --type weekly --keep 5
     """
     snapshot_type = type
     snapshots_to_keep = keep
@@ -407,6 +407,33 @@ def snapshot(vm_name:str = typer.Argument(..., help="VM Name"),
                 print("Old snapshot was removed: " + command)
         else:
             print("VM " + vm_name + " doesn't have any snapshots to delete")
+
+
+@app.command()
+def kill(vm_name:str = typer.Argument(..., help="VM Name")):
+    """
+    Kill the VM immediately!
+    """
+    if vm_name not in VmList().json_output():
+        sys.exit("VM doesn't exist on this system.")
+    elif CoreChecks(vm_name).vm_is_live():
+        command = "ifconfig | grep " + vm_name + " | awk '{ print $2 }'"
+        shell_command = subprocess.check_output(command, shell=True)
+        running_tap_adaptor = shell_command.decode("utf-8").split()[0]
+        tap_interface_list = shell_command.decode("utf-8").split()
+
+        command = "bhyvectl --destroy --vm=" + vm_name
+        shell_command = subprocess.run(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        
+        time.sleep(1)
+
+        for tap in tap_interface_list:
+            if tap:
+                command = "ifconfig " + tap + " destroy"
+                shell_command = subprocess.run(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        print("Killed the VM: " + vm_name)
+    else:
+        sys.exit("VM is dead!")
 
 
 """ If this file is executed from the command line, activate Typer """
