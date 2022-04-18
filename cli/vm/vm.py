@@ -368,7 +368,7 @@ def destroy(vm_name:str = typer.Argument(..., help="VM Name")):
 @app.command()
 def snapshot(vm_name:str = typer.Argument(..., help="VM Name"),
     type:str = typer.Option("custom", help="Snapshot type: daily, weekly, etc"),
-    keep:str = typer.Option(3, help="How many snapshots to keep")
+    keep:int = typer.Option(3, help="How many snapshots to keep")
     ):
     """
     Snapshot the VM (RAM snapshots are not supported)
