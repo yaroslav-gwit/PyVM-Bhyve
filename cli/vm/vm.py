@@ -372,7 +372,7 @@ def snapshot(vm_name:str = typer.Argument(..., help="VM Name"),
     ):
     """
     Snapshot the VM (RAM snapshots are not supported). Snapshot will be taken at the storage level: ZFS or GlusterFS.
-    Example: hoster vm snapshot test-vm-1 --type weekly --keep 5
+    \nExample: hoster vm snapshot test-vm-1 --type weekly --keep 5
     """
     snapshot_type = type
     snapshots_to_keep = keep
