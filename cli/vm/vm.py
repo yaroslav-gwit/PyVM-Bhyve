@@ -433,7 +433,8 @@ def kill(vm_name:str = typer.Argument(..., help="VM Name")):
                 shell_command = subprocess.run(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         print("Killed the VM: " + vm_name)
     else:
-        sys.exit("VM is dead!")
+        print("VM is already dead!")
+        sys.exit(0)
 
 
 """ If this file is executed from the command line, activate Typer """
