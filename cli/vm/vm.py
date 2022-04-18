@@ -296,9 +296,11 @@ def diskexpand(vm_name:str = typer.Argument(..., help="VM name"),
     Expand one of VM's disks. Example: hoster vm diskexpand test_vm_1 --disk disk1.img --size 100
     """
     if vm_name in VmList().json_output():
-        print("All good. VM exists.")
+        # DEBUG
+        # print("All good. VM exists.")
         if CoreChecks(vm_name=vm_name, disk_image_name=disk).disk_exists():
-            print("All good. Disk exists.")
+            # DEBUG
+            # print("All good. Disk exists.")
             disk_location = CoreChecks(vm_name=vm_name, disk_image_name=disk).disk_location()
             shell_command = "truncate -s +" + str(size) + "G " + disk_location
             subprocess.run(shell_command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -307,6 +309,34 @@ def diskexpand(vm_name:str = typer.Argument(..., help="VM name"),
             sys.exit("Sorry, could not find the disk: " + disk)
     else:
         sys.exit("Sorry, could not find the VM with such name: " + vm_name)
+
+
+@app.command()
+def rename(vm_name:str = typer.Argument(..., help="VM Name")):
+    """
+    Rename one of the VMs
+    """
+    print("This feature is not available. To rename your VM use cireset, like so: 'hoster vm cireset old_vm_name --new-name new_vm_name'.")
+
+
+@app.command()
+def console(vm_name:str = typer.Argument(..., help="VM Name")):
+    """
+    Connect to VM's console
+    """
+    if CoreChecks(vm_name).vm_is_live():
+        command = "tmux ls | grep -c " + vm_name + " || true"
+        shell_command = subprocess.check_output(command, shell=True)
+        tmux_sessions = shell_command.decode("utf-8").split()[0]
+        if tmux_sessions != "no server running on /tmp/tmux-0/default":
+            if int(tmux_sessions) > 0:
+                command = 'tmux a -t ' + '"' + vm_name + '"'
+                shell_command = subprocess.check_output(command, shell=True)
+            else:
+                command = 'tmux new-session -s ' + vm_name + ' "cu -l /dev/nmdm-' + vm_name + '-1B"'
+                subprocess.run(command, shell=True)
+    else:
+        sys.exit("VM is not running. Start the VM first to connect to it's console.")
 
 
 """ If this file is executed from the command line, activate Typer """
