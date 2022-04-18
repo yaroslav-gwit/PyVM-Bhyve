@@ -371,7 +371,7 @@ def snapshot(vm_name:str = typer.Argument(..., help="VM Name"),
     keep:int = typer.Option(3, help="How many snapshots to keep")
     ):
     """
-    Snapshot the VM (RAM snapshots are not supported)
+    Snapshot the VM (RAM snapshots are not supported). Snapshot will be taken at the storage level: ZFS or GlusterFS.
     """
     snapshot_type = type
     snapshots_to_keep = keep
