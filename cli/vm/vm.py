@@ -299,6 +299,10 @@ def diskexpand(vm_name:str = typer.Argument(..., help="VM name"),
         print("All good. VM exists.")
         if CoreChecks(vm_name=vm_name, disk_image_name=disk).disk_exists():
             print("All good. Disk exists.")
+            disk_location = CoreChecks(vm_name=vm_name, disk_image_name=disk).disk_location()
+            shell_command = "truncate -s +" + str(size) + "G " + disk_location
+            subprocess.run(shell_command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            print("Disk was enlarged by " + str(size) + "G. Reboot or start the VM now to apply new settings.")
         else:
             sys.exit("Sorry, could not find the disk: " + disk)
     else:
