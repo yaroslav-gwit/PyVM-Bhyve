@@ -349,7 +349,7 @@ def console(vm_name:str = typer.Argument(..., help="VM Name")):
 
 
 @app.command()
-def destroy(vm_name:str = typer.Argument("Default", help="VM Name")):
+def destroy(vm_name:str = typer.Argument(..., help="VM Name")):
     """
     Completely remove the VM from this system!
     """
@@ -359,8 +359,32 @@ def destroy(vm_name:str = typer.Argument("Default", help="VM Name")):
         sys.exit("VM is still running. You'll have to stop (or kill) it first.")
     else:
         command = "zfs destroy -rR " + CoreChecks(vm_name).vm_location()
-        print(command)
-        # shell_command = subprocess.check_output(command, shell=True)
+        # DEBUG
+        # print(command)
+        shell_command = subprocess.check_output(command, shell=True)
+        print("The VM " + vm_name + " was destroyed!")
+
+
+@app.command()
+def snapshot(vm_name:str = typer.Argument(..., help="VM Name"),
+    type:str = typer.Option("custom", help="Snapshot type: daily, weekly, etc"),
+    keep:str = typer.Option(3, help="How many snapshots to keep")
+    ):
+    """
+    Snapshot the VM (RAM snapshots are not supported)
+    """
+    snapshot_type_list = [ "replication", "custom", "hourly", "daily", "weekly", "monthly", "yearly" ]
+    if vm_name in VmList().json_output():
+        date_now = time.strftime("%Y-%m-%d_%H-%M-%S", time.localtime())
+        snapshot_name = snapshot_type + "_" + date_now
+        command = "zfs snapshot " + CoreChecks(vm_name).vm_location() + "@" + snapshot_name
+        subprocess.run(command, shell=True, stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
+        # DEBUG
+        # print(command)
+        print("The snapshot was taken for the VM: " + vm_name)
+    else:
+        sys.exit("VM doesn't exist on this system.")
+        
 
 """ If this file is executed from the command line, activate Typer """
 if __name__ == "__main__":
