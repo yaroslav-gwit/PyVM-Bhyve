@@ -300,7 +300,7 @@ def diskexpand(vm_name:str = typer.Argument(..., help="VM name"),
         disk:str = typer.Option("disk0.img", help="Disk image file name"),
     ):
     """
-    Expand one of VM's disks. Example: hoster vm diskexpand test_vm_1 --disk disk1.img --size 100
+    Make VM disks larger. Example: hoster vm diskexpand test_vm_1 --disk disk1.img --size 100
     """
     if vm_name in VmList().json_output():
         # DEBUG
@@ -321,7 +321,7 @@ def diskexpand(vm_name:str = typer.Argument(..., help="VM name"),
 @app.command()
 def rename(vm_name:str = typer.Argument("Default", help="VM Name")):
     """
-    Rename one of the VMs
+    Rename the VM
     """
     print("This feature is not available. To rename your VM use cireset, like so: 'hoster vm cireset old_vm_name --new-name new_vm_name'.")
 
