@@ -67,7 +67,7 @@ class CoreChecks:
             if exists(ds["mount_path"]+self.vm_name):
                 vm_location = ds["zfs_path"] + self.vm_name
                 return vm_location
-            else:
+            elif ds == len(self.zfs_datasets["datasets"]) and not exists(ds["mount_path"]+self.vm_name):
                 sys.exit("VM doesn't exist!")
 
 
@@ -351,7 +351,7 @@ def console(vm_name:str = typer.Argument(..., help="VM Name")):
 @app.command()
 def destroy(vm_name:str = typer.Argument("Default", help="VM Name")):
     """
-    Rename one of the VMs
+    Completely remove the VM from this system!
     """
     if vm_name not in VmList().json_output():
         sys.exit("VM doesn't exist on this system.")
