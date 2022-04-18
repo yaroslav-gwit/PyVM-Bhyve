@@ -289,7 +289,7 @@ def info(vm_name:str = typer.Argument(..., help="Print VM config file to the scr
 @app.command()
 def edit(vm_name:str = typer.Argument(..., help="Edit VM config file with nano")):
     """
-    Manually edit the VM's config file
+    Manually edit the VM config file (with 'nano')
     """
     VmConfigs(vm_name).vm_config_manual_edit()
 
