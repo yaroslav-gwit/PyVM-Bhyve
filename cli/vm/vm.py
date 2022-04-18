@@ -373,6 +373,7 @@ def snapshot(vm_name:str = typer.Argument(..., help="VM Name"),
     """
     Snapshot the VM (RAM snapshots are not supported)
     """
+    snapshot_type = type
     snapshot_type_list = [ "replication", "custom", "hourly", "daily", "weekly", "monthly", "yearly" ]
     if vm_name in VmList().json_output():
         date_now = time.strftime("%Y-%m-%d_%H-%M-%S", time.localtime())
