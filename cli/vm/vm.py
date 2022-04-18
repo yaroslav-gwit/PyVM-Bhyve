@@ -312,7 +312,7 @@ def diskexpand(vm_name:str = typer.Argument(..., help="VM name"),
 
 
 @app.command()
-def rename(vm_name:str = typer.Argument(..., help="VM Name")):
+def rename(vm_name:str = typer.Argument("Default", help="VM Name")):
     """
     Rename one of the VMs
     """
