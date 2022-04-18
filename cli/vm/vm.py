@@ -367,14 +367,14 @@ def destroy(vm_name:str = typer.Argument(..., help="VM Name")):
 
 @app.command()
 def snapshot(vm_name:str = typer.Argument(..., help="VM Name"),
-    type:str = typer.Option("custom", help="Snapshot type: daily, weekly, etc"),
+    stype:str = typer.Option("custom", help="Snapshot type: daily, weekly, etc"),
     keep:int = typer.Option(3, help="How many snapshots to keep")
     ):
     """
     Snapshot the VM (RAM snapshots are not supported). Snapshot will be taken at the storage level: ZFS or GlusterFS.
     Example: hoster vm snapshot test-vm-1 --type weekly --keep 5
     """
-    snapshot_type = type
+    snapshot_type = stype
     snapshots_to_keep = keep
     snapshot_type_list = [ "replication", "custom", "hourly", "daily", "weekly", "monthly", "yearly" ]
     if vm_name in VmList().json_output():
@@ -410,15 +410,14 @@ def snapshot(vm_name:str = typer.Argument(..., help="VM Name"),
 
 
 @app.command()
-def snapshot_all(type:str = typer.Option("custom", help="Snapshot type: daily, weekly, etc"),
+def snapshot_all(stype:str = typer.Option("custom", help="Snapshot type: daily, weekly, etc"),
     keep:int = typer.Option(3, help="How many snapshots to keep")
     ):
     """
     Snapshot all VMs
     """
-    snapshot_type = type
     for vm_name in VmList().json_output():
-        snapshot(vm_name=vm_name, keep=keep, type=snapshot_type)
+        snapshot(vm_name=vm_name, keep=keep, stype=stype)
 
 
 @app.command()
