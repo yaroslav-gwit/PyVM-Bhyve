@@ -61,7 +61,14 @@ class CoreChecks:
             image_path = ds["mount_path"]+self.vm_name+"/"+self.disk_image_name
             if exists(image_path):
                 return image_path
-
+    
+    def vm_location(self):
+        for ds in self.zfs_datasets["datasets"]:
+            if exists(ds["mount_path"]+self.vm_name):
+                vm_location = ds["zfs_path"] + self.vm_name
+                return vm_location
+            else:
+                sys.exit("VM doesn't exist!")
 
 
 class VmConfigs:
@@ -324,7 +331,9 @@ def console(vm_name:str = typer.Argument(..., help="VM Name")):
     """
     Connect to VM's console
     """
-    if CoreChecks(vm_name).vm_is_live():
+    if vm_name not in VmList().json_output():
+        sys.exit("VM doesn't exist on this system.")
+    elif CoreChecks(vm_name).vm_is_live():
         command = "tmux ls | grep -c " + vm_name + " || true"
         shell_command = subprocess.check_output(command, shell=True)
         tmux_sessions = shell_command.decode("utf-8").split()[0]
@@ -338,6 +347,20 @@ def console(vm_name:str = typer.Argument(..., help="VM Name")):
     else:
         sys.exit("VM is not running. Start the VM first to connect to it's console.")
 
+
+@app.command()
+def destroy(vm_name:str = typer.Argument("Default", help="VM Name")):
+    """
+    Rename one of the VMs
+    """
+    if vm_name not in VmList().json_output():
+        sys.exit("VM doesn't exist on this system.")
+    elif CoreChecks(vm_name).vm_is_live():
+        sys.exit("VM is still running. You'll have to stop (or kill) it first.")
+    else:
+        command = "zfs destroy -rR " + CoreChecks(vm_name).vm_location()
+        print(command)
+        # shell_command = subprocess.check_output(command, shell=True)
 
 """ If this file is executed from the command line, activate Typer """
 if __name__ == "__main__":
