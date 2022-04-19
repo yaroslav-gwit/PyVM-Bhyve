@@ -317,7 +317,7 @@ class Operation:
         else:
             command = "zfs destroy -rR " + CoreChecks(vm_name).vm_location()
             # ADD DEBUG/FAKE RUN
-            # shell_command = subprocess.check_output(command, shell=True)
+            shell_command = subprocess.check_output(command, shell=True)
             print("The VM was destroyed: " + command)
 
     @staticmethod
