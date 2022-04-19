@@ -263,6 +263,10 @@ class VmList:
 class Operation:
     @staticmethod
     def snapshot(vm_name:str, stype:str="custom", keep:int=3):
+        """
+        Function responsible for taking VM Snapshots
+        """
+
         snapshot_type = stype
         snapshots_to_keep = keep
         snapshot_type_list = [ "replication", "custom", "hourly", "daily", "weekly", "monthly", "yearly" ]
@@ -296,6 +300,53 @@ class Operation:
                     print("Old snapshot was removed: " + command)
             else:
                 print("VM " + vm_name + " doesn't have any snapshots to delete")
+
+    @staticmethod
+    def destroy(vm_name:str, force:bool=False):
+        """
+        Function responsible for completely removing VMs from the system
+        """
+        if force == True:
+            sys.exit("Sorry, this feature has not been implemented yet!")
+
+        if vm_name not in VmList().plainList:
+            sys.exit("VM doesn't exist on this system.")
+        # elif force -> future force option
+        elif CoreChecks(vm_name).vm_is_live():
+            sys.exit("VM is still running. You'll have to stop (or kill) it first.")
+        else:
+            command = "zfs destroy -rR " + CoreChecks(vm_name).vm_location()
+            # DEBUG
+            # print(command)
+            shell_command = subprocess.check_output(command, shell=True)
+            print("The VM " + vm_name + " was destroyed!")
+
+    @staticmethod
+    def kill(vm_name:str):
+        """
+        Function that forcefully kills the VM
+        """
+        if vm_name not in VmList().plainList:
+            sys.exit("VM doesn't exist on this system.")
+        elif CoreChecks(vm_name).vm_is_live():
+            command = "ifconfig | grep " + vm_name + " | awk '{ print $2 }'"
+            shell_command = subprocess.check_output(command, shell=True)
+            running_tap_adaptor = shell_command.decode("utf-8").split()[0]
+            tap_interface_list = shell_command.decode("utf-8").split()
+
+            command = "bhyvectl --destroy --vm=" + vm_name
+            shell_command = subprocess.run(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            
+            time.sleep(1)
+
+            for tap in tap_interface_list:
+                if tap:
+                    command = "ifconfig " + tap + " destroy"
+                    shell_command = subprocess.run(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            print("Killed the VM: " + vm_name)
+        else:
+            print("VM is already dead!")
+            sys.exit(0)
 
 
 
@@ -389,20 +440,22 @@ def console(vm_name:str = typer.Argument(..., help="VM Name")):
 
 
 @app.command()
-def destroy(vm_name:str = typer.Argument(..., help="VM Name")):
+def destroy(vm_name:str = typer.Argument(..., help="VM Name"),
+    force:bool = typer.Option(False, help="Kill and destroy the VM, even if it's running"),
+    ):
     """
     Completely remove the VM from this system!
     """
-    if vm_name not in VmList().plainList:
-        sys.exit("VM doesn't exist on this system.")
-    elif CoreChecks(vm_name).vm_is_live():
-        sys.exit("VM is still running. You'll have to stop (or kill) it first.")
-    else:
-        command = "zfs destroy -rR " + CoreChecks(vm_name).vm_location()
-        # DEBUG
-        # print(command)
-        shell_command = subprocess.check_output(command, shell=True)
-        print("The VM " + vm_name + " was destroyed!")
+    Operation.destroy(vm_name=vm_name)
+
+@app.command()
+def destroy_all(force:bool = typer.Option(False, help="Kill and destroy all VMs, even if they are running")):
+    """
+    Completely remove all VMs from this system!
+    """
+    vm_list = VmList().plainList
+    for _vm in vm_list:
+        Operation.destroy(vm_name=_vm, force=force)
 
 
 @app.command()
@@ -434,27 +487,16 @@ def kill(vm_name:str = typer.Argument(..., help="VM Name")):
     """
     Kill the VM immediately!
     """
-    if vm_name not in VmList().plainList:
-        sys.exit("VM doesn't exist on this system.")
-    elif CoreChecks(vm_name).vm_is_live():
-        command = "ifconfig | grep " + vm_name + " | awk '{ print $2 }'"
-        shell_command = subprocess.check_output(command, shell=True)
-        running_tap_adaptor = shell_command.decode("utf-8").split()[0]
-        tap_interface_list = shell_command.decode("utf-8").split()
+    Operation.kill(vm_name=vm_name)
 
-        command = "bhyvectl --destroy --vm=" + vm_name
-        shell_command = subprocess.run(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        
-        time.sleep(1)
-
-        for tap in tap_interface_list:
-            if tap:
-                command = "ifconfig " + tap + " destroy"
-                shell_command = subprocess.run(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        print("Killed the VM: " + vm_name)
-    else:
-        print("VM is already dead!")
-        sys.exit(0)
+@app.command()
+def kill_all():
+    """
+    Kill all VMs on this system!
+    """
+    vm_list = VmList().plainList
+    for _vm in vm_list:
+        Operation.kill(vm_name=_vm)
 
 
 """ If this file is executed from the command line, activate Typer """
