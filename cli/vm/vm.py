@@ -312,13 +312,12 @@ class Operation:
         if vm_name not in VmList().plainList:
             sys.exit("VM doesn't exist on this system.")
         elif CoreChecks(vm_name).vm_is_live():
-            sys.exit("VM is still running. You'll have to stop (or kill) it first.")
+            print("VM is still running. You'll have to stop (or kill) it first.")
         else:
             command = "zfs destroy -rR " + CoreChecks(vm_name).vm_location()
-            # DEBUG
-            print(command)
+            # ADD DEBUG/FAKE RUN
             # shell_command = subprocess.check_output(command, shell=True)
-            print("The VM " + vm_name + " was destroyed!")
+            print("The VM was destroyed: " + command)
 
     @staticmethod
     def kill(vm_name:str):
