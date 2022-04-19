@@ -423,7 +423,8 @@ def snapshot_all(stype:str = typer.Option("custom", help="Snapshot type: daily, 
     """
     Snapshot all VMs
     """
-    for vm_name in VmList().json_output():
+    vm_list = VmList().json_output()
+    for vm_name in vm_list:
         Operation.snapshot(vm_name=vm_name, keep=keep, stype=stype)
 
 
