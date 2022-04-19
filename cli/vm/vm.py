@@ -346,6 +346,10 @@ class Operation:
         else:
             print("VM is already dead: " + vm_name + "!")
 
+    @staticmethod
+    def start(vm_name:str):
+        print("Sorry, this feature has not been implemented yet!")
+
 
 
 """ Section below is responsible for the CLI input/output """
