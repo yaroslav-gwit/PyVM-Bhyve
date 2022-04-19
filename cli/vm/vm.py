@@ -127,8 +127,7 @@ class VmList:
                 print("Please create 2 zfs datasets: " + zfs_datasets_list)
                 sys.exit(1)
         
-        plainList = vmColumnNames.copy()
-        self.plainList = plainList
+        self.plainList = vmColumnNames.copy()
         self.vmColumnNames = natsorted(vmColumnNames)
 
     def table_output(self):
@@ -425,7 +424,7 @@ def snapshot_all(stype:str = typer.Option("custom", help="Snapshot type: daily, 
     """
     Snapshot all VMs
     """
-    vm_list = VmList.vmColumnNames
+    vm_list = VmList().plainList
     for _vm in vm_list:
         Operation.snapshot(vm_name=_vm, keep=keep, stype=stype)
 
