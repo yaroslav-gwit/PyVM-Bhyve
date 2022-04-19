@@ -306,14 +306,12 @@ class Operation:
         """
         Function responsible for completely removing VMs from the system
         """
-        vm_is_live = CoreChecks(vm_name).vm_is_live()
-
-        if force == True and vm_is_live:
+        if force == True and CoreChecks(vm_name).vm_is_live():
             kill(vm_name=vm_name)
 
         if vm_name not in VmList().plainList:
             sys.exit("VM doesn't exist on this system.")
-        elif vm_is_live:
+        elif CoreChecks(vm_name).vm_is_live():
             print("VM is still running. You'll have to stop (or kill) it first.")
         else:
             command = "zfs destroy -rR " + CoreChecks(vm_name).vm_location()
