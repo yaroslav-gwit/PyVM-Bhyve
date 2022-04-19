@@ -128,7 +128,7 @@ class VmList:
                 sys.exit(1)
         
         plainList = vmColumnNames.copy()
-        self.Plain = plainList
+        self.plainList = plainList
         self.vmColumnNames = natsorted(vmColumnNames)
 
     def table_output(self):
