@@ -307,18 +307,17 @@ class Operation:
         Function responsible for completely removing VMs from the system
         """
         if force == True:
-            sys.exit("Sorry, this feature has not been implemented yet!")
+            kill(vm_name=vm_name)
 
         if vm_name not in VmList().plainList:
             sys.exit("VM doesn't exist on this system.")
-        # elif force -> future force option
         elif CoreChecks(vm_name).vm_is_live():
             sys.exit("VM is still running. You'll have to stop (or kill) it first.")
         else:
             command = "zfs destroy -rR " + CoreChecks(vm_name).vm_location()
             # DEBUG
-            # print(command)
-            shell_command = subprocess.check_output(command, shell=True)
+            print(command)
+            # shell_command = subprocess.check_output(command, shell=True)
             print("The VM " + vm_name + " was destroyed!")
 
     @staticmethod
@@ -345,8 +344,7 @@ class Operation:
                     shell_command = subprocess.run(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             print("Killed the VM: " + vm_name)
         else:
-            print("VM is already dead!")
-            sys.exit(0)
+            print("VM is already dead: " + vm_name + "!")
 
 
 
