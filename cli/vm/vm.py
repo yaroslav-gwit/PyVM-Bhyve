@@ -266,7 +266,7 @@ class Operation:
         snapshot_type = stype
         snapshots_to_keep = keep
         snapshot_type_list = [ "replication", "custom", "hourly", "daily", "weekly", "monthly", "yearly" ]
-        if vm_name in VmList().json_output():
+        if vm_name in VmList().plainList:
             date_now = time.strftime("%Y-%m-%d_%H-%M-%S", time.localtime())
             snapshot_name = snapshot_type + "_" + date_now
             command = "zfs snapshot " + CoreChecks(vm_name).vm_location() + "@" + snapshot_name
@@ -342,7 +342,7 @@ def diskexpand(vm_name:str = typer.Argument(..., help="VM name"),
     """
     Make VM disks larger. Example: hoster vm diskexpand test_vm_1 --disk disk1.img --size 100
     """
-    if vm_name in VmList().json_output():
+    if vm_name in VmList().plainList:
         # DEBUG
         # print("All good. VM exists.")
         if CoreChecks(vm_name=vm_name, disk_image_name=disk).disk_exists():
@@ -371,7 +371,7 @@ def console(vm_name:str = typer.Argument(..., help="VM Name")):
     """
     Connect to VM's console
     """
-    if vm_name not in VmList().json_output():
+    if vm_name not in VmList().plainList:
         sys.exit("VM doesn't exist on this system.")
     elif CoreChecks(vm_name).vm_is_live():
         command = "tmux ls | grep -c " + vm_name + " || true"
@@ -393,7 +393,7 @@ def destroy(vm_name:str = typer.Argument(..., help="VM Name")):
     """
     Completely remove the VM from this system!
     """
-    if vm_name not in VmList().json_output():
+    if vm_name not in VmList().plainList:
         sys.exit("VM doesn't exist on this system.")
     elif CoreChecks(vm_name).vm_is_live():
         sys.exit("VM is still running. You'll have to stop (or kill) it first.")
@@ -434,7 +434,7 @@ def kill(vm_name:str = typer.Argument(..., help="VM Name")):
     """
     Kill the VM immediately!
     """
-    if vm_name not in VmList().json_output():
+    if vm_name not in VmList().plainList:
         sys.exit("VM doesn't exist on this system.")
     elif CoreChecks(vm_name).vm_is_live():
         command = "ifconfig | grep " + vm_name + " | awk '{ print $2 }'"
