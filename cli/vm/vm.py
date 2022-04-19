@@ -308,6 +308,7 @@ class Operation:
         """
         if force == True and CoreChecks(vm_name).vm_is_live():
             kill(vm_name=vm_name)
+            time.sleep(3)
 
         if vm_name not in VmList().plainList:
             sys.exit("VM doesn't exist on this system.")
