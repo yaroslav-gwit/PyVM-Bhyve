@@ -259,6 +259,45 @@ class VmList:
 
 
 
+class Operation:
+    @staticmethod
+    def snapshot(vm_name:str, stype:str="custom", keep:int=3):
+        snapshot_type = stype
+        snapshots_to_keep = keep
+        snapshot_type_list = [ "replication", "custom", "hourly", "daily", "weekly", "monthly", "yearly" ]
+        if vm_name in VmList().json_output():
+            date_now = time.strftime("%Y-%m-%d_%H-%M-%S", time.localtime())
+            snapshot_name = snapshot_type + "_" + date_now
+            command = "zfs snapshot " + CoreChecks(vm_name).vm_location() + "@" + snapshot_name
+            subprocess.run(command, shell=True, stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
+            # DEBUG
+            # print(command)
+            print("New snapshot was taken: " + command)
+        else:
+            sys.exit("VM doesn't exist on this system.")
+            
+        # Remove old snapshots
+        if snapshot_type != "custom":
+            # Get the snapshot list
+            command = "zfs list -r -t snapshot " + CoreChecks(vm_name).vm_location() + " | tail +2 | awk '{ print $1 }' | grep " + snapshot_type
+            shell_command = subprocess.check_output(command, shell=True, stderr=subprocess.DEVNULL)
+            vm_zfs_snapshot_list = shell_command.decode("utf-8").split()
+
+            # Generate list of snapshots to delete
+            vm_zfs_snapshots_to_delete = vm_zfs_snapshot_list.copy()
+            if len(vm_zfs_snapshots_to_delete) > 0 and len(vm_zfs_snapshots_to_delete) > snapshots_to_keep:
+                for zfs_snapshot in range(0, snapshots_to_keep):
+                    del vm_zfs_snapshots_to_delete[-1]
+                # Remove the old snapshots
+                for vm_zfs_snapshot_to_delete in vm_zfs_snapshots_to_delete:
+                    command = "zfs destroy " + vm_zfs_snapshot_to_delete
+                    subprocess.run(command, shell=True)
+                    print("Old snapshot was removed: " + command)
+            else:
+                print("VM " + vm_name + " doesn't have any snapshots to delete")
+
+
+
 """ Section below is responsible for the CLI input/output """
 app = typer.Typer(context_settings=dict(max_content_width=800))
 # app.add_typer(vmdeploy.app, name="deploy", help="Manage users in the app.")
@@ -374,39 +413,7 @@ def snapshot(vm_name:str = typer.Argument(..., help="VM Name"),
     Snapshot the VM (RAM snapshots are not supported). Snapshot will be taken at the storage level: ZFS or GlusterFS.
     Example: hoster vm snapshot test-vm-1 --type weekly --keep 5
     """
-    snapshot_type = stype
-    snapshots_to_keep = keep
-    snapshot_type_list = [ "replication", "custom", "hourly", "daily", "weekly", "monthly", "yearly" ]
-    if vm_name in VmList().json_output():
-        date_now = time.strftime("%Y-%m-%d_%H-%M-%S", time.localtime())
-        snapshot_name = snapshot_type + "_" + date_now
-        command = "zfs snapshot " + CoreChecks(vm_name).vm_location() + "@" + snapshot_name
-        subprocess.run(command, shell=True, stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
-        # DEBUG
-        # print(command)
-        print("New snapshot was taken: " + command)
-    else:
-        sys.exit("VM doesn't exist on this system.")
-        
-    # Remove old snapshots
-    if snapshot_type != "custom":
-        # Get the snapshot list
-        command = "zfs list -r -t snapshot " + CoreChecks(vm_name).vm_location() + " | tail +2 | awk '{ print $1 }' | grep " + snapshot_type
-        shell_command = subprocess.check_output(command, shell=True, stderr=subprocess.DEVNULL)
-        vm_zfs_snapshot_list = shell_command.decode("utf-8").split()
-
-        # Generate list of snapshots to delete
-        vm_zfs_snapshots_to_delete = vm_zfs_snapshot_list.copy()
-        if len(vm_zfs_snapshots_to_delete) > 0 and len(vm_zfs_snapshots_to_delete) > snapshots_to_keep:
-            for zfs_snapshot in range(0, snapshots_to_keep):
-                del vm_zfs_snapshots_to_delete[-1]
-            # Remove the old snapshots
-            for vm_zfs_snapshot_to_delete in vm_zfs_snapshots_to_delete:
-                command = "zfs destroy " + vm_zfs_snapshot_to_delete
-                subprocess.run(command, shell=True)
-                print("Old snapshot was removed: " + command)
-        else:
-            print("VM " + vm_name + " doesn't have any snapshots to delete")
+    Operation.snapshot(vm_name=vm_name, stype=stype, keep=keep)
 
 
 @app.command()
@@ -417,7 +424,7 @@ def snapshot_all(stype:str = typer.Option("custom", help="Snapshot type: daily, 
     Snapshot all VMs
     """
     for vm_name in VmList().json_output():
-        snapshot(vm_name=vm_name, keep=keep, stype=stype)
+        Operation.snapshot(vm_name=vm_name, keep=keep, stype=stype)
 
 
 @app.command()
