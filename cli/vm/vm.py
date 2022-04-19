@@ -126,8 +126,8 @@ class VmList:
             else:
                 print("Please create 2 zfs datasets: " + zfs_datasets_list)
                 sys.exit(1)
-            
-        self.vm_list = vmColumnNames
+
+        self.vm_list = vmColumnNames.copy()
         self.vmColumnNames = natsorted(vmColumnNames)
 
     def table_output(self):
