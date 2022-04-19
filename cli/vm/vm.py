@@ -467,7 +467,6 @@ def snapshot(vm_name:str = typer.Argument(..., help="VM Name"),
     """
     Operation.snapshot(vm_name=vm_name, stype=stype, keep=keep)
 
-
 @app.command()
 def snapshot_all(stype:str = typer.Option("custom", help="Snapshot type: daily, weekly, etc"),
     keep:int = typer.Option(3, help="How many snapshots to keep")
