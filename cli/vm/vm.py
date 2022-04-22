@@ -299,7 +299,7 @@ class Operation:
                     subprocess.run(command, shell=True)
                     print("Old snapshot was removed: " + command)
             else:
-                print("VM " + vm_name + " doesn't have any snapshots to delete")
+                print("VM " + vm_name + " doesn't have any '" + snapshot_type + "' snapshots to delete")
 
     @staticmethod
     def destroy(vm_name:str, force:bool=False):
