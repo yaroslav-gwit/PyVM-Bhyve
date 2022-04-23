@@ -333,9 +333,9 @@ class Operation:
         if vm_name not in VmList().plainList:
             sys.exit("VM doesn't exist on this system.")
         elif CoreChecks(vm_name).vm_is_live():
+            # This block is a duplicate. Creating a function would be a good idea for the future!
             command = "ifconfig | grep " + vm_name + " | awk '{ print $2 }'"
             shell_command = subprocess.check_output(command, shell=True)
-            running_tap_adaptor = shell_command.decode("utf-8").split()[0]
             tap_interface_list = shell_command.decode("utf-8").split()
 
             command = "bhyvectl --destroy --vm=" + vm_name
@@ -343,12 +343,14 @@ class Operation:
             
             time.sleep(1)
 
-            for tap in tap_interface_list:
-                if tap:
-                    command = "ifconfig " + tap + " destroy"
-                    shell_command = subprocess.run(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            if tap_interface_list:
+                for tap in tap_interface_list:
+                    if tap:
+                        command = "ifconfig " + tap + " destroy"
+                        shell_command = subprocess.run(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             print("Killed the VM: " + vm_name)
         else:
+            # This block is a duplicate. Creating a function would be a good idea for the future!
             command = "ifconfig | grep " + vm_name + " | awk '{ print $2 }'"
             shell_command = subprocess.check_output(command, shell=True)
             tap_interface_list = shell_command.decode("utf-8").split()
@@ -525,13 +527,13 @@ def start(vm_name:str = typer.Argument(..., help="VM name"),
     elif vm_name in VmList().plainList:
         print("Starting the VM: " + vm_name + ". It should be up and running shortly.")
         
+        #_ NETWORKING - Create required TAP interfaces _#
         vm_network_interfaces = CoreChecks(vm_name).vm_network_interfaces()
         tap_interface_number = 0
         tap_interface_list = []
         interface_number = 0
         
         for interface in vm_network_interfaces:
-            #_ Create required TAP interfaces _#
             command = "ifconfig | grep -G '^tap' | awk '{ print $1 }' | sed s/://"
             shell_command = subprocess.check_output(command, shell=True)
             existing_tap_interfaces = shell_command.decode("utf-8").split()
@@ -559,6 +561,26 @@ def start(vm_name:str = typer.Argument(..., help="VM name"),
             
             interface_number = interface_number + 1
             tap_interface_list.append(tap_interface)
+        
+        #_ NEXT SECTION _#
+        command1 = "bhyve -HAw -s 0:0,hostbridge -s 31,lpc "
+
+        s1 = 2
+        s2 = 0
+        space = " "
+        for network_interface in range(len(vm_network_interfaces)):
+            network_adaptor_type = vm_network_interfaces[network_interface]["network_adaptor_type"]
+            print(str(network_interface) + space + network_adaptor_type)
+        # network_adaptor_type = vm_info_dict["network_adaptor_type"]
+        # else_macs_text = "," + network_adaptor_type + ","
+        # for mac in range(0, len(macs_list)):
+        #     if mac == 0:
+        #         mac_final = "-s " + str(s1) + ":" + str(s2) + else_macs_text + tap_interface_list[mac] + ",mac=" + macs_list[mac]
+        #     else:
+        #         s2 = s2 + 1
+        #         mac_final = mac_final + space + "-s " + str(s1) + ":" + str(s2) + else_macs_text + tap_interface_list[mac] + ",mac=" + macs_list[mac]
+
+        # command2 = mac_final
     else:
         print("Such VM doesn't exist!")
 
