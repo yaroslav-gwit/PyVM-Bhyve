@@ -71,6 +71,7 @@ class CoreChecks:
                 sys.exit("VM doesn't exist!")
     
     def vm_network_interfaces(self):
+        vm_name = self.vm_name
         vm_config = VmConfigs(vm_name).vm_config_read()
         vm_network_interfaces = vm_config["networks"]
         return vm_network_interfaces
