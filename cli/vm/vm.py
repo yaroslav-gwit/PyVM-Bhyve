@@ -579,18 +579,9 @@ def start(vm_name:str = typer.Argument(..., help="VM name"),
             network_adaptor_type = vm_network_interfaces[0]["network_adaptor_type"]
             generic_network_text = "," + network_adaptor_type + ","
             network_final = "-s " + str(bhyve_pci_1) + ":" + str(bhyve_pci_2) + generic_network_text + tap_interface_list[0] + ",mac=" + vm_network_interfaces[0]["network_mac"]
-        print(network_final)
 
-        # network_adaptor_type = vm_info_dict["network_adaptor_type"]
-        # else_macs_text = "," + network_adaptor_type + ","
-        # for mac in range(0, len(macs_list)):
-        #     if mac == 0:
-        #         mac_final = "-s " + str(s1) + ":" + str(s2) + else_macs_text + tap_interface_list[mac] + ",mac=" + macs_list[mac]
-        #     else:
-        #         s2 = s2 + 1
-        #         mac_final = mac_final + space + "-s " + str(s1) + ":" + str(s2) + else_macs_text + tap_interface_list[mac] + ",mac=" + macs_list[mac]
-
-        # command2 = mac_final
+        command2 = network_final
+        print(command1 + command2)
     else:
         print("Such VM doesn't exist!")
 
