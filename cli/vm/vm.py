@@ -574,7 +574,7 @@ def start(vm_name:str = typer.Argument(..., help="VM name"),
             while tap_interface in existing_tap_interfaces:
                 tap_interface_number = tap_interface_number + 1
                 tap_interface = "tap" + str(tap_interface_number)
-            print(tap_interface)
+            # print(tap_interface)
             
             command = "ifconfig " + tap_interface + " create"
             print(command)
@@ -654,10 +654,9 @@ def start(vm_name:str = typer.Argument(..., help="VM name"),
         else:
             print("Loader is not supported!")
 
-        print(command)
-        
         vm_folder = CoreChecks(vm_name).vm_folder()
-        command = "nohup /root/bin/startvm " + '"' + command + '"' + " " + vm_name + " > " + vm_folder + "vm.log 2>&1 &"
+        # command = "nohup /root/bin/startvm " + '"' + command + '"' + " " + vm_name + " > " + vm_folder + "vm.log 2>&1 &"
+        command = "nohup /root/bin/startvm " + '"' + command + '"' + " " + vm_name + " &> " + vm_folder + "vm.log &"
         print(command)
 
     else:
