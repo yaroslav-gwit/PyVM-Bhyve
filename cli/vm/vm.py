@@ -574,7 +574,7 @@ def start(vm_name:str = typer.Argument(..., help="VM name"),
                     network_final = "-s " + str(bhyve_pci_1) + ":" + str(bhyve_pci_2) + generic_network_text + tap_interface_list[interface] + ",mac=" + vm_network_interfaces[interface]["network_mac"]
                 else:
                     bhyve_pci_2 = bhyve_pci_2 + 1
-                    network_final = network_final + + space + "-s " + str(bhyve_pci_1) + ":" + str(bhyve_pci_2) + generic_network_text + tap_interface_list[interface] + ",mac=" + vm_network_interfaces[interface]["network_mac"]
+                    network_final = network_final + space + "-s " + str(bhyve_pci_1) + ":" + str(bhyve_pci_2) + generic_network_text + tap_interface_list[interface] + ",mac=" + vm_network_interfaces[interface]["network_mac"]
         else:
             network_adaptor_type = vm_network_interfaces[0]["network_adaptor_type"]
             generic_network_text = "," + network_adaptor_type + ","
