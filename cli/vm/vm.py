@@ -535,19 +535,19 @@ def start(vm_name:str = typer.Argument(..., help="VM name"),
             
             command = "ifconfig " + tap_interface + " create"
             print(command)
-            # subprocess.run(command, shell=True)
+            subprocess.run(command, shell=True)
             
             command = "ifconfig vm-" + vm_network_interfaces[0]["network_bridge"] + " addm " + tap_interface
             print(command)
-            # subprocess.run(command, shell=True)
+            subprocess.run(command, shell=True)
             
             command = "ifconfig vm-"+ vm_network_interfaces[0]["network_bridge"] + " up"
             print(command)
-            # subprocess.run(command, shell=True)
+            subprocess.run(command, shell=True)
             
             command = 'ifconfig ' + tap_interface + ' description ' + '"' + tap_interface + ' ' + vm_name + ' ' + 'interface' + str(interface_number) + '"'
             print(command)
-            # subprocess.run(command, shell=True)
+            subprocess.run(command, shell=True)
             
             interface_number = interface_number + 1
             tap_interface_list.append(tap_interface)
