@@ -92,6 +92,7 @@ class CoreChecks:
     def vm_os_type(self):
         vm_config = self.vm_config
         os_type = vm_config.get["os_type", "debian11"]
+        return os_type
 
 
 
