@@ -500,6 +500,42 @@ def kill_all():
         Operation.kill(vm_name=_vm)
 
 
+@app.command()
+def start(vm_name:str = typer.Argument(..., help="VM name"),
+    wait:int = typer.Option(5, help="Seconds to wait before starting the next VM on the list")
+    ):
+    """
+    Power on the VM
+    """
+    if CoreChecks(vm_name).vm_is_live():
+        print("VM is already live!")
+    elif vm_name in VmList().plainList:
+        print("Starting the VM: " + vmname + ". It should be up and running shortly.")
+        
+        #_ Create required TAP interfaces _#
+        tap_interface_list = []
+        command = "ifconfig | grep -G '^tap' | awk '{ print $1 }' | sed s/://"
+        shell_command = subprocess.check_output(command, shell=True)
+        existing_tap_interfaces = shell_command.decode("utf-8").split()
+        tap_interface_number = 0
+        tap_interface = "tap" + str(tap_interface_number)
+        while tap_interface in existing_tap_interfaces:
+            tap_interface_number = tap_interface_number + 1
+            tap_interface = "tap" + str(tap_interface_number)
+        print(tap_interface)
+        # command = "ifconfig " + tap_interface + " create"
+        # subprocess.run(command, shell=True)
+        # command = "ifconfig vm-" + vm_info_dict["network_bridges"][interface_index] + " addm " + tap_interface
+        # subprocess.run(command, shell=True)
+        # command = "ifconfig vm-"+ vm_info_dict["network_bridges"][interface_index] + " up"
+        # subprocess.run(command, shell=True)
+        # command = 'ifconfig ' + tap_interface + ' description ' + '"' + tap_interface + ' ' + vmname + ' ' + 'interface' + str(interface_index) + '"'
+        # subprocess.run(command, shell=True)
+        # tap_interface_list.append(tap_interface)
+    else:
+        print("Such VM doesn't exist!")
+
+
 """ If this file is executed from the command line, activate Typer """
 if __name__ == "__main__":
     app()
