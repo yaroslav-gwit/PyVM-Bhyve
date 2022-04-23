@@ -87,6 +87,7 @@ class CoreChecks:
         vm_cpu = {}
         vm_cpu["cpu_sockets"] = vm_config.get("cpu_sockets", 1)
         vm_cpu["cpu_cores"] = vm_config.get("cpu_cores", 2)
+        vm_cpu["memory"] = vm_config.get("memory", "1G")
         return vm_cpu
     
     def vm_os_type(self):
@@ -624,7 +625,7 @@ def start(vm_name:str = typer.Argument(..., help="VM name"),
 
         os_type = CoreChecks(vm_name).vm_os_type()
         vm_cpus = CoreChecks(vm_name).vm_cpus()
-        command5 = " -c sockets=" + vm_cpus["cpu_sockets"] + ",cores=" + vm_cpus["cpu_cores"] + " -m " + vm_info_dict["memory"]
+        command5 = " -c sockets=" + vm_cpus["cpu_sockets"] + ",cores=" + vm_cpus["cpu_cores"] + " -m " + vm_cpus["memory"]
 
         print(command1 + command2 + command3 + command5)
     else:
