@@ -577,19 +577,19 @@ def start(vm_name:str = typer.Argument(..., help="VM name"),
             # print(tap_interface)
             
             command = "ifconfig " + tap_interface + " create"
-            print(command)
+            # print(command)
             subprocess.run(command, shell=True)
             
             command = "ifconfig vm-" + vm_network_interfaces[interface]["network_bridge"] + " addm " + tap_interface
-            print(command)
+            # print(command)
             subprocess.run(command, shell=True)
             
             command = "ifconfig vm-"+ vm_network_interfaces[interface]["network_bridge"] + " up"
-            print(command)
+            # print(command)
             subprocess.run(command, shell=True)
             
             command = 'ifconfig ' + tap_interface + ' description ' + '"' + tap_interface + ' ' + vm_name + ' ' + 'interface' + str(interface) + '"'
-            print(command)
+            # print(command)
             subprocess.run(command, shell=True)
             
             tap_interface_list.append(tap_interface)
@@ -657,8 +657,8 @@ def start(vm_name:str = typer.Argument(..., help="VM name"),
         vm_folder = CoreChecks(vm_name).vm_folder()
         # command = "nohup /root/bin/startvm " + '"' + command + '"' + " " + vm_name + " > " + vm_folder + "vm.log 2>&1 &"
         command = "nohup ./cli/shell_helpers/vm_start.sh " + '"' + command + '"' + " " + vm_name + " &> " + vm_folder + "/vm.log &"
-        print(command)
-        # subprocess.run(command, shell=True, stderr = subprocess.DEVNULL, stdout=subprocess.DEVNULL)
+        # print(command)
+        subprocess.run(command, shell=True, stderr = subprocess.DEVNULL, stdout=subprocess.DEVNULL)
 
     else:
         print("Such VM '" + vm_name + "' doesn't exist!")
