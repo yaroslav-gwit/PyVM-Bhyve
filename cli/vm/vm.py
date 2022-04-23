@@ -177,7 +177,7 @@ class VmList:
         vmColumnCPU = []
         for vm_name in vmColumnNames:
             vm_config = VmConfigs(vm_name).vm_config_read()
-            vm_config = vm_config.get("cpus", "-")
+            vm_config = vm_config.get("cpu_cores", "-")
             vmColumnCPU.append(vm_config)
 
         
