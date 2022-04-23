@@ -531,9 +531,8 @@ def start(vm_name:str = typer.Argument(..., help="VM name"),
         vm_network_interfaces = CoreChecks(vm_name).vm_network_interfaces()
         tap_interface_number = 0
         tap_interface_list = []
-        interface_number = 0
         
-        for interface in vm_network_interfaces:
+        for interface in range(len(vm_network_interfaces)):
             command = "ifconfig | grep -G '^tap' | awk '{ print $1 }' | sed s/://"
             shell_command = subprocess.check_output(command, shell=True)
             existing_tap_interfaces = shell_command.decode("utf-8").split()
@@ -547,30 +546,40 @@ def start(vm_name:str = typer.Argument(..., help="VM name"),
             print(command)
             subprocess.run(command, shell=True)
             
-            command = "ifconfig vm-" + vm_network_interfaces[0]["network_bridge"] + " addm " + tap_interface
+            command = "ifconfig vm-" + vm_network_interfaces[interface]["network_bridge"] + " addm " + tap_interface
             print(command)
             subprocess.run(command, shell=True)
             
-            command = "ifconfig vm-"+ vm_network_interfaces[0]["network_bridge"] + " up"
+            command = "ifconfig vm-"+ vm_network_interfaces[interface]["network_bridge"] + " up"
             print(command)
             subprocess.run(command, shell=True)
             
-            command = 'ifconfig ' + tap_interface + ' description ' + '"' + tap_interface + ' ' + vm_name + ' ' + 'interface' + str(interface_number) + '"'
+            command = 'ifconfig ' + tap_interface + ' description ' + '"' + tap_interface + ' ' + vm_name + ' ' + 'interface' + str(interface) + '"'
             print(command)
             subprocess.run(command, shell=True)
             
-            interface_number = interface_number + 1
             tap_interface_list.append(tap_interface)
         
         #_ NEXT SECTION _#
         command1 = "bhyve -HAw -s 0:0,hostbridge -s 31,lpc "
 
-        s1 = 2
-        s2 = 0
+        bhyve_pci_1 = 2
+        bhyve_pci_2 = 0
         space = " "
-        for network_interface in range(len(vm_network_interfaces)):
-            network_adaptor_type = vm_network_interfaces[network_interface]["network_adaptor_type"]
-            print(str(network_interface) + space + network_adaptor_type)
+        generic_network_text = "," + network_adaptor_type + ","
+        if len(vm_network_interfaces) > 1:
+            for interface in range(len(vm_network_interfaces)):
+                network_adaptor_type = vm_network_interfaces[interface]["network_adaptor_type"]
+                if interface == 0:
+                    network_final = "-s " + str(bhyve_pci_1) + ":" + str(bhyve_pci_2) + generic_network_text + tap_interface_list[interface] + ",mac=" + network_mac[interface]
+                else:
+                    bhyve_pci_2 = bhyve_pci_2 + 1
+                    network_final = network_final + + space + "-s " + str(bhyve_pci_1) + ":" + str(bhyve_pci_2) + generic_network_text + tap_interface_list[interface] + ",mac=" + network_mac[interface]
+        else:
+            network_adaptor_type = vm_network_interfaces[0]["network_adaptor_type"]
+            network_final = "-s " + str(bhyve_pci_1) + ":" + str(bhyve_pci_2) + generic_network_text + tap_interface_list[0] + ",mac=" + network_mac[0]
+        print(network_final)
+
         # network_adaptor_type = vm_info_dict["network_adaptor_type"]
         # else_macs_text = "," + network_adaptor_type + ","
         # for mac in range(0, len(macs_list)):
