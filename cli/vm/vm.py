@@ -522,7 +522,7 @@ def start(vm_name:str = typer.Argument(..., help="VM name"),
         tap_interface_list = []
         
         for interface in vm_network_interfaces:
-            print(interface)
+            print(interface["network_bridge"])
             """
             #_ Create required TAP interfaces _#
             command = "ifconfig | grep -G '^tap' | awk '{ print $1 }' | sed s/://"
