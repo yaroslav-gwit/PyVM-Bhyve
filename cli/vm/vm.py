@@ -88,6 +88,8 @@ class CoreChecks:
         vm_cpu["cpu_sockets"] = vm_config.get("cpu_sockets", 1)
         vm_cpu["cpu_cores"] = vm_config.get("cpu_cores", 2)
         vm_cpu["memory"] = vm_config.get("memory", "1G")
+        vm_cpu["vnc_port"] = vm_config.get("vnc_port", 5100)
+        vm_cpu["vnc_password"] = vm_config.get("vnc_password", "NakHkX09a7pgZUQoEJzI")
         return vm_cpu
     
     def vm_os_type(self):
@@ -627,7 +629,24 @@ def start(vm_name:str = typer.Argument(..., help="VM name"),
         vm_cpus = CoreChecks(vm_name).vm_cpus()
         command5 = " -c sockets=" + vm_cpus["cpu_sockets"] + ",cores=" + vm_cpus["cpu_cores"] + " -m " + vm_cpus["memory"]
 
-        print(command1 + command2 + command3 + command5)
+        bhyve_pci = bhyve_pci + 1
+        command6 = " -s " + str(bhyve_pci) + ":" + str(bhyve_pci_2) + ",fbuf,tcp=0.0.0.0:" + vm_cpus["vnc_port"] + ",w=1280,h=1024,password=" + vm_cpus["vnc_password"]
+        
+        bhyve_pci = bhyve_pci + 1
+        if vm_info_dict["loader"] == "bios":
+            command7 = " -s " + str(bhyve_pci) + ":" + str(bhyve_pci_2) + ",xhci,tablet -l com1,/dev/nmdm-" + vm_name + "-1A -l bootrom,/usr/local/share/uefi-firmware/BHYVE_UEFI_CSM.fd -u " + vmname
+            # command = command1 + command2 + command3 + command4 + command5 + command6 + command7
+            command = command1 + command2 + command3 + command5 + command6 + command7
+        else:
+            command7 = " -s " + str(bhyve_pci) + ",xhci,tablet -l com1,/dev/nmdm-" + vm_name + "-1A -l bootrom,/usr/local/share/uefi-firmware/BHYVE_UEFI.fd -u " + vmname
+            # command = command1 + command2 + command3 + command4 + command5 + command6 + command7
+            command = command1 + command2 + command3 + command5 + command6 + command7
+
+        print(command)
+
+        command = "nohup /root/bin/startvm " + '"' + command + '"' + " " + vmname + " > " + vm_folder + "vm.log 2>&1 &"
+        print(command)
+
     else:
         print("Such VM doesn't exist!")
 
