@@ -29,7 +29,6 @@ class CoreChecks:
         self.zfs_datasets = dataset.DatasetList().datasets
         self.disk_image_name = disk_image_name
         self.vm_config = VmConfigs(vm_name).vm_config_read()
-        self.vm_os_type = self.vm_config["os_type"]
 
 
     def vm_is_live(self):
@@ -89,6 +88,10 @@ class CoreChecks:
         vm_cpu["sockets"] = vm_config.get("cpu_sockets", 1)
         vm_cpu["cores"] = vm_config.get("cpu_cores", 2)
         return vm_cpu
+    
+    def vm_os_type(self):
+        vm_config = self.vm_config
+        os_type = vm_config.get["os_type", "debian11"]
 
 
 
@@ -620,7 +623,7 @@ def start(vm_name:str = typer.Argument(..., help="VM name"),
         print(command3)
         print(command1 + command2 + command3)
 
-        os_type = CoreChecks(vm_name).vm_config
+        os_type = CoreChecks(vm_name).vm_os_type()
         print(os_type)
     else:
         print("Such VM doesn't exist!")
