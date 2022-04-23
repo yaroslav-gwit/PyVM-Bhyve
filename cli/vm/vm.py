@@ -635,11 +635,11 @@ def start(vm_name:str = typer.Argument(..., help="VM name"),
         
         bhyve_pci = bhyve_pci + 1
         if vm_cpus["loader"] == "bios":
-            command7 = " -s " + str(bhyve_pci) + ":" + str(bhyve_pci_2) + ",xhci,tablet -l com1,/dev/nmdm-" + vm_name + "-1A -l bootrom,/usr/local/share/uefi-firmware/BHYVE_UEFI_CSM.fd -u " + vmname
+            command7 = " -s " + str(bhyve_pci) + ":" + str(bhyve_pci_2) + ",xhci,tablet -l com1,/dev/nmdm-" + vm_name + "-1A -l bootrom,/usr/local/share/uefi-firmware/BHYVE_UEFI_CSM.fd -u " + vm_name
             # command = command1 + command2 + command3 + command4 + command5 + command6 + command7
             command = command1 + command2 + command3 + command5 + command6 + command7
         elif vm_cpus["loader"] == "uefi":
-            command7 = " -s " + str(bhyve_pci) + ",xhci,tablet -l com1,/dev/nmdm-" + vm_name + "-1A -l bootrom,/usr/local/share/uefi-firmware/BHYVE_UEFI.fd -u " + vmname
+            command7 = " -s " + str(bhyve_pci) + ",xhci,tablet -l com1,/dev/nmdm-" + vm_name + "-1A -l bootrom,/usr/local/share/uefi-firmware/BHYVE_UEFI.fd -u " + vm_name
             # command = command1 + command2 + command3 + command4 + command5 + command6 + command7
             command = command1 + command2 + command3 + command5 + command6 + command7
         else:
@@ -647,7 +647,7 @@ def start(vm_name:str = typer.Argument(..., help="VM name"),
 
         print(command)
 
-        command = "nohup /root/bin/startvm " + '"' + command + '"' + " " + vmname + " > " + vm_folder + "vm.log 2>&1 &"
+        command = "nohup /root/bin/startvm " + '"' + command + '"' + " " + vm_name + " > " + vm_folder + "vm.log 2>&1 &"
         print(command)
 
     else:
