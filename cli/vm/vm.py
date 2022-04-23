@@ -656,11 +656,12 @@ def start(vm_name:str = typer.Argument(..., help="VM name"),
 
         vm_folder = CoreChecks(vm_name).vm_folder()
         # command = "nohup /root/bin/startvm " + '"' + command + '"' + " " + vm_name + " > " + vm_folder + "vm.log 2>&1 &"
-        command = "nohup /root/bin/startvm " + '"' + command + '"' + " " + vm_name + " &> " + vm_folder + "vm.log &"
+        command = "nohup ./cli/shell_helpers/vm_start.sh " + '"' + command + '"' + " " + vm_name + " &> " + vm_folder + "vm.log &"
         print(command)
+        # subprocess.run(command, shell=True, stderr = subprocess.DEVNULL, stdout=subprocess.DEVNULL)
 
     else:
-        print("Such VM doesn't exist!")
+        print("Such VM '" + vm_name + "' doesn't exist!")
 
 
 """ If this file is executed from the command line, activate Typer """
