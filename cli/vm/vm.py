@@ -510,7 +510,7 @@ def start(vm_name:str = typer.Argument(..., help="VM name"),
     if CoreChecks(vm_name).vm_is_live():
         print("VM is already live!")
     elif vm_name in VmList().plainList:
-        print("Starting the VM: " + vmname + ". It should be up and running shortly.")
+        print("Starting the VM: " + vm_name + ". It should be up and running shortly.")
         
         #_ Create required TAP interfaces _#
         tap_interface_list = []
