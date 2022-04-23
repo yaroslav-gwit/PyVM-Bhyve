@@ -71,6 +71,15 @@ class CoreChecks:
             elif ds == len(self.zfs_datasets["datasets"]) and not exists(ds["mount_path"]+self.vm_name):
                 sys.exit("VM doesn't exist!")
     
+    def vm_folder(self):
+        for ds in self.zfs_datasets["datasets"]:
+            if exists(ds["mount_path"]+self.vm_name):
+                vm_folder = ds["mount_path"] + self.vm_name
+                return vm_folder
+            elif ds == len(self.zfs_datasets["datasets"]) and not exists(ds["mount_path"]+self.vm_name):
+                sys.exit("VM doesn't exist!")
+
+
     #_ VM START PORTION _#
     def vm_network_interfaces(self):
         vm_config = self.vm_config
@@ -646,7 +655,8 @@ def start(vm_name:str = typer.Argument(..., help="VM name"),
             print("Loader is not supported!")
 
         print(command)
-
+        
+        vm_folder = CoreChecks(vm_name).vm_folder()
         command = "nohup /root/bin/startvm " + '"' + command + '"' + " " + vm_name + " > " + vm_folder + "vm.log 2>&1 &"
         print(command)
 
