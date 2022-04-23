@@ -517,36 +517,41 @@ def start(vm_name:str = typer.Argument(..., help="VM name"),
     elif vm_name in VmList().plainList:
         print("Starting the VM: " + vm_name + ". It should be up and running shortly.")
         
-        #_ Create required TAP interfaces _#
-        tap_interface_list = []
-        command = "ifconfig | grep -G '^tap' | awk '{ print $1 }' | sed s/://"
-        shell_command = subprocess.check_output(command, shell=True)
-        existing_tap_interfaces = shell_command.decode("utf-8").split()
-        tap_interface_number = 0
-        tap_interface = "tap" + str(tap_interface_number)
-        while tap_interface in existing_tap_interfaces:
-            tap_interface_number = tap_interface_number + 1
-            tap_interface = "tap" + str(tap_interface_number)
-        print(tap_interface)
-        
-        command = "ifconfig " + tap_interface + " create"
-        print(command)
-        # subprocess.run(command, shell=True)
         vm_network_interfaces = CoreChecks(vm_name).vm_network_interfaces()
+        tap_interface_number = 0
+        tap_interface_list = []
         
-        command = "ifconfig vm-" + vm_network_interfaces[0]["network_bridge"] + " addm " + tap_interface
-        print(command)
-        # subprocess.run(command, shell=True)
-        
-        command = "ifconfig vm-"+ vm_network_interfaces[0]["network_bridge"] + " up"
-        print(command)
-        # subprocess.run(command, shell=True)
-        
-        command = 'ifconfig ' + tap_interface + ' description ' + '"' + tap_interface + ' ' + vm_name + ' ' + 'interface' + str(0) + '"'
-        print(command)
-        # subprocess.run(command, shell=True)
-        
-        tap_interface_list.append(tap_interface)
+        for interface in vm_network_interfaces:
+            print(interface)
+            """
+            #_ Create required TAP interfaces _#
+            command = "ifconfig | grep -G '^tap' | awk '{ print $1 }' | sed s/://"
+            shell_command = subprocess.check_output(command, shell=True)
+            existing_tap_interfaces = shell_command.decode("utf-8").split()
+            tap_interface = "tap" + str(tap_interface_number)
+            while tap_interface in existing_tap_interfaces:
+                tap_interface_number = tap_interface_number + 1
+                tap_interface = "tap" + str(tap_interface_number)
+            print(tap_interface)
+            
+            command = "ifconfig " + tap_interface + " create"
+            print(command)
+            # subprocess.run(command, shell=True)
+            
+            command = "ifconfig vm-" + vm_network_interfaces[0]["network_bridge"] + " addm " + tap_interface
+            print(command)
+            # subprocess.run(command, shell=True)
+            
+            command = "ifconfig vm-"+ vm_network_interfaces[0]["network_bridge"] + " up"
+            print(command)
+            # subprocess.run(command, shell=True)
+            
+            command = 'ifconfig ' + tap_interface + ' description ' + '"' + tap_interface + ' ' + vm_name + ' ' + 'interface' + str(0) + '"'
+            print(command)
+            # subprocess.run(command, shell=True)
+            
+            tap_interface_list.append(tap_interface)
+            """
     else:
         print("Such VM doesn't exist!")
 
