@@ -71,6 +71,7 @@ class CoreChecks:
             elif ds == len(self.zfs_datasets["datasets"]) and not exists(ds["mount_path"]+self.vm_name):
                 sys.exit("VM doesn't exist!")
     
+    #_ VM START PORTION _#
     def vm_network_interfaces(self):
         vm_config = self.vm_config
         vm_network_interfaces = vm_config["networks"]
@@ -80,6 +81,13 @@ class CoreChecks:
         vm_config = self.vm_config
         vm_disks = vm_config["disks"]
         return vm_disks
+    
+    def vm_cpus(self):
+        vm_config = self.vm_config
+        vm_cpu = {}
+        vm_cpu["sockets"] = vm_config.get("cpu_sockets", 1)
+        vm_cpu["cores"] = vm_config.get("cpu_cores", 2)
+
 
 
 class VmConfigs:
@@ -108,6 +116,7 @@ class VmConfigs:
             if exists(vm_config):
                 command = "nano " + vm_config
                 shell_command = subprocess.run(command, shell=True)
+                return
             elif ds == self.zfs_datasets["datasets"][-1] and not exists(vm_config):
                 print("Sorry, config file was not found for " + self.vm_name + " path: " + vm_config)
                 sys.exit(1)

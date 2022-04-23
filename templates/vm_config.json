@@ -1,5 +1,6 @@
 {
-    "cpus": "2",
+    "cpu_sockets": "1",
+    "cpu_cores": "2",
     "memory": "1G",
     "loader": "uefi",
     "live_status": "production",
