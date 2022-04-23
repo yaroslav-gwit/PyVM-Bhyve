@@ -542,10 +542,11 @@ def start(vm_name:str = typer.Argument(..., help="VM name"),
         print(command)
         # subprocess.run(command, shell=True)
         
-        # command = 'ifconfig ' + tap_interface + ' description ' + '"' + tap_interface + ' ' + vmname + ' ' + 'interface' + str(interface_index) + '"'
+        command = 'ifconfig ' + tap_interface + ' description ' + '"' + tap_interface + ' ' + vm_name + ' ' + 'interface' + str(0) + '"'
+        print(command)
         # subprocess.run(command, shell=True)
         
-        # tap_interface_list.append(tap_interface)
+        tap_interface_list.append(tap_interface)
     else:
         print("Such VM doesn't exist!")
 
