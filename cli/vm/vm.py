@@ -520,10 +520,9 @@ def start(vm_name:str = typer.Argument(..., help="VM name"),
         vm_network_interfaces = CoreChecks(vm_name).vm_network_interfaces()
         tap_interface_number = 0
         tap_interface_list = []
+        interface_number = 0
         
         for interface in vm_network_interfaces:
-            print(interface["network_bridge"])
-            """
             #_ Create required TAP interfaces _#
             command = "ifconfig | grep -G '^tap' | awk '{ print $1 }' | sed s/://"
             shell_command = subprocess.check_output(command, shell=True)
@@ -546,12 +545,12 @@ def start(vm_name:str = typer.Argument(..., help="VM name"),
             print(command)
             # subprocess.run(command, shell=True)
             
-            command = 'ifconfig ' + tap_interface + ' description ' + '"' + tap_interface + ' ' + vm_name + ' ' + 'interface' + str(0) + '"'
+            command = 'ifconfig ' + tap_interface + ' description ' + '"' + tap_interface + ' ' + vm_name + ' ' + 'interface' + str(interface_number) + '"'
             print(command)
             # subprocess.run(command, shell=True)
             
+            interface_number = interface_number + 1
             tap_interface_list.append(tap_interface)
-            """
     else:
         print("Such VM doesn't exist!")
 
