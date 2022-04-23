@@ -28,6 +28,7 @@ class CoreChecks:
         self.vm_name = vm_name
         self.zfs_datasets = dataset.DatasetList().datasets
         self.disk_image_name = disk_image_name
+        self.vm_config = VmConfigs(vm_name).vm_config_read()
 
 
     def vm_is_live(self):
@@ -44,7 +45,7 @@ class CoreChecks:
 
     
     def vm_in_production(self):
-        vm_info_dict = VmConfigs(self.vm_name).vm_config_read()
+        vm_info_dict = self.vm_config
         if vm_info_dict["live_status"] == "Production" or vm_info_dict["live_status"] == "production":
             return True
         else:
@@ -71,10 +72,15 @@ class CoreChecks:
                 sys.exit("VM doesn't exist!")
     
     def vm_network_interfaces(self):
-        vm_name = self.vm_name
-        vm_config = VmConfigs(vm_name).vm_config_read()
+        vm_config = self.vm_config
         vm_network_interfaces = vm_config["networks"]
         return vm_network_interfaces
+
+    def vm_disks(self):
+        vm_config = self.vm_config
+        vm_disks = vm_config["disks"]
+        return vm_disks
+
 
 class VmConfigs:
     def __init__(self, vm_name):
@@ -581,7 +587,28 @@ def start(vm_name:str = typer.Argument(..., help="VM name"),
             network_final = "-s " + str(bhyve_pci_1) + ":" + str(bhyve_pci_2) + generic_network_text + tap_interface_list[0] + ",mac=" + vm_network_interfaces[0]["network_mac"]
 
         command2 = network_final
-        print(command1 + command2)
+
+        bhyve_pci = 3
+        vm_disks = CoreChecks(vm_name).vm_disks()
+        if len(vm_disks) > 1:
+            for disk in range(len(vm_disks)):
+                generic_disk_text = ":0," + vm_disks[disk]["disk_type"] + ","
+                disk_image = vm_disks[disk]["disk_image"]
+                if disk == 0:
+                    disk_final = " -s " + str(bhyve_pci) + generic_disk_text + CoreChecks(vm_name=vm_name, disk_image_name=disk_image).disk_location()
+                else:
+                    bhyve_pci = bhyve_pci + 1
+                    disk_final = disk_final + " -s " + str(bhyve_pci) + generic_disk_text + CoreChecks(vm_name=vm_name, disk_image_name=disk_image).disk_location()
+        else:
+            generic_disk_text = ":0," + disk_type + ","
+            disk_image = vm_disks[0]["disk_image"]
+            disk_final = " -s " + str(bhyve_pci) + generic_disk_text + CoreChecks(vm_name=vm_name, disk_image_name=disk_image).disk_location()
+
+        command3 = disk_final
+
+        print(command3)
+        print(command1 + command2 + command3)
+
     else:
         print("Such VM doesn't exist!")
 
