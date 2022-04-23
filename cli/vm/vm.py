@@ -538,8 +538,8 @@ def start(vm_name:str = typer.Argument(..., help="VM name"),
         print(command)
         # subprocess.run(command, shell=True)
         
-        # command = "ifconfig vm-"+ vm_info_dict["network_bridges"][interface_index] + " up"
-        # print(command)
+        command = "ifconfig vm-"+ vm_network_interfaces[0]["network_bridge"] + " up"
+        print(command)
         # subprocess.run(command, shell=True)
         
         # command = 'ifconfig ' + tap_interface + ' description ' + '"' + tap_interface + ' ' + vmname + ' ' + 'interface' + str(interface_index) + '"'
