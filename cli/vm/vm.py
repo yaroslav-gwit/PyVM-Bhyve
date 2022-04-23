@@ -69,7 +69,11 @@ class CoreChecks:
                 return vm_location
             elif ds == len(self.zfs_datasets["datasets"]) and not exists(ds["mount_path"]+self.vm_name):
                 sys.exit("VM doesn't exist!")
-
+    
+    def vm_network_interfaces(self):
+        vm_config = VmConfigs(vm_name).vm_config_read()
+        vm_network_interfaces = vm_config["networks"]
+        return vm_network_interfaces
 
 class VmConfigs:
     def __init__(self, vm_name):
@@ -523,14 +527,22 @@ def start(vm_name:str = typer.Argument(..., help="VM name"),
             tap_interface_number = tap_interface_number + 1
             tap_interface = "tap" + str(tap_interface_number)
         print(tap_interface)
-        # command = "ifconfig " + tap_interface + " create"
+        
+        command = "ifconfig " + tap_interface + " create"
+        print(command)
         # subprocess.run(command, shell=True)
+        vm_network_interfaces = CoreChecks(vm_name).vm_network_interfaces()
+        print(vm_network_interfaces)
         # command = "ifconfig vm-" + vm_info_dict["network_bridges"][interface_index] + " addm " + tap_interface
+        # print(command)
         # subprocess.run(command, shell=True)
+        
         # command = "ifconfig vm-"+ vm_info_dict["network_bridges"][interface_index] + " up"
         # subprocess.run(command, shell=True)
+        
         # command = 'ifconfig ' + tap_interface + ' description ' + '"' + tap_interface + ' ' + vmname + ' ' + 'interface' + str(interface_index) + '"'
         # subprocess.run(command, shell=True)
+        
         # tap_interface_list.append(tap_interface)
     else:
         print("Such VM doesn't exist!")
