@@ -411,7 +411,7 @@ class Operation:
         if CoreChecks(vm_name).vm_is_live():
             print("VM is already live: " + vm_name)
         elif vm_name in VmList().plainList:
-            print("Starting the VM. It should be up and running shortly: " + vm_name)
+            print("Starting the VM: " + vm_name)
         
             #_ NETWORKING - Create required TAP interfaces _#
             vm_network_interfaces = CoreChecks(vm_name).vm_network_interfaces()
