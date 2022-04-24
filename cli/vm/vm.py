@@ -687,7 +687,7 @@ def start_all(wait:int = typer.Option(5, help="Seconds to wait before starting t
                 Operation.start(vm_name=_vm)
                 time.sleep(wait)
         else:
-            print("VM is already live: " + vm_name)
+            print("VM is already live: " + _vm)
 
 
 """ If this file is executed from the command line, activate Typer """
