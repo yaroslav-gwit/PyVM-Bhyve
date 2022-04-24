@@ -399,8 +399,113 @@ class Operation:
             print("VM is already dead: " + vm_name + "!")
 
     @staticmethod
-    def start(vm_name:str):
-        print("Sorry, this feature has not been implemented yet!")
+    def start(vm_name:str, wait:int = 5):
+        if CoreChecks(vm_name).vm_is_live():
+            print("VM is already live!")
+        elif vm_name in VmList().plainList:
+            print("Starting the VM: " + vm_name + ". It should be up and running shortly.")
+        
+            #_ NETWORKING - Create required TAP interfaces _#
+            vm_network_interfaces = CoreChecks(vm_name).vm_network_interfaces()
+            tap_interface_number = 0
+            tap_interface_list = []
+        
+            for interface in range(len(vm_network_interfaces)):
+                command = "ifconfig | grep -G '^tap' | awk '{ print $1 }' | sed s/://"
+                shell_command = subprocess.check_output(command, shell=True)
+                existing_tap_interfaces = shell_command.decode("utf-8").split()
+                tap_interface = "tap" + str(tap_interface_number)
+                while tap_interface in existing_tap_interfaces:
+                    tap_interface_number = tap_interface_number + 1
+                    tap_interface = "tap" + str(tap_interface_number)
+                # print(tap_interface)
+                
+                command = "ifconfig " + tap_interface + " create"
+                # print(command)
+                subprocess.run(command, shell=True)
+                
+                command = "ifconfig vm-" + vm_network_interfaces[interface]["network_bridge"] + " addm " + tap_interface
+                # print(command)
+                subprocess.run(command, shell=True)
+                
+                command = "ifconfig vm-"+ vm_network_interfaces[interface]["network_bridge"] + " up"
+                # print(command)
+                subprocess.run(command, shell=True)
+                
+                command = 'ifconfig ' + tap_interface + ' description ' + '"' + tap_interface + ' ' + vm_name + ' ' + 'interface' + str(interface) + '"'
+                # print(command)
+                subprocess.run(command, shell=True)
+                
+                tap_interface_list.append(tap_interface)
+        
+            #_ NEXT SECTION _#
+            command1 = "bhyve -HAw -s 0:0,hostbridge -s 31,lpc "
+
+            bhyve_pci_1 = 2
+            bhyve_pci_2 = 0
+            space = " "
+            if len(vm_network_interfaces) > 1:
+                for interface in range(len(vm_network_interfaces)):
+                    network_adaptor_type = vm_network_interfaces[interface]["network_adaptor_type"]
+                    generic_network_text = "," + network_adaptor_type + ","
+                    if interface == 0:
+                        network_final = "-s " + str(bhyve_pci_1) + ":" + str(bhyve_pci_2) + generic_network_text + tap_interface_list[interface] + ",mac=" + vm_network_interfaces[interface]["network_mac"]
+                    else:
+                        bhyve_pci_2 = bhyve_pci_2 + 1
+                        network_final = network_final + space + "-s " + str(bhyve_pci_1) + ":" + str(bhyve_pci_2) + generic_network_text + tap_interface_list[interface] + ",mac=" + vm_network_interfaces[interface]["network_mac"]
+            else:
+                network_adaptor_type = vm_network_interfaces[0]["network_adaptor_type"]
+                generic_network_text = "," + network_adaptor_type + ","
+                network_final = "-s " + str(bhyve_pci_1) + ":" + str(bhyve_pci_2) + generic_network_text + tap_interface_list[0] + ",mac=" + vm_network_interfaces[0]["network_mac"]
+
+            command2 = network_final
+
+            bhyve_pci = 3
+            vm_disks = CoreChecks(vm_name).vm_disks()
+            if len(vm_disks) > 1:
+                for disk in range(len(vm_disks)):
+                    generic_disk_text = ":0," + vm_disks[disk]["disk_type"] + ","
+                    disk_image = vm_disks[disk]["disk_image"]
+                    if disk == 0:
+                        disk_final = " -s " + str(bhyve_pci) + generic_disk_text + CoreChecks(vm_name=vm_name, disk_image_name=disk_image).disk_location()
+                    else:
+                        bhyve_pci = bhyve_pci + 1
+                        disk_final = disk_final + " -s " + str(bhyve_pci) + generic_disk_text + CoreChecks(vm_name=vm_name, disk_image_name=disk_image).disk_location()
+            else:
+                generic_disk_text = ":0," + disk_type + ","
+                disk_image = vm_disks[0]["disk_image"]
+                disk_final = " -s " + str(bhyve_pci) + generic_disk_text + CoreChecks(vm_name=vm_name, disk_image_name=disk_image).disk_location()
+
+            command3 = disk_final
+
+
+            os_type = CoreChecks(vm_name).vm_os_type()
+            vm_cpus = CoreChecks(vm_name).vm_cpus()
+            command5 = " -c sockets=" + vm_cpus["cpu_sockets"] + ",cores=" + vm_cpus["cpu_cores"] + " -m " + vm_cpus["memory"]
+
+            bhyve_pci = bhyve_pci + 1
+            command6 = " -s " + str(bhyve_pci) + ":" + str(bhyve_pci_2) + ",fbuf,tcp=0.0.0.0:" + vm_cpus["vnc_port"] + ",w=1280,h=1024,password=" + vm_cpus["vnc_password"]
+            
+            bhyve_pci = bhyve_pci + 1
+            if vm_cpus["loader"] == "bios":
+                command7 = " -s " + str(bhyve_pci) + ":" + str(bhyve_pci_2) + ",xhci,tablet -l com1,/dev/nmdm-" + vm_name + "-1A -l bootrom,/usr/local/share/uefi-firmware/BHYVE_UEFI_CSM.fd -u " + vm_name
+                # command = command1 + command2 + command3 + command4 + command5 + command6 + command7
+                command = command1 + command2 + command3 + command5 + command6 + command7
+            elif vm_cpus["loader"] == "uefi":
+                command7 = " -s " + str(bhyve_pci) + ",xhci,tablet -l com1,/dev/nmdm-" + vm_name + "-1A -l bootrom,/usr/local/share/uefi-firmware/BHYVE_UEFI.fd -u " + vm_name
+                # command = command1 + command2 + command3 + command4 + command5 + command6 + command7
+                command = command1 + command2 + command3 + command5 + command6 + command7
+            else:
+                print("Loader is not supported!")
+
+            vm_folder = CoreChecks(vm_name).vm_folder()
+            # command = "nohup /root/bin/startvm " + '"' + command + '"' + " " + vm_name + " > " + vm_folder + "vm.log 2>&1 &"
+            command = "nohup ./cli/shell_helpers/vm_start.sh " + '"' + command + '"' + " " + vm_name + " &> " + vm_folder + "/vm.log &"
+            # print(command)
+            subprocess.run(command, shell=True, stderr = subprocess.DEVNULL, stdout=subprocess.DEVNULL)
+
+        else:
+            print("Such VM '" + vm_name + "' doesn't exist!")
 
 
 
@@ -559,112 +664,7 @@ def start(vm_name:str = typer.Argument(..., help="VM name"),
     """
     Power on the VM
     """
-    if CoreChecks(vm_name).vm_is_live():
-        print("VM is already live!")
-    elif vm_name in VmList().plainList:
-        print("Starting the VM: " + vm_name + ". It should be up and running shortly.")
-        
-        #_ NETWORKING - Create required TAP interfaces _#
-        vm_network_interfaces = CoreChecks(vm_name).vm_network_interfaces()
-        tap_interface_number = 0
-        tap_interface_list = []
-        
-        for interface in range(len(vm_network_interfaces)):
-            command = "ifconfig | grep -G '^tap' | awk '{ print $1 }' | sed s/://"
-            shell_command = subprocess.check_output(command, shell=True)
-            existing_tap_interfaces = shell_command.decode("utf-8").split()
-            tap_interface = "tap" + str(tap_interface_number)
-            while tap_interface in existing_tap_interfaces:
-                tap_interface_number = tap_interface_number + 1
-                tap_interface = "tap" + str(tap_interface_number)
-            # print(tap_interface)
-            
-            command = "ifconfig " + tap_interface + " create"
-            # print(command)
-            subprocess.run(command, shell=True)
-            
-            command = "ifconfig vm-" + vm_network_interfaces[interface]["network_bridge"] + " addm " + tap_interface
-            # print(command)
-            subprocess.run(command, shell=True)
-            
-            command = "ifconfig vm-"+ vm_network_interfaces[interface]["network_bridge"] + " up"
-            # print(command)
-            subprocess.run(command, shell=True)
-            
-            command = 'ifconfig ' + tap_interface + ' description ' + '"' + tap_interface + ' ' + vm_name + ' ' + 'interface' + str(interface) + '"'
-            # print(command)
-            subprocess.run(command, shell=True)
-            
-            tap_interface_list.append(tap_interface)
-        
-        #_ NEXT SECTION _#
-        command1 = "bhyve -HAw -s 0:0,hostbridge -s 31,lpc "
-
-        bhyve_pci_1 = 2
-        bhyve_pci_2 = 0
-        space = " "
-        if len(vm_network_interfaces) > 1:
-            for interface in range(len(vm_network_interfaces)):
-                network_adaptor_type = vm_network_interfaces[interface]["network_adaptor_type"]
-                generic_network_text = "," + network_adaptor_type + ","
-                if interface == 0:
-                    network_final = "-s " + str(bhyve_pci_1) + ":" + str(bhyve_pci_2) + generic_network_text + tap_interface_list[interface] + ",mac=" + vm_network_interfaces[interface]["network_mac"]
-                else:
-                    bhyve_pci_2 = bhyve_pci_2 + 1
-                    network_final = network_final + space + "-s " + str(bhyve_pci_1) + ":" + str(bhyve_pci_2) + generic_network_text + tap_interface_list[interface] + ",mac=" + vm_network_interfaces[interface]["network_mac"]
-        else:
-            network_adaptor_type = vm_network_interfaces[0]["network_adaptor_type"]
-            generic_network_text = "," + network_adaptor_type + ","
-            network_final = "-s " + str(bhyve_pci_1) + ":" + str(bhyve_pci_2) + generic_network_text + tap_interface_list[0] + ",mac=" + vm_network_interfaces[0]["network_mac"]
-
-        command2 = network_final
-
-        bhyve_pci = 3
-        vm_disks = CoreChecks(vm_name).vm_disks()
-        if len(vm_disks) > 1:
-            for disk in range(len(vm_disks)):
-                generic_disk_text = ":0," + vm_disks[disk]["disk_type"] + ","
-                disk_image = vm_disks[disk]["disk_image"]
-                if disk == 0:
-                    disk_final = " -s " + str(bhyve_pci) + generic_disk_text + CoreChecks(vm_name=vm_name, disk_image_name=disk_image).disk_location()
-                else:
-                    bhyve_pci = bhyve_pci + 1
-                    disk_final = disk_final + " -s " + str(bhyve_pci) + generic_disk_text + CoreChecks(vm_name=vm_name, disk_image_name=disk_image).disk_location()
-        else:
-            generic_disk_text = ":0," + disk_type + ","
-            disk_image = vm_disks[0]["disk_image"]
-            disk_final = " -s " + str(bhyve_pci) + generic_disk_text + CoreChecks(vm_name=vm_name, disk_image_name=disk_image).disk_location()
-
-        command3 = disk_final
-
-
-        os_type = CoreChecks(vm_name).vm_os_type()
-        vm_cpus = CoreChecks(vm_name).vm_cpus()
-        command5 = " -c sockets=" + vm_cpus["cpu_sockets"] + ",cores=" + vm_cpus["cpu_cores"] + " -m " + vm_cpus["memory"]
-
-        bhyve_pci = bhyve_pci + 1
-        command6 = " -s " + str(bhyve_pci) + ":" + str(bhyve_pci_2) + ",fbuf,tcp=0.0.0.0:" + vm_cpus["vnc_port"] + ",w=1280,h=1024,password=" + vm_cpus["vnc_password"]
-        
-        bhyve_pci = bhyve_pci + 1
-        if vm_cpus["loader"] == "bios":
-            command7 = " -s " + str(bhyve_pci) + ":" + str(bhyve_pci_2) + ",xhci,tablet -l com1,/dev/nmdm-" + vm_name + "-1A -l bootrom,/usr/local/share/uefi-firmware/BHYVE_UEFI_CSM.fd -u " + vm_name
-            # command = command1 + command2 + command3 + command4 + command5 + command6 + command7
-            command = command1 + command2 + command3 + command5 + command6 + command7
-        elif vm_cpus["loader"] == "uefi":
-            command7 = " -s " + str(bhyve_pci) + ",xhci,tablet -l com1,/dev/nmdm-" + vm_name + "-1A -l bootrom,/usr/local/share/uefi-firmware/BHYVE_UEFI.fd -u " + vm_name
-            # command = command1 + command2 + command3 + command4 + command5 + command6 + command7
-            command = command1 + command2 + command3 + command5 + command6 + command7
-        else:
-            print("Loader is not supported!")
-
-        vm_folder = CoreChecks(vm_name).vm_folder()
-        # command = "nohup /root/bin/startvm " + '"' + command + '"' + " " + vm_name + " > " + vm_folder + "vm.log 2>&1 &"
-        command = "nohup ./cli/shell_helpers/vm_start.sh " + '"' + command + '"' + " " + vm_name + " &> " + vm_folder + "/vm.log &"
-        # print(command)
-        subprocess.run(command, shell=True, stderr = subprocess.DEVNULL, stdout=subprocess.DEVNULL)
-
-    else:
-        print("Such VM '" + vm_name + "' doesn't exist!")
+    Operation.start(vm_name=vm_name)
 
 
 """ If this file is executed from the command line, activate Typer """
