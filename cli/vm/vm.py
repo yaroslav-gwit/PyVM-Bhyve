@@ -674,7 +674,7 @@ def start_all(wait:int = typer.Option(5, help="Seconds to wait before starting t
     """
     vm_list = VmList().plainList
     for _vm in vm_list:
-        if not CoreChecks(vm_name).vm_is_live():
+        if not CoreChecks(vm_name=_vm).vm_is_live():
             _vm_live_status = CoreChecks(vm_name=_vm).vm_cpus()["live_status"]
             if _vm_live_status == "production":
                 Operation.start(vm_name=_vm)
