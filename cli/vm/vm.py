@@ -269,7 +269,10 @@ class VmList:
         vmColumnUptime = []
         for vm_name in vmColumnNames:
             if CoreChecks(vm_name).vm_is_live():
-                if (time.time() - os.path.getmtime("/tmp/bhyve_vms_uptime.txt")) > 10 or not exists("/tmp/bhyve_vms_uptime.txt"):
+                if not exists("/tmp/bhyve_vms_uptime.txt"):
+                    command = "ps axwww -o etime,command > /tmp/bhyve_vms_uptime.txt"
+                    subprocess.run(command, shell=True)
+                elif (time.time() - os.path.getmtime("/tmp/bhyve_vms_uptime.txt")) > 10:
                     command = "ps axwww -o etime,command > /tmp/bhyve_vms_uptime.txt"
                     subprocess.run(command, shell=True)
                 command = "grep 'bhyve: " + vm_name + "' /tmp/bhyve_vms_uptime.txt | grep -v grep | awk '{print $1}'"
