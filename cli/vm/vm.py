@@ -100,6 +100,7 @@ class CoreChecks:
         vm_cpu["vnc_port"] = vm_config.get("vnc_port", 5100)
         vm_cpu["vnc_password"] = vm_config.get("vnc_password", "NakHkX09a7pgZUQoEJzI")
         vm_cpu["loader"] = vm_config.get("loader", "uefi")
+        vm_cpu["live_status"] = vm_config.get("live_status", "testing")
         return vm_cpu
     
     def vm_os_type(self):
@@ -399,7 +400,7 @@ class Operation:
             print("VM is already dead: " + vm_name + "!")
 
     @staticmethod
-    def start(vm_name:str, wait:int = 5):
+    def start(vm_name:str):
         if CoreChecks(vm_name).vm_is_live():
             print("VM is already live!")
         elif vm_name in VmList().plainList:
@@ -659,12 +660,24 @@ def kill_all():
 
 @app.command()
 def start(vm_name:str = typer.Argument(..., help="VM name"),
-    wait:int = typer.Option(5, help="Seconds to wait before starting the next VM on the list")
     ):
     """
     Power on the VM
     """
     Operation.start(vm_name=vm_name)
+
+@app.command()
+def start_all(wait:int = typer.Option(5, help="Seconds to wait before starting the next VM on the list")
+    ):
+    """
+    Power on all production VMs
+    """
+    vm_list = VmList().plainList
+    for _vm in vm_list:
+        _vm_live_status = CoreChecks(vm_name=_vm).vm_cpus()["live_status"]
+        if _vm_live_status == "production":
+            Operation.start(vm_name=_vm)
+            time.sleep(wait)
 
 
 """ If this file is executed from the command line, activate Typer """
