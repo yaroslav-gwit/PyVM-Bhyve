@@ -402,7 +402,7 @@ class Operation:
     @staticmethod
     def start(vm_name:str):
         if CoreChecks(vm_name).vm_is_live():
-            print("VM is already live!")
+            print("VM '" + vm_name + "' is already live!")
         elif vm_name in VmList().plainList:
             print("Starting the VM: " + vm_name + ". It should be up and running shortly.")
         
@@ -674,10 +674,11 @@ def start_all(wait:int = typer.Option(5, help="Seconds to wait before starting t
     """
     vm_list = VmList().plainList
     for _vm in vm_list:
-        _vm_live_status = CoreChecks(vm_name=_vm).vm_cpus()["live_status"]
-        if _vm_live_status == "production":
-            Operation.start(vm_name=_vm)
-            time.sleep(wait)
+        if not CoreChecks(vm_name).vm_is_live():
+            _vm_live_status = CoreChecks(vm_name=_vm).vm_cpus()["live_status"]
+            if _vm_live_status == "production":
+                Operation.start(vm_name=_vm)
+                time.sleep(wait)
 
 
 """ If this file is executed from the command line, activate Typer """
