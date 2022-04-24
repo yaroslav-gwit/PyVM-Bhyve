@@ -167,6 +167,10 @@ class VmList:
                 print("Please create 2 zfs datasets: " + zfs_datasets_list)
                 sys.exit(1)
         
+        if not vmColumnNames:
+            print("\nThere are no VMs on this system. To deploy one, use:\n pyvm --vmdeploy\n")
+            sys.exit(0)
+
         self.plainList = vmColumnNames.copy()
         self.vmColumnNames = natsorted(vmColumnNames)
 
