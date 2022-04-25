@@ -520,7 +520,7 @@ class Operation:
         """
         Gracefully stop the VM
         """
-        if vm_name not in VmList().plainList or CoreChecks.vm_is_live:
+        if vm_name not in VmList().plainList:
             sys.exit("VM doesn't exist on this system.")
         elif CoreChecks(vm_name).vm_is_live():
             print("Gracefully stopping the VM: " + vm_name)
@@ -551,6 +551,8 @@ class Operation:
                 subprocess.run(command, shell=True)
             
             print("The VM is fully stopped now: " + vm_name)
+        else:
+            print("VM is already stopped: " + vm_name)
 
 
 """ Section below is responsible for the CLI input/output """
