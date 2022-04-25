@@ -520,7 +520,7 @@ class Operation:
         """
         Gracefully stop the VM
         """
-        if vm_name not in VmList().plainList:
+        if vm_name not in VmList().plainList or CoreChecks.vm_is_live:
             sys.exit("VM doesn't exist on this system.")
         elif CoreChecks(vm_name).vm_is_live():
             print("Gracefully stopping the VM: " + vm_name)
