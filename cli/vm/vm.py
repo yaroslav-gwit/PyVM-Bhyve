@@ -712,7 +712,7 @@ def start(vm_name:str = typer.Argument(..., help="VM name"),
     Operation.start(vm_name=vm_name)
 
 @app.command()
-def start_all(wait:int = typer.Option(5, help="Seconds to wait before starting the next VM on the list")
+def start_all(wait:int = typer.Option(5, help="Seconds to wait before starting next VM on the list")
     ):
     """
     Power on all production VMs
@@ -735,6 +735,20 @@ def stop(vm_name:str = typer.Argument(..., help="VM name"),
         Gracefully stop the VM
         """
         Operation.stop(vm_name=vm_name)
+
+@app.command()
+def stop_all(wait:int = typer.Option(5, help="Seconds to wait before stopping next VM on the list")
+    ):
+    """
+    Gracefully stop all VMs running on this system
+    """
+    vm_list = VmList().plainList
+    for _vm in vm_list:
+        if CoreChecks(vm_name=_vm).vm_is_live():
+            Operation.stop(vm_name=_vm)
+            time.sleep(wait)
+        else:
+            print("VM is already stopped: " + _vm)
 
 
 """ If this file is executed from the command line, activate Typer """
