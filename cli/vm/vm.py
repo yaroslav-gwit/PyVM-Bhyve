@@ -757,7 +757,7 @@ def deploy(vm_name:str = typer.Argument(..., help="New VM name"),
         """
         New VM deployment
         """
-        vmdeploy
+        vmdeploy.Test()
 
 
 """ If this file is executed from the command line, activate Typer """
