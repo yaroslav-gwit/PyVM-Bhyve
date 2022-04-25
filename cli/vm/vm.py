@@ -480,7 +480,7 @@ class Operation:
                         bhyve_pci = bhyve_pci + 1
                         disk_final = disk_final + " -s " + str(bhyve_pci) + generic_disk_text + CoreChecks(vm_name=vm_name, disk_image_name=disk_image).disk_location()
             else:
-                generic_disk_text = ":0," + disk_type + ","
+                generic_disk_text = ":0," + vm_disks[0]["disk_type"] + ","
                 disk_image = vm_disks[0]["disk_image"]
                 disk_final = " -s " + str(bhyve_pci) + generic_disk_text + CoreChecks(vm_name=vm_name, disk_image_name=disk_image).disk_location()
 
@@ -515,6 +515,42 @@ class Operation:
         else:
             print("Such VM '" + vm_name + "' doesn't exist!")
 
+    @staticmethod
+    def stop(vm_name:str):
+        """
+        Gracefully stop the VM
+        """
+        if vm_name not in VmList().plainList:
+            sys.exit("VM doesn't exist on this system.")
+        elif CoreChecks(vm_name).vm_is_live():
+            print("Gracefully stopping the VM: " + vm_name)
+
+            command = "ps axf | grep -v grep | grep " + vm_name + " | grep bhyve: | awk '{ print $1 }'"
+            shell_command = subprocess.check_output(command, shell=True)
+            running_vm_pid = shell_command.decode("utf-8").split()[0]
+            command = "kill -SIGTERM " + running_vm_pid
+            subprocess.run(command, shell=True)
+
+            command = "ifconfig | grep " + vm_name + " | awk '{ print $2 }'"
+            shell_command = subprocess.check_output(command, shell=True)
+            running_tap_adaptor = shell_command.decode("utf-8").split()[0]
+            tap_interface_list = shell_command.decode("utf-8").split()
+
+            running_tap_adaptor_status = "active"
+            while running_tap_adaptor_status == "active":
+                command = "ifconfig " + running_tap_adaptor + " | grep status | sed s/.status:.//"
+                shell_command = subprocess.check_output(command, shell=True)
+                running_tap_adaptor_status = shell_command.decode("utf-8").split("\n")[0]
+                time.sleep(2)
+            
+            command = "bhyvectl --destroy --vm=" + vm_name
+            subprocess.run(command, shell=True)
+            
+            for tap in tap_interface_list:
+                command = "ifconfig " + tap + " destroy"
+                subprocess.run(command, shell=True)
+            
+            print("The VM is fully stopped now: " + vm_name)
 
 
 """ Section below is responsible for the CLI input/output """
@@ -688,6 +724,15 @@ def start_all(wait:int = typer.Option(5, help="Seconds to wait before starting t
                 time.sleep(wait)
         else:
             print("VM is already live: " + _vm)
+
+@app.command()
+def stop(vm_name:str = typer.Argument(..., help="VM name"),
+        
+        ):
+        """
+        Gracefully stop the VM
+        """
+        Operation.stop(vm_name=vm_name)
 
 
 """ If this file is executed from the command line, activate Typer """
