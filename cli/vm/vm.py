@@ -1,6 +1,7 @@
 #!bin/python
 
 # Native Python functions
+from ipaddress import ip_address
 import typer
 import sys
 import os
@@ -78,6 +79,14 @@ class CoreChecks:
                 return vm_folder
             elif ds == len(self.zfs_datasets["datasets"]) and not exists(ds["mount_path"]+self.vm_name):
                 sys.exit("VM doesn't exist!")
+    
+    def vm_ip_address(self):
+        """
+        Get VM's IP address
+        """
+        vm_info_dict = self.vm_config
+        vm_ip_address = vm_info_dict["networks"][0]["ip_address"]
+        return vm_ip_address
 
 
     #_ VM START PORTION _#
@@ -307,6 +316,32 @@ class VmList:
         vm_list_dict = self.vmColumnNames
         vm_list_json = json.dumps(vm_list_dict, indent=2)
         return vm_list_json
+
+
+class VmDeploy:
+    def __init__(self, vm_name:str):
+        #_ Load networks config _#
+        with open("./configs/networks.json", "r") as file:
+            networks_file = file.read()
+        networks_file = json.loads(networks_file)
+        self.networks = networks_file
+
+        #_ Load host config _#
+        with open("./configs/host.json", "r") as file:
+            host_file = file.read()
+        host_file = json.loads(host_file)
+        self.host = host_file
+
+        self.vm_name = vm_name
+        ip_addresses = CoreChecks(vm_name=vm_name).vm_ip_address
+        print(ip_addresses)
+    
+    def generators(self):
+        pass
+    
+    def template_files(self):
+        pass
+
 
 
 
@@ -757,7 +792,7 @@ def deploy(vm_name:str = typer.Argument("test-vm-1", help="New VM name"),
         """
         New VM deployment
         """
-        vmdeploy.Deploy()
+        VmDeploy()
 
 
 """ If this file is executed from the command line, activate Typer """

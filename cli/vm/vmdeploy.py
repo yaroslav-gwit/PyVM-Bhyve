@@ -12,8 +12,8 @@ from os import listdir
 import re
 import json
 
-# from cli.vm.vm import CoreChecks
-# from cli.vm.vm import VmConfigs
+from cli.vm.checks import CoreChecks
+from cli.vm.checks import VmConfigs
 
 class Deploy:
     def __init__(self):
@@ -28,6 +28,8 @@ class Deploy:
             host_file = file.read()
         host_file = json.loads(host_file)
         self.host = host_file
+
+        
 
         print(self.networks, self.host)
 
