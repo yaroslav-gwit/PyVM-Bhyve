@@ -809,7 +809,7 @@ def deploy(vm_name:str = typer.Argument("test-vm", help="New VM name"),
         """
         New VM deployment
         """
-        VmDeploy()
+        VmDeploy(vm_name=vm_name)
 
 
 """ If this file is executed from the command line, activate Typer """
