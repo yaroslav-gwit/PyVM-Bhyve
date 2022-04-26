@@ -333,7 +333,6 @@ class VmDeploy:
         self.host = host_file
 
         self.vm_name = vm_name
-        self.vm_name = vm_name_generator()
         
         self.existing_ip_addresses = []
         for _vm in VmList().plainList:
@@ -357,8 +356,8 @@ class VmDeploy:
         return vm_name
 
 
-    def template_files(self):
-        pass
+    def final_output(self):
+        return vm_name_generator()
 
 
 
@@ -812,7 +811,7 @@ def deploy(vm_name:str = typer.Argument("test-vm", help="New VM name"),
         """
         # print(VmDeploy(vm_name=vm_name).existing_ip_addresses)
         # print(VmDeploy(vm_name=vm_name).existing_vms)
-        print(VmDeploy(vm_name=vm_name).vm_name)
+        print(VmDeploy(vm_name=vm_name).final_output())
 
 
 """ If this file is executed from the command line, activate Typer """
