@@ -16,7 +16,7 @@ from tabulate import tabulate
 from natsort import natsorted
 
 # Own functions
-from cli.vm import vmdeploy
+# from cli.vm import vmdeploy
 from cli.host import dataset
 
 
@@ -812,8 +812,8 @@ def deploy(vm_name:str = typer.Argument("test-vm", help="New VM name"),
         """
         New VM deployment
         """
-        # VmDeploy(vm_name=vm_name)
-        VmDeploy()
+        VmDeploy(vm_name=vm_name)
+
 
 
 """ If this file is executed from the command line, activate Typer """
