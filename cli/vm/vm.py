@@ -342,6 +342,7 @@ class VmDeploy:
         
         self.existing_vms = VmList().plainList
     
+
     def vm_name_generator(self):
         # Generate test VM name and number
         number = 1
@@ -811,7 +812,7 @@ def deploy(vm_name:str = typer.Argument("test-vm", help="New VM name"),
         """
         # print(VmDeploy(vm_name=vm_name).existing_ip_addresses)
         # print(VmDeploy(vm_name=vm_name).existing_vms)
-        print(VmDeploy(vm_name=vm_name).generators())
+        print(VmDeploy(vm_name=vm_name).vm_name)
 
 
 """ If this file is executed from the command line, activate Typer """
