@@ -318,9 +318,9 @@ class VmList:
         return vm_list_json
 
 
-class VmDeploy:
-    def __init__(self, vm_name:str = "test-vm"):
-        #_ Load networks config _#
+class Generators:
+    def __init__(self, vm_name:str):
+    #_ Load networks config _#
         with open("./configs/networks.json", "r") as file:
             networks_file = file.read()
         networks_file = json.loads(networks_file)
@@ -341,7 +341,6 @@ class VmDeploy:
         
         self.existing_vms = VmList().plainList
     
-
     def vm_name_generator(self):
         # Generate test VM name and number
         number = 1
@@ -356,9 +355,10 @@ class VmDeploy:
         return vm_name
 
 
-    def final_output(self):
-        return vm_name_generator()
-
+class VmDeploy:
+    def __init__(self, vm_name:str="test-vm"):
+        self.vm_name = Generators(vm_name).vm_name_generator()
+        print(self.vm_name)
 
 
 
