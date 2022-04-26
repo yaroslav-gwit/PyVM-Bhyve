@@ -359,7 +359,7 @@ class Generators:
 
 
 class VmDeploy:
-    def __init__(self, vm_name:str="test-vm"):
+    def __init__(self, vm_name:str):
         self.vm_name = Generators(vm_name).vm_name_generator()
         print(self.vm_name)
 
