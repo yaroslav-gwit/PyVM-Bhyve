@@ -333,6 +333,7 @@ class VmDeploy:
         self.host = host_file
 
         self.vm_name = vm_name
+        self.vm_name = vm_name_generator()
         
         self.existing_ip_addresses = []
         for _vm in VmList().plainList:
@@ -341,14 +342,18 @@ class VmDeploy:
         
         self.existing_vms = VmList().plainList
     
-    def generators(self):
+    def vm_name_generator(self):
         # Generate test VM name and number
         number = 1
-        if self.vm_name == "test-vm":
-            self.vm_name = "test-vm-" + str(number)
-            while self.vm_name in self.existing_vms:
+        vm_name = self.vm_name
+        if vm_name == "test-vm":
+            vm_name = "test-vm-" + str(number)
+            while vm_name in self.existing_vms:
                 number = number + 1
-                self.vm_name = "test-vm-" + str(number)
+                vm_name = "test-vm-" + str(number)
+        else:
+            vm_name = vm_name
+        return vm_name
 
 
     def template_files(self):
