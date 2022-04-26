@@ -29,6 +29,7 @@ class Deploy:
         host_file = json.loads(host_file)
         self.host = host_file
 
+        print(self.networks, self.host)
 
 class Generators:
     def __init__(self):
