@@ -318,8 +318,8 @@ class VmList:
         return vm_list_json
 
 
-class Generators:
-    def __init__(self, vm_name:str):
+class VmDeploy:
+    def __init__(self, vm_name:str = "test-vm", ip_address:str = "10.0.0.0"):
     #_ Load networks config _#
         with open("./configs/networks.json", "r") as file:
             networks_file = file.read()
@@ -333,6 +333,7 @@ class Generators:
         self.host = host_file
 
         self.vm_name = vm_name
+        self.ip_address = ip_address
         
         self.existing_ip_addresses = []
         for _vm in VmList().plainList:
@@ -340,6 +341,7 @@ class Generators:
             self.existing_ip_addresses.append(ip_address)
         
         self.existing_vms = VmList().plainList
+    
     
     def vm_name_generator(self):
         # Generate test VM name and number
@@ -356,12 +358,18 @@ class Generators:
         else:
             vm_name = vm_name
         return vm_name
+    
 
+    def ip_address_generator(self):
+        ip_address = self.ip_address
+        if ip_address in self.existing_ip_addresses and self.vm_name != "test-vm":
+            print("VM with such IP exists: " + vm_name + "/" + self.ip_address)
+        elif ip_address == "10.0.0.0":
+            bridge_address = self.networks["bridge_address"]
+            ip_address = bridge_address
 
-class VmDeploy:
-    def __init__(self, vm_name:str):
-        self.vm_name = Generators(vm_name).vm_name_generator()
-        print(self.vm_name)
+        return ip_address
+
 
 
 
@@ -808,11 +816,12 @@ def stop_all(wait:int = typer.Option(5, help="Seconds to wait before stopping ne
 @app.command()
 def deploy(vm_name:str = typer.Argument("test-vm", help="New VM name"),
         os_type:str = typer.Option("debian11", help="OS Type, for example: debian11 or ubuntu2004"),
+        ip_address:str = typer.Option("10.0.0.0", help="Specify the IP address for your new VM or leave at default to generate a random address")
         ):
         """
         New VM deployment
         """
-        VmDeploy(vm_name=vm_name)
+        VmDeploy(vm_name=vm_name, ip_address=ip_address)
 
 
 
