@@ -12,8 +12,8 @@ from os import listdir
 import re
 import json
 
-from cli.vm.vm import CoreChecks
-from cli.vm.vm import VmConfigs
+# from cli.vm.vm import CoreChecks
+# from cli.vm.vm import VmConfigs
 
 class Deploy:
     def __init__(self):
