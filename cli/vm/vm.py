@@ -345,10 +345,10 @@ class VmDeploy:
         # Generate test VM name and number
         number = 1
         if self.vm_name == "test-vm":
-            self.vm_name = "test-vm-" + number
+            self.vm_name = "test-vm-" + str(number)
             while self.vm_name in self.existing_vms:
                 number = number + 1
-                self.vm_name = "test-vm-" + number
+                self.vm_name = "test-vm-" + str(number)
 
 
     def template_files(self):
