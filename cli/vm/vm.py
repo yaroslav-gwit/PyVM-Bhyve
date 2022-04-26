@@ -319,7 +319,7 @@ class VmList:
 
 
 class VmDeploy:
-    def __init__(self, vm_name:str = "test-vm-1"):
+    def __init__(self, vm_name:str = "test-vm"):
         #_ Load networks config _#
         with open("./configs/networks.json", "r") as file:
             networks_file = file.read()
@@ -342,8 +342,15 @@ class VmDeploy:
         self.existing_vms = VmList().plainList
     
     def generators(self):
-        pass
-    
+        # Generate test VM name and number
+        number = 1
+        if self.vm_name == "test-vm":
+            self.vm_name = "test-vm-" + number
+            while self.vm_name in self.existing_vms:
+                number = number + 1
+                self.vm_name = "test-vm-" + number
+
+
     def template_files(self):
         pass
 
@@ -791,7 +798,7 @@ def stop_all(wait:int = typer.Option(5, help="Seconds to wait before stopping ne
             print("VM is already stopped: " + _vm)
 
 @app.command()
-def deploy(vm_name:str = typer.Argument("test-vm-1", help="New VM name"),
+def deploy(vm_name:str = typer.Argument("test-vm", help="New VM name"),
         os_type:str = typer.Option("debian11", help="OS Type, for example: debian11 or ubuntu2004"),
         ):
         """
