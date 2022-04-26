@@ -809,9 +809,7 @@ def deploy(vm_name:str = typer.Argument("test-vm", help="New VM name"),
         """
         New VM deployment
         """
-        # print(VmDeploy(vm_name=vm_name).existing_ip_addresses)
-        # print(VmDeploy(vm_name=vm_name).existing_vms)
-        print(VmDeploy(vm_name=vm_name).final_output())
+        VmDeploy()
 
 
 """ If this file is executed from the command line, activate Typer """
