@@ -333,8 +333,10 @@ class VmDeploy:
         self.host = host_file
 
         self.vm_name = vm_name
-        ip_addresses = CoreChecks(vm_name=vm_name).vm_ip_address
-        print(ip_addresses)
+        self.existing_ip_addresses = []
+        for _vm in VmList().plainList:
+            ip_address = CoreChecks(vm_name=_vm).vm_ip_address()
+            self.existing_ip_addresses.append(ip_address)
     
     def generators(self):
         pass
@@ -792,8 +794,7 @@ def deploy(vm_name:str = typer.Argument("test-vm-1", help="New VM name"),
         """
         New VM deployment
         """
-        # print(VmDeploy(vm_name))
-        print(CoreChecks(vm_name).vm_ip_address())
+        print(VmDeploy(vm_name=vm_name).existing_ip_addresses)
 
 
 """ If this file is executed from the command line, activate Typer """
