@@ -319,7 +319,7 @@ class VmList:
 
 
 class VmDeploy:
-    def __init__(self, vm_name:str):
+    def __init__(self, vm_name:str = "test-vm-1"):
         #_ Load networks config _#
         with open("./configs/networks.json", "r") as file:
             networks_file = file.read()
