@@ -345,7 +345,10 @@ class Generators:
         # Generate test VM name and number
         number = 1
         vm_name = self.vm_name
-        if vm_name == "test-vm":
+        if vm_name in self.existing_vms:
+            print("VM with this name exists: " + vm_name)
+            sys.exit(0)
+        elif vm_name == "test-vm":
             vm_name = "test-vm-" + str(number)
             while vm_name in self.existing_vms:
                 number = number + 1
