@@ -793,7 +793,7 @@ def deploy(vm_name:str = typer.Argument("test-vm-1", help="New VM name"),
         New VM deployment
         """
         # print(VmDeploy(vm_name))
-        CoreChecks(vm_name).vm_ip_address()
+        print(CoreChecks(vm_name).vm_ip_address())
 
 
 """ If this file is executed from the command line, activate Typer """
