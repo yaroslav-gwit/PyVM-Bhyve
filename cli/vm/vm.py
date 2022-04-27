@@ -417,7 +417,7 @@ class VmDeploy:
         if numbers:
             for item in numbers_var:
                 valid_chars_list.append(item)
-        if numbers:
+        if specials:
             for item in specials_var:
                 valid_chars_list.append(item)
         
