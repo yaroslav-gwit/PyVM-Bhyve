@@ -1,7 +1,7 @@
 #!bin/python
 
 # Native Python functions
-from ipaddress import ip_address
+# from ipaddress import ip_address
 import typer
 import sys
 import os
@@ -318,6 +318,10 @@ class VmList:
         return vm_list_json
 
 
+# class Generators:
+
+
+
 class VmDeploy:
     def __init__(self, vm_name:str = "test-vm", ip_address:str = "10.0.0.0"):
     #_ Load networks config _#
@@ -341,37 +345,44 @@ class VmDeploy:
             self.existing_ip_addresses.append(ip_address)
         
         self.existing_vms = VmList().plainList
-    
-    
-    def vm_name_generator(self):
+
+
+    @staticmethod
+    def vm_name_generator(vm_name:str, existing_vms):
         # Generate test VM name and number
         number = 1
-        vm_name = self.vm_name
-        if vm_name in self.existing_vms:
+        if vm_name in existing_vms:
             print("VM with this name exists: " + vm_name)
             sys.exit(0)
         elif vm_name == "test-vm":
             vm_name = "test-vm-" + str(number)
-            while vm_name in self.existing_vms:
+            while vm_name in existing_vms:
                 number = number + 1
                 vm_name = "test-vm-" + str(number)
         else:
             vm_name = vm_name
         return vm_name
     
-
-    def ip_address_generator(self):
-        ip_address = self.ip_address
-        if ip_address in self.existing_ip_addresses and self.vm_name != "test-vm":
+    @staticmethod
+    def ip_address_generator(ip_address:str, networks, existing_ip_addresses):
+        if ip_address in existing_ip_addresses and vm_name != "test-vm":
             print("VM with such IP exists: " + vm_name + "/" + self.ip_address)
         elif ip_address == "10.0.0.0":
-            bridge_address = self.networks["bridge_address"]
+            bridge_address = networks["bridge_address"]
             ip_address = bridge_address
 
         return ip_address
+    
+    def output_dict(self):
+        output_dict = {}
+        output_dict["vm_name"] = VmDeploy.vm_name_generator(vm_name=self.vm_name, existing_vms=self.existing_vms)
+        output_dict["ip_address"] = VmDeploy.ip_address_generator(ip_address=self.ip_address, networks=self.networks, existing_ip_addresses=self.existing_ip_addresses)
+        return output_dict
+    
+    def deploy(self):
+        pass
 
-
-
+    
 
 class Operation:
     @staticmethod
@@ -821,8 +832,8 @@ def deploy(vm_name:str = typer.Argument("test-vm", help="New VM name"),
         """
         New VM deployment
         """
-        VmDeploy(vm_name=vm_name, ip_address=ip_address)
-
+        printout = VmDeploy(vm_name=vm_name, ip_address=ip_address).output_dict()
+        print(printout)
 
 
 """ If this file is executed from the command line, activate Typer """
