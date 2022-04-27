@@ -849,7 +849,7 @@ def stop_all(wait:int = typer.Option(5, help="Seconds to wait before stopping ne
 @app.command()
 def deploy(vm_name:str = typer.Argument("test-vm", help="New VM name"),
         os_type:str = typer.Option("debian11", help="OS Type, for example: debian11 or ubuntu2004"),
-        ip_address:str = typer.Option("10.0.0.0", help="Specify the IP address for your new VM or leave at default to generate a random address")
+        ip_address:str = typer.Option("10.0.0.0", help="Specify the IP address or leave at default to generate a random address")
         ):
         """
         New VM deployment
