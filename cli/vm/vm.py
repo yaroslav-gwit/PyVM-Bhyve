@@ -417,6 +417,9 @@ class VmDeploy:
         if numbers:
             for item in numbers_var:
                 valid_chars_list.append(item)
+        if numbers:
+            for item in specials_var:
+                valid_chars_list.append(item)
         
         password = ""
         for iteration in range(0, lenght):
