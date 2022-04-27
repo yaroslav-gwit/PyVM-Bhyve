@@ -376,7 +376,7 @@ class VmDeploy:
             # Generate full list of IPs for the specified range
             bridge_split = bridge_address.split(".")
             del bridge_split[-1]
-            bridge_join = bridge_split.join(".")
+            bridge_join = ".".join(bridge_split) + "."
             ip_address = bridge_split
 
         return ip_address
