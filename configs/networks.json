@@ -5,7 +5,7 @@
             "bridge_address": "10.0.101.254",
             "apply_bridge_address": true,
             "range_start": 10,
-            "range_end": 14,
+            "range_end": 13,
             "bridge_subnet": 24,
             "comment": "Internal Network"
         }
