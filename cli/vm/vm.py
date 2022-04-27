@@ -304,7 +304,7 @@ class VmList:
             vmColumnDescription.append(vm_config)
 
 
-        vmTableHeader = [["Name", "State", "CPUs", "RAM", "Main IP", "VNC Port", "VNC Password", "OS Disk", "OS Comment", "Uptime", "Description", ]]
+        vmTableHeader = [ ["Name", "State", "CPUs", "RAM", "Main IP", "VNC Port", "VNC Password", "OS Disk", "OS Comment", "Uptime", "Description", ] ]
 
         for vm_index in range(len(vmColumnNames)):
             vmTableHeader.append([ vmColumnNames[vm_index], vmColumnState[vm_index], vmColumnCPU[vm_index], vmColumnRAM[vm_index], vmColumnIpAddress[vm_index], vmColumnVncPort[vm_index], vmColumnVncPassword[vm_index], vmColumnOsDisk[vm_index], vmColumnOsType[vm_index], vmColumnUptime[vm_index], vmColumnDescription[vm_index], ])
@@ -376,6 +376,7 @@ class VmDeploy:
     def ip_address_generator(ip_address:str, networks, existing_ip_addresses):
         if ip_address in existing_ip_addresses and vm_name != "test-vm":
             print("VM with such IP exists: " + vm_name + "/" + self.ip_address)
+        
         elif ip_address == "10.0.0.0":
             bridge_address = networks["bridge_address"]
             range_start = networks["range_start"]
@@ -407,7 +408,7 @@ class VmDeploy:
         letters_var = "asdfghjklqwertyuiopzxcvbnm"
         capitals_var = "ASDFGHJKLZXCVBNMQWERTYUIOP"
         numbers_var = "0987654321"
-        specials_var = ".,-_!^*?><)(%[]"
+        specials_var = ".,-_!^*?><)(%[]=+$#"
         
         valid_chars_list = []
         for item in letters_var:
@@ -434,6 +435,11 @@ class VmDeploy:
         mac_addess = mac_addess.lower()
         return mac_addess
     
+    def dns_registry(self):
+        vm_ip_addresses = []
+        for vm_index, vm_name in enumerate(self.existing_vms):
+            ip_address = CoreChecks(self.existing_vms[vm_index]).vm_ip_address()
+            vm_ip_addresses.append(ip_address)
 
     def output_dict(self):
         output_dict = {}
