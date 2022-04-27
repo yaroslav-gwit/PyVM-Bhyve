@@ -10,6 +10,7 @@ from os.path import exists
 from os import listdir
 import json
 import time
+import random
 
 # Installed packages/modules
 from tabulate import tabulate
@@ -400,11 +401,33 @@ class VmDeploy:
 
         return ip_address
     
+    @staticmethod
+    def random_password_generator(capitals:bool = False, numbers:bool = False, lenght:int = 8):
+        letters_var = "asdfghjklqwertyuiopzxcvbnm"
+        capitals_var = "ASDFGHJKLZXCVBNMQWERTYUIOP"
+        numbers_var = "0987654321"
+        
+        valid_chars_list = []
+        for item in letters_var:
+            valid_chars_list.append(item)
+        if capitals:
+            for item in capitals_var:
+                valid_chars_list.append(item)
+        if numbers:
+            for item in numbers_var:
+                valid_chars_list.append(item)
+        
+        password = ""
+        for iteration in range(0, lenght):
+            password = password + random.choice(valid_chars_list)
+    
+
     def output_dict(self):
         output_dict = {}
         output_dict["vm_name"] = VmDeploy.vm_name_generator(vm_name=self.vm_name, existing_vms=self.existing_vms)
         output_dict["ip_address"] = VmDeploy.ip_address_generator(ip_address=self.ip_address, networks=self.networks, existing_ip_addresses=self.existing_ip_addresses)
         output_dict["os_type"] = self.os_type
+        output_dict["root_password"] = VmDeploy.random_password_generator(lenght=12)
         return output_dict
     
     def deploy(self):
