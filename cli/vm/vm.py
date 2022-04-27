@@ -351,7 +351,7 @@ class VmDeploy:
         if os_type in os_type_list:
             self.os_type = os_type
         else:
-            os_type_list = ", ".join(os_type_list)
+            os_type_list = " ".join(os_type_list)
             sys.exit("Sorry this OS is not supported. Here is the list of supported OSes: " + os_type_list)
 
     @staticmethod
