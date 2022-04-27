@@ -323,7 +323,7 @@ class VmList:
 
 
 class VmDeploy:
-    def __init__(self, vm_name:str = "test-vm", ip_address:str = "10.0.0.0"):
+    def __init__(self, vm_name:str = "test-vm", ip_address:str = "10.0.0.0", os_type:str = "debian11"):
         #_ Load networks config _#
         with open("./configs/networks.json", "r") as file:
             networks_file = file.read()
@@ -346,8 +346,8 @@ class VmDeploy:
         
         self.existing_vms = VmList().plainList
 
-        # print(self.host, self.networks)
-
+        # OS Type Settings
+        self.os_type = os_type
 
     @staticmethod
     def vm_name_generator(vm_name:str, existing_vms):
@@ -399,6 +399,7 @@ class VmDeploy:
         output_dict = {}
         output_dict["vm_name"] = VmDeploy.vm_name_generator(vm_name=self.vm_name, existing_vms=self.existing_vms)
         output_dict["ip_address"] = VmDeploy.ip_address_generator(ip_address=self.ip_address, networks=self.networks, existing_ip_addresses=self.existing_ip_addresses)
+        output_dict["os_type"] = self.os_type
         return output_dict
     
     def deploy(self):
