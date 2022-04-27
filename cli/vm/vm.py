@@ -328,7 +328,7 @@ class VmDeploy:
         with open("./configs/networks.json", "r") as file:
             networks_file = file.read()
         networks_dict = json.loads(networks_file)
-        self.networks = networks_dict["networks"]
+        self.networks = networks_dict["networks"][0]
 
         #_ Load host config _#
         with open("./configs/host.json", "r") as file:
