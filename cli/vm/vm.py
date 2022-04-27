@@ -371,7 +371,11 @@ class VmDeploy:
             print("VM with such IP exists: " + vm_name + "/" + self.ip_address)
         elif ip_address == "10.0.0.0":
             bridge_address = networks["bridge_address"]
-            ip_address = bridge_address
+            range_start = networks["range_start"]
+            range_end = networks["range_end"]
+            # Generate full list of IPs for the specified range
+            bridge_split = bridge_address.split(".")
+            ip_address = bridge_split
 
         return ip_address
     
