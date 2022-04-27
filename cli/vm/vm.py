@@ -406,7 +406,7 @@ class VmDeploy:
         letters_var = "asdfghjklqwertyuiopzxcvbnm"
         capitals_var = "ASDFGHJKLZXCVBNMQWERTYUIOP"
         numbers_var = "0987654321"
-        specials_var = ".,-_!^*"
+        specials_var = ".,-_!^*?><)(%[]"
         
         valid_chars_list = []
         for item in letters_var:
