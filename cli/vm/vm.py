@@ -855,7 +855,7 @@ def deploy(vm_name:str = typer.Argument("test-vm", help="New VM name"),
         """
         New VM deployment
         """
-        printout = VmDeploy(vm_name=vm_name, ip_address=ip_address).output_dict()
+        printout = VmDeploy(vm_name=vm_name, ip_address=ip_address, os_type=os_type).output_dict()
         print(printout)
 
 
