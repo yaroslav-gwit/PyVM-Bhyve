@@ -372,7 +372,7 @@ class VmDeploy:
         elif ip_address == "10.0.0.0":
             bridge_address = networks["bridge_address"]
             range_start = networks["range_start"]
-            range_end = networks["range_end"]
+            range_end = networks["range_end"] + 1
             # Generate full list of IPs for the specified range
             bridge_split = bridge_address.split(".")
             del bridge_split[-1]
