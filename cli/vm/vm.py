@@ -377,7 +377,11 @@ class VmDeploy:
             bridge_split = bridge_address.split(".")
             del bridge_split[-1]
             bridge_join = ".".join(bridge_split) + "."
-            ip_address = bridge_join
+            ip_address_list = []
+            for number in range(range_start, range_end):
+                _ip_address = bridge_join + str(number)
+                ip_address_list.append(_ip_address)
+            ip_address = ip_address_list
 
         return ip_address
     
