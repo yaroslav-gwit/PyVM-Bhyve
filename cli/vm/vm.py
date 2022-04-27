@@ -347,7 +347,11 @@ class VmDeploy:
         self.existing_vms = VmList().plainList
 
         # OS Type Settings
-        self.os_type = os_type
+        os_type_list = ["debian11", "ubuntu2004"]
+        if os_type in os_type_list:
+            self.os_type = os_type
+        else:
+            sys.exit("Sorry this OS is not supported. Here is the list of supported OSes: " + os_type_list)
 
     @staticmethod
     def vm_name_generator(vm_name:str, existing_vms):
