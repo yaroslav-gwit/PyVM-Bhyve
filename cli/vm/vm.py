@@ -388,7 +388,10 @@ class VmDeploy:
             number = range_start
             while ip_address in existing_ip_addresses:
                 number = number + 1
-                ip_address = bridge_join + str(number)
+                if number > range_end:
+                    sys.exit("There are no free IPs left!")
+                else:
+                    ip_address = bridge_join + str(number)
 
         return ip_address
     
