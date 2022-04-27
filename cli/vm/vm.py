@@ -429,7 +429,7 @@ class VmDeploy:
         output_dict["vm_name"] = VmDeploy.vm_name_generator(vm_name=self.vm_name, existing_vms=self.existing_vms)
         output_dict["ip_address"] = VmDeploy.ip_address_generator(ip_address=self.ip_address, networks=self.networks, existing_ip_addresses=self.existing_ip_addresses)
         output_dict["os_type"] = self.os_type
-        output_dict["root_password"] = VmDeploy.random_password_generator(lenght=12)
+        output_dict["root_password"] = VmDeploy.random_password_generator(lenght=12, capitals=True)
         return output_dict
     
     def deploy(self):
