@@ -378,8 +378,10 @@ class VmDeploy:
     def output_dict(self):
         output_dict = {}
         output_dict["vm_name"] = VmDeploy.vm_name_generator(vm_name=self.vm_name, existing_vms=self.existing_vms)
+        print(output_dict)
         output_dict["ip_address"] = VmDeploy.ip_address_generator(ip_address=self.ip_address, networks=self.networks, existing_ip_addresses=self.existing_ip_addresses)
-        return output_dict
+        print(output_dict)
+        # return output_dict
     
     def deploy(self):
         pass
@@ -834,8 +836,8 @@ def deploy(vm_name:str = typer.Argument("test-vm", help="New VM name"),
         """
         New VM deployment
         """
-        printout = VmDeploy(vm_name=vm_name, ip_address=ip_address)
-        print(printout)
+        printout = VmDeploy(vm_name=vm_name, ip_address=ip_address).output_dict()
+        # print(printout)
 
 
 """ If this file is executed from the command line, activate Typer """
