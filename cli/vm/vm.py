@@ -352,7 +352,7 @@ class VmDeploy:
             self.os_type = os_type
         else:
             os_type_list = " ".join(os_type_list)
-            sys.exit("Sorry this OS is not supported. Here is the list of supported OSes:\r" + os_type_list)
+            sys.exit("Sorry this OS is not supported. Here is the list of supported OSes:\n" + os_type_list)
 
     @staticmethod
     def vm_name_generator(vm_name:str, existing_vms):
