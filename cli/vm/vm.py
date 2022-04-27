@@ -373,15 +373,22 @@ class VmDeploy:
             bridge_address = networks["bridge_address"]
             range_start = networks["range_start"]
             range_end = networks["range_end"] + 1
+            
             # Generate full list of IPs for the specified range
             bridge_split = bridge_address.split(".")
             del bridge_split[-1]
             bridge_join = ".".join(bridge_split) + "."
+
             ip_address_list = []
             for number in range(range_start, range_end):
                 _ip_address = bridge_join + str(number)
                 ip_address_list.append(_ip_address)
-            ip_address = ip_address_list
+            
+            ip_address = ip_address_list[0]
+            number = range_start
+            while ip_address in existing_ip_addresses:
+                number = number + 1
+                ip_address = bridge_join + str(number)
 
         return ip_address
     
