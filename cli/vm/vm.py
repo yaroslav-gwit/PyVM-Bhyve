@@ -327,14 +327,14 @@ class VmDeploy:
     #_ Load networks config _#
         with open("./configs/networks.json", "r") as file:
             networks_file = file.read()
-        networks_file = json.loads(networks_file)
-        self.networks = networks_file
+        networks_dict = json.loads(networks_file)
+        self.networks = networks_dict
 
         #_ Load host config _#
         with open("./configs/host.json", "r") as file:
             host_file = file.read()
-        host_file = json.loads(host_file)
-        self.host = host_file
+        host_dict = json.loads(host_file)
+        self.host = host_dict
 
         self.vm_name = vm_name
         self.ip_address = ip_address
@@ -345,6 +345,8 @@ class VmDeploy:
             self.existing_ip_addresses.append(ip_address)
         
         self.existing_vms = VmList().plainList
+
+        print(self.host, self.networks)
 
 
     @staticmethod
@@ -832,7 +834,7 @@ def deploy(vm_name:str = typer.Argument("test-vm", help="New VM name"),
         """
         New VM deployment
         """
-        printout = VmDeploy(vm_name=vm_name, ip_address=ip_address).output_dict()
+        printout = VmDeploy(vm_name=vm_name, ip_address=ip_address)
         print(printout)
 
 
