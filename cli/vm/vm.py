@@ -420,6 +420,8 @@ class VmDeploy:
         password = ""
         for iteration in range(0, lenght):
             password = password + random.choice(valid_chars_list)
+        
+        return password
     
 
     def output_dict(self):
