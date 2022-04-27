@@ -402,10 +402,11 @@ class VmDeploy:
         return ip_address
     
     @staticmethod
-    def random_password_generator(capitals:bool = False, numbers:bool = False, lenght:int = 8):
+    def random_password_generator(capitals:bool = False, numbers:bool = False, lenght:int = 8, specials:bool = False):
         letters_var = "asdfghjklqwertyuiopzxcvbnm"
         capitals_var = "ASDFGHJKLZXCVBNMQWERTYUIOP"
         numbers_var = "0987654321"
+        specials_var = ".,-_!^*"
         
         valid_chars_list = []
         for item in letters_var:
@@ -429,7 +430,7 @@ class VmDeploy:
         output_dict["vm_name"] = VmDeploy.vm_name_generator(vm_name=self.vm_name, existing_vms=self.existing_vms)
         output_dict["ip_address"] = VmDeploy.ip_address_generator(ip_address=self.ip_address, networks=self.networks, existing_ip_addresses=self.existing_ip_addresses)
         output_dict["os_type"] = self.os_type
-        output_dict["root_password"] = VmDeploy.random_password_generator(lenght=12, capitals=True)
+        output_dict["root_password"] = VmDeploy.random_password_generator(lenght=12, capitals=True, numbers=True, specials=True)
         return output_dict
     
     def deploy(self):
