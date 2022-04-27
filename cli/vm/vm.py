@@ -324,7 +324,7 @@ class VmList:
 
 class VmDeploy:
     def __init__(self, vm_name:str = "test-vm", ip_address:str = "10.0.0.0"):
-    #_ Load networks config _#
+        #_ Load networks config _#
         with open("./configs/networks.json", "r") as file:
             networks_file = file.read()
         networks_dict = json.loads(networks_file)
@@ -346,7 +346,7 @@ class VmDeploy:
         
         self.existing_vms = VmList().plainList
 
-        print(self.host, self.networks)
+        # print(self.host, self.networks)
 
 
     @staticmethod
@@ -378,10 +378,8 @@ class VmDeploy:
     def output_dict(self):
         output_dict = {}
         output_dict["vm_name"] = VmDeploy.vm_name_generator(vm_name=self.vm_name, existing_vms=self.existing_vms)
-        print(output_dict)
         output_dict["ip_address"] = VmDeploy.ip_address_generator(ip_address=self.ip_address, networks=self.networks, existing_ip_addresses=self.existing_ip_addresses)
-        print(output_dict)
-        # return output_dict
+        return output_dict
     
     def deploy(self):
         pass
@@ -837,7 +835,7 @@ def deploy(vm_name:str = typer.Argument("test-vm", help="New VM name"),
         New VM deployment
         """
         printout = VmDeploy(vm_name=vm_name, ip_address=ip_address).output_dict()
-        # print(printout)
+        print(printout)
 
 
 """ If this file is executed from the command line, activate Typer """
