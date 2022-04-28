@@ -16,9 +16,9 @@ import random
 from tabulate import tabulate
 from natsort import natsorted
 from generate_mac import generate_mac
+from jinja2 import Template
 
 # Own functions
-# from cli.vm import vmdeploy
 from cli.host import dataset
 
 
@@ -435,11 +435,13 @@ class VmDeploy:
         mac_addess = mac_addess.lower()
         return mac_addess
     
-    def dns_registry(self):
+    def dns_registry(existing_vms):
         vm_ip_addresses = []
-        for vm_index, vm_name in enumerate(self.existing_vms):
-            ip_address = CoreChecks(self.existing_vms[vm_index]).vm_ip_address()
+        for vm_index, vm_name in enumerate(existing_vms):
+            ip_address = CoreChecks(existing_vms[vm_index]).vm_ip_address()
             vm_ip_addresses.append(ip_address)
+        
+        return vm_ip_addresses
 
     def output_dict(self):
         output_dict = {}
@@ -450,6 +452,7 @@ class VmDeploy:
         output_dict["user_password"] = VmDeploy.random_password_generator(lenght=41, capitals=True, numbers=True)
         output_dict["vnc_password"] = VmDeploy.random_password_generator(lenght=20, capitals=True, numbers=True)
         output_dict["mac_address"] = VmDeploy.mac_address_generator()
+        output_dict["dns_registry"] = VmDeploy.dns_registry(self.existing_vms)
 
         return output_dict
     
