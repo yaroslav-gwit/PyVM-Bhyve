@@ -435,7 +435,7 @@ class VmDeploy:
         mac_addess = mac_addess.lower()
         return mac_addess
     
-    @staticmethod()
+    @staticmethod
     def dns_registry(existing_vms):
         vms_and_ips = []
         for vm_index, vm_name in enumerate(existing_vms):
