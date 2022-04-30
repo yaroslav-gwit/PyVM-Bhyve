@@ -356,6 +356,7 @@ class VmDeploy:
             os_type_list = " ".join(os_type_list)
             sys.exit("Sorry this OS is not supported. Here is the list of supported OSes:\n" + os_type_list)
 
+    
     @staticmethod
     def vm_name_generator(vm_name:str, existing_vms):
         # Generate test VM name and number
@@ -371,6 +372,7 @@ class VmDeploy:
         else:
             vm_name = vm_name
         return vm_name
+    
     
     @staticmethod
     def ip_address_generator(ip_address:str, networks, existing_ip_addresses):
@@ -403,6 +405,7 @@ class VmDeploy:
 
         return ip_address
     
+    
     @staticmethod
     def random_password_generator(capitals:bool = False, numbers:bool = False, lenght:int = 8, specials:bool = False):
         letters_var = "asdfghjklqwertyuiopzxcvbnm"
@@ -429,11 +432,13 @@ class VmDeploy:
         
         return password
     
+    
     @staticmethod
     def mac_address_generator(prefix:str = "58:9C:FC"):
         mac_addess = generate_mac.vid_provided(prefix)
         mac_addess = mac_addess.lower()
         return mac_addess
+    
     
     @staticmethod
     def dns_registry(existing_vms, host_dict):
@@ -450,12 +455,21 @@ class VmDeploy:
             vm_and_ip_dict["ip_address"] = ip_address
             vms_and_ips.append(vm_and_ip_dict)
         
+        # Read Unbound template
         with open("./templates/unbound.conf", "r") as file:
             template = file.read()
+        # Render Unbound template
         template = Template(template)
         template = template.render(dns_registry=dns_registry)
+        # Write Unbould template
+        with open("/var/unbound/unbound.conf", "w") as file:
+            file.write(template)
+        # Reload the Unbound service
+        command = "service local_unbound reload"
+        subprocess.run(command, shell=True, stdout=subprocess.DEVNULL)
         
-        return template
+        return
+
 
     def output_dict(self):
         output_dict = {}
@@ -466,13 +480,11 @@ class VmDeploy:
         output_dict["user_password"] = VmDeploy.random_password_generator(lenght=41, capitals=True, numbers=True)
         output_dict["vnc_password"] = VmDeploy.random_password_generator(lenght=20, capitals=True, numbers=True)
         output_dict["mac_address"] = VmDeploy.mac_address_generator()
-        # output_dict["dns_registry"] = VmDeploy.dns_registry(existing_vms=self.existing_vms, host_dict=self.host_dict)
 
         return output_dict
     
     def deploy(self):
-        template = VmDeploy.dns_registry(existing_vms=self.existing_vms, host_dict=self.host_dict)
-        return template
+        pass
     
 
 class Operation:
@@ -923,7 +935,7 @@ def deploy(vm_name:str = typer.Argument("test-vm", help="New VM name"),
         """
         New VM deployment
         """
-        printout = VmDeploy(vm_name=vm_name, ip_address=ip_address, os_type=os_type).deploy()
+        printout = VmDeploy(vm_name=vm_name, ip_address=ip_address, os_type=os_type).output_dict()
         print(printout)
 
 
