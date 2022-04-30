@@ -485,7 +485,6 @@ class VmDeploy:
     
     def deploy(self):
         pass
-    
 
 class Operation:
     @staticmethod
@@ -936,7 +935,7 @@ def deploy(vm_name:str = typer.Argument("test-vm", help="New VM name"),
         New VM deployment
         """
         printout = VmDeploy(vm_name=vm_name, ip_address=ip_address, os_type=os_type).output_dict()
-        VmDeploy.dns_registry()
+        VmDeploy.dns_registry(existing_vms=VmDeploy().existing_vms, host_dict=VmDeploy().host_dict)
         print(printout)
 
 
