@@ -372,11 +372,11 @@ class VmDeploy:
         allowed_vnc_ports = []
         for port in range(5900, 6100):
             allowed_vnc_ports.append(port)
-
+        
         for _vm in VmList().plainList:
-            vnc_port = CoreChecks(vm_name=_vm).vm_vnc_port()
-            vnc_port = int(vnc_port)
-            existing_vnc_ports.append(vnc_port)
+            _vm_vnc_port = CoreChecks(vm_name=_vm).vm_vnc_port()
+            _vm_vnc_port = int(vnc_port)
+            existing_vnc_ports.append(_vm_vnc_port)
         
         if vnc_port not in allowed_vnc_ports:
             sys.exit("You can't assign this port to your VM! Allowed range: 5900-6100")
