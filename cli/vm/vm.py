@@ -438,16 +438,22 @@ class VmDeploy:
     @staticmethod
     def dns_registry(existing_vms, host_dict):
         dns_registry = {}
-        dns_registry["host_dns_acls"] = host_dict["host_dns_acls"]
         vms_and_ips = []
+        
+        dns_registry["host_dns_acls"] = host_dict["host_dns_acls"]
         dns_registry["vms_and_ips"] = vms_and_ips
+        
         for vm_index, vm_name in enumerate(existing_vms):
             vm_and_ip_dict = {}
             ip_address = CoreChecks(existing_vms[vm_index]).vm_ip_address()
             vm_and_ip_dict["vm_name"] = vm_name
             vm_and_ip_dict["ip_address"] = ip_address
             vms_and_ips.append(vm_and_ip_dict)
-        return dns_registry
+        
+        with open("./templates/unbound.conf", "r") as file:
+            template = file.read()
+        
+        return template
 
     def output_dict(self):
         output_dict = {}
