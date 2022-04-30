@@ -452,8 +452,10 @@ class VmDeploy:
         
         with open("./templates/unbound.conf", "r") as file:
             template = file.read()
+        template = Template(template)
+        template = template.render(dns_registry=dns_registry)
         
-        return template
+        return dns_registry, template
 
     def output_dict(self):
         output_dict = {}
