@@ -526,8 +526,13 @@ class VmDeploy:
         output_dict["live_status"] = self.live_status
 
         # Cloud Init Section
+        host_dict = self.host_dict
+        vm_ssh_keys = []
+        for _key in host_dict["host_ssh_keys"]:
+            _ssh_key = _key["key_value"]
+            vm_ssh_keys.append(_ssh_key)
         output_dict["random_instanse_id"] = "id_" + VmDeploy.random_password_generator(lenght=10, capitals=True, numbers=True)
-        output_dict["vm_ssh_keys"] = ""
+        output_dict["vm_ssh_keys"] = vm_ssh_keys
 
         return output_dict
     
