@@ -365,13 +365,18 @@ class VmDeploy:
         
         self.vnc_port = vnc_port
 
+        if vm_name == "test-vm":
+            self.live_status = "testing"
+        else:
+            self.live_status = "production"
+
 
     @staticmethod
     def vm_vnc_port_generator(vnc_port):
         existing_vnc_ports = []
         allowed_vnc_ports = []
-        for port in range(5900, 6100):
-            allowed_vnc_ports.append(port)
+        for _port in range(5900, 6100):
+            allowed_vnc_ports.append(_port)
         
         for _vm in VmList().plainList:
             _vm_vnc_port = CoreChecks(vm_name=_vm).vm_vnc_port()
@@ -513,8 +518,19 @@ class VmDeploy:
         output_dict["vnc_port"] = VmDeploy.vm_vnc_port_generator(vnc_port=self.vnc_port)
         output_dict["vnc_password"] = VmDeploy.random_password_generator(lenght=20, capitals=True, numbers=True)
         output_dict["mac_address"] = VmDeploy.mac_address_generator()
+        networks = self.networks
+        network_bridge_name = networks[0]["bridge_name"]
+        network_bridge_address = networks[0]["bridge_address"]
+        output_dict["network_bridge_name"] = network_bridge_name
+        output_dict["network_bridge_address"] = network_bridge_address
+        output_dict["live_status"] = self.live_status
+
+        # Cloud Init Section
+        output_dict["random_instanse_id"] = "id_" + VmDeploy.random_password_generator(lenght=10, capitals=True, numbers=True)
+        output_dict["vm_ssh_keys"] = ""
 
         return output_dict
+    
     
     def deploy(self):
         pass

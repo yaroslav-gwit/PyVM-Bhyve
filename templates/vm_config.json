@@ -18,7 +18,7 @@
             "comment": "Internal Network"
         }
     ],
-    
+
     "disks": [
         {
             "disk_type": "virtio-blk",
@@ -42,7 +42,7 @@
             "comment": "Fedora Ryzen PC Key"
         }
     ],
-    
+
     "vnc_port": "5903",
     "vnc_password": "NakHkX09a7pgZUQoEJzI",
     
