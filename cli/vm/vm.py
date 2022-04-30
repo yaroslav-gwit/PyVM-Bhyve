@@ -518,9 +518,9 @@ class VmDeploy:
         output_dict["vnc_port"] = VmDeploy.vm_vnc_port_generator(vnc_port=self.vnc_port)
         output_dict["vnc_password"] = VmDeploy.random_password_generator(lenght=20, capitals=True, numbers=True)
         output_dict["mac_address"] = VmDeploy.mac_address_generator()
-        networks = self.networks
-        network_bridge_name = networks["networks"][0]["bridge_name"]
-        network_bridge_address = networks["networks"][0]["bridge_address"]
+        network0 = self.networks
+        network_bridge_name = network0["bridge_name"]
+        network_bridge_address = network0["bridge_address"]
         output_dict["network_bridge_name"] = network_bridge_name
         output_dict["network_bridge_address"] = network_bridge_address
         output_dict["live_status"] = self.live_status
