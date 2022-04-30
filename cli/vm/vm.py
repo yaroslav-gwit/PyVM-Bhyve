@@ -336,7 +336,7 @@ class VmDeploy:
         with open("./configs/host.json", "r") as file:
             host_file = file.read()
         host_dict = json.loads(host_file)
-        self.host = host_dict
+        self.host_dict = host_dict
 
         self.vm_name = vm_name
         self.ip_address = ip_address
@@ -436,15 +436,18 @@ class VmDeploy:
         return mac_addess
     
     @staticmethod
-    def dns_registry(existing_vms):
+    def dns_registry(existing_vms, host_dict):
+        dns_registry = {}
+        dns_registry["host_dns_acls"] = host_dict["host_dns_acls"]
         vms_and_ips = []
+        dns_registry["vms_and_ips"] = vms_and_ips
         for vm_index, vm_name in enumerate(existing_vms):
             vm_and_ip_dict = {}
             ip_address = CoreChecks(existing_vms[vm_index]).vm_ip_address()
             vm_and_ip_dict["vm_name"] = vm_name
             vm_and_ip_dict["ip_address"] = ip_address
             vms_and_ips.append(vm_and_ip_dict)
-        return vms_and_ips
+        return dns_registry
 
     def output_dict(self):
         output_dict = {}
@@ -455,7 +458,7 @@ class VmDeploy:
         output_dict["user_password"] = VmDeploy.random_password_generator(lenght=41, capitals=True, numbers=True)
         output_dict["vnc_password"] = VmDeploy.random_password_generator(lenght=20, capitals=True, numbers=True)
         output_dict["mac_address"] = VmDeploy.mac_address_generator()
-        output_dict["dns_registry"] = VmDeploy.dns_registry(self.existing_vms)
+        output_dict["dns_registry"] = VmDeploy.dns_registry(existing_vms=self.existing_vms, host_dict=self.host_dict)
 
         return output_dict
     
