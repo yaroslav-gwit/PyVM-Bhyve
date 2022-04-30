@@ -455,7 +455,7 @@ class VmDeploy:
         template = Template(template)
         template = template.render(dns_registry=dns_registry)
         
-        return dns_registry, template
+        return template
 
     def output_dict(self):
         output_dict = {}
