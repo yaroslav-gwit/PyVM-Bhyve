@@ -440,17 +440,16 @@ class VmDeploy:
         return mac_addess
     
     
-    @staticmethod
-    def dns_registry(existing_vms, host_dict):
+    def dns_registry(self):
         dns_registry = {}
         vms_and_ips = []
         
-        dns_registry["host_dns_acls"] = host_dict["host_dns_acls"]
+        dns_registry["host_dns_acls"] = self.host_dict["host_dns_acls"]
         dns_registry["vms_and_ips"] = vms_and_ips
         
-        for vm_index, vm_name in enumerate(existing_vms):
+        for vm_index, vm_name in enumerate(self.existing_vms):
             vm_and_ip_dict = {}
-            ip_address = CoreChecks(existing_vms[vm_index]).vm_ip_address()
+            ip_address = CoreChecks(self.existing_vms[vm_index]).vm_ip_address()
             vm_and_ip_dict["vm_name"] = vm_name
             vm_and_ip_dict["ip_address"] = ip_address
             vms_and_ips.append(vm_and_ip_dict)
@@ -828,6 +827,9 @@ def destroy(vm_name:str = typer.Argument(..., help="VM Name"),
     Completely remove the VM from this system!
     """
     Operation.destroy(vm_name=vm_name)
+    
+    # Reload DNS 
+    VmDeploy().dns_registry()
 
 @app.command()
 def destroy_all(force:bool = typer.Option(False, help="Kill and destroy all VMs, even if they are running")):
@@ -837,6 +839,9 @@ def destroy_all(force:bool = typer.Option(False, help="Kill and destroy all VMs,
     vm_list = VmList().plainList
     for _vm in vm_list:
         Operation.destroy(vm_name=_vm, force=force)
+    
+    # Reload DNS 
+    VmDeploy().dns_registry()
 
 
 @app.command()
@@ -934,11 +939,11 @@ def deploy(vm_name:str = typer.Argument("test-vm", help="New VM name"),
         """
         New VM deployment
         """
-        existing_vms = VmDeploy().existing_vms
-        host_dict = VmDeploy().host_dict
         printout = VmDeploy(vm_name=vm_name, ip_address=ip_address, os_type=os_type).output_dict()
-        VmDeploy.dns_registry(existing_vms=existing_vms, host_dict=host_dict)
         print(printout)
+        
+        # Reload DNS 
+        VmDeploy().dns_registry()
 
 
 """ If this file is executed from the command line, activate Typer """
