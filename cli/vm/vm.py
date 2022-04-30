@@ -90,6 +90,13 @@ class CoreChecks:
         vm_ip_address = vm_info_dict["networks"][0]["ip_address"]
         return vm_ip_address
 
+    def vm_vnc_port(self):
+        """
+        Get VM's VNC port
+        """
+        vm_info_dict = self.vm_config
+        vm_ip_address = vm_info_dict["vnc_port"]
+        return vm_ip_address
 
     #_ VM START PORTION _#
     def vm_network_interfaces(self):
@@ -325,7 +332,7 @@ class VmList:
 
 
 class VmDeploy:
-    def __init__(self, vm_name:str = "test-vm", ip_address:str = "10.0.0.0", os_type:str = "debian11"):
+    def __init__(self, vm_name:str = "test-vm", ip_address:str = "10.0.0.0", os_type:str = "debian11", vnc_port:int = 5900):
         #_ Load networks config _#
         with open("./configs/networks.json", "r") as file:
             networks_file = file.read()
@@ -355,8 +362,34 @@ class VmDeploy:
         else:
             os_type_list = " ".join(os_type_list)
             sys.exit("Sorry this OS is not supported. Here is the list of supported OSes:\n" + os_type_list)
+        
+        self.vnc_port = vnc_port
 
-    
+
+    @staticmethod
+    def vm_vnc_port_generator(vnc_port):
+        existing_vnc_ports = []
+        allowed_vnc_ports = []
+        for port in range(5900, 6100):
+            allowed_vnc_ports.append(port)
+
+        for _vm in VmList().plainList:
+            vnc_port = CoreChecks(vm_name=_vm).vm_vnc_port()
+            vnc_port = int(vnc_port)
+            existing_vnc_ports.append(vnc_port)
+        
+        if vnc_port not in allowed_vnc_ports:
+            sys.exit("You can't assign this port to your VM! Allowed range: 5900-6100")
+        
+        while vnc_port in existing_vnc_ports:
+            if vnc_port >= 5900 and vnc_port <= 6100:
+                vnc_port = vnc_port + 1
+            else:
+                sys.exit("We ran out of available VNC ports!")
+        
+        return vnc_port
+
+
     @staticmethod
     def vm_name_generator(vm_name:str, existing_vms):
         # Generate test VM name and number
@@ -477,6 +510,7 @@ class VmDeploy:
         output_dict["os_type"] = self.os_type
         output_dict["root_password"] = VmDeploy.random_password_generator(lenght=41, capitals=True, numbers=True)
         output_dict["user_password"] = VmDeploy.random_password_generator(lenght=41, capitals=True, numbers=True)
+        output_dict["vnc_port"] = VmDeploy.vm_vnc_port_generator(vnc_port=self.vnc_port)
         output_dict["vnc_password"] = VmDeploy.random_password_generator(lenght=20, capitals=True, numbers=True)
         output_dict["mac_address"] = VmDeploy.mac_address_generator()
 
