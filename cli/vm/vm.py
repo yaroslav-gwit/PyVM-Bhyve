@@ -934,8 +934,10 @@ def deploy(vm_name:str = typer.Argument("test-vm", help="New VM name"),
         """
         New VM deployment
         """
+        existing_vms = VmDeploy().existing_vms
+        host_dict = VmDeploy().host_dict
         printout = VmDeploy(vm_name=vm_name, ip_address=ip_address, os_type=os_type).output_dict()
-        VmDeploy.dns_registry(existing_vms=VmDeploy().existing_vms, host_dict=VmDeploy().host_dict)
+        VmDeploy.dns_registry(existing_vms=existing_vms, host_dict=host_dict)
         print(printout)
 
 
