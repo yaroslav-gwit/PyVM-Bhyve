@@ -435,13 +435,16 @@ class VmDeploy:
         mac_addess = mac_addess.lower()
         return mac_addess
     
+    @staticmethod()
     def dns_registry(existing_vms):
-        vm_ip_addresses = []
+        vms_and_ips = []
         for vm_index, vm_name in enumerate(existing_vms):
+            vm_and_ip_dict = {}
             ip_address = CoreChecks(existing_vms[vm_index]).vm_ip_address()
-            vm_ip_addresses.append(ip_address)
-        
-        return vm_ip_addresses
+            vm_and_ip_dict["vm_name"] = vm_name
+            vm_and_ip_dict["ip_address"] = ip_address
+            vms_and_ips.append(vm_and_ip_dict)
+        return vms_and_ips
 
     def output_dict(self):
         output_dict = {}
