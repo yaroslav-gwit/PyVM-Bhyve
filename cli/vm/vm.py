@@ -466,13 +466,13 @@ class VmDeploy:
         output_dict["user_password"] = VmDeploy.random_password_generator(lenght=41, capitals=True, numbers=True)
         output_dict["vnc_password"] = VmDeploy.random_password_generator(lenght=20, capitals=True, numbers=True)
         output_dict["mac_address"] = VmDeploy.mac_address_generator()
-        output_dict["dns_registry"] = VmDeploy.dns_registry(existing_vms=self.existing_vms, host_dict=self.host_dict)
+        # output_dict["dns_registry"] = VmDeploy.dns_registry(existing_vms=self.existing_vms, host_dict=self.host_dict)
 
         return output_dict
     
     def deploy(self):
-        pass
-
+        template = VmDeploy.dns_registry(existing_vms=self.existing_vms, host_dict=self.host_dict)
+        return template
     
 
 class Operation:
@@ -923,7 +923,7 @@ def deploy(vm_name:str = typer.Argument("test-vm", help="New VM name"),
         """
         New VM deployment
         """
-        printout = VmDeploy(vm_name=vm_name, ip_address=ip_address, os_type=os_type).output_dict()
+        printout = VmDeploy(vm_name=vm_name, ip_address=ip_address, os_type=os_type).deploy()
         print(printout)
 
 
