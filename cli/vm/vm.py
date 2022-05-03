@@ -546,8 +546,11 @@ class VmDeploy:
         default_dataset_path = dataset.DatasetList().datasets["datasets"][dataset_id]["mount_path"]
         
         # Clone a template using ZFS clone
-        if exists(default_dataset_path + "template-" + output_dict["os_type"]):
-            print("Found your template!")
+        template_ds = default_dataset + "/template-" + output_dict["os_type"]
+        template_folder = default_dataset_path + "template-" + output_dict["os_type"]
+        if exists(template_folder):
+            command = "zfs snapshot " + template_ds + "@deployment_" + output_dict["vm_name"] + "_" + VmDeploy.random_password_generator(lenght=4)
+            print(command)
 
         # Read VM template
         with open("./templates/vm_config_template.json", "r") as file:
