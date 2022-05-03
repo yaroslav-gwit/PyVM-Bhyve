@@ -563,11 +563,20 @@ class VmDeploy:
         nw_template = Template(nw_template)
         nw_template = nw_template.render(output_dict=output_dict)
 
+        # Read Cloud Init User
+        with open("./templates/cloudinit/user-data", "r") as file:
+            usr_template = file.read()
+        # Render loud Init User
+        usr_template = Template(usr_template)
+        usr_template = usr_template.render(output_dict=output_dict)
+
         print(template)
         print()
         print(md_template)
         print()
         print(nw_template)
+        print()
+        print(usr_template)
 
 class Operation:
     @staticmethod
