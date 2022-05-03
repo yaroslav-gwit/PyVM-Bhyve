@@ -685,8 +685,17 @@ class Operation:
         if vm_name not in VmList().plainList:
             sys.exit("VM doesn't exist on this system.")
         elif CoreChecks(vm_name).vm_is_live():
+            # This code block is a duplicate. Another one exists in stop section.
+            command = "ps axf | grep -v grep | grep 'nmdm-" + vm_name + "' | awk '{ print $1 }'"
+            shell_command = subprocess.check_output(command, shell=True)
+            console_list = shell_command.decode("utf-8").split()
+            for _console in console_list:
+                if _console:
+                    command = "kill -SIGTERM " + _console
+                    subprocess.run(command, shell=True)
+
             # This block is a duplicate. Creating a function would be a good idea for the future!
-            command = "ifconfig | grep " + vm_name + " | awk '{ print $2 }'"
+            command = "ifconfig | grep " +  + " | awk '{ print $2 }'"
             shell_command = subprocess.check_output(command, shell=True)
             tap_interface_list = shell_command.decode("utf-8").split()
 
@@ -832,6 +841,16 @@ class Operation:
             sys.exit("VM doesn't exist on this system.")
         elif CoreChecks(vm_name).vm_is_live():
             print("Gracefully stopping the VM: " + vm_name)
+
+            # This code block is a duplicate. Another one exists in kill section.
+            command = "ps axf | grep -v grep | grep 'nmdm-" + vm_name + "' | awk '{ print $1 }'"
+            shell_command = subprocess.check_output(command, shell=True)
+            console_list = shell_command.decode("utf-8").split()
+            for _console in console_list:
+                if _console:
+                    command = "kill -SIGTERM " + _console
+                    subprocess.run(command, shell=True)
+            
 
             command = "ps axf | grep -v grep | grep " + vm_name + " | grep bhyve: | awk '{ print $1 }'"
             shell_command = subprocess.check_output(command, shell=True)
