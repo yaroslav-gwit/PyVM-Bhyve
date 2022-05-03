@@ -1009,6 +1009,7 @@ def deploy(vm_name:str = typer.Argument("test-vm", help="New VM name"),
         
         # Reload DNS 
         VmDeploy().dns_registry()
+        VmDeploy().deploy()
 
 
 """ If this file is executed from the command line, activate Typer """
