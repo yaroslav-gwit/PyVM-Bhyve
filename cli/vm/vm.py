@@ -811,7 +811,7 @@ class Operation:
             command = "nohup ./cli/shell_helpers/vm_start.sh " + '"' + command + '"' + " " + vm_name + " > " + vm_folder + "vm.log 2>&1 &"
             # command = "nohup ./cli/shell_helpers/vm_start.sh " + '"' + command + '"' + " " + vm_name + " &> " + vm_folder + "/vm.log &"
             # print(command)
-            subprocess.run(command, shell=True, stderr = subprocess.DEVNULL, stdout=subprocess.DEVNULL)
+            subprocess.run(command, shell=True)
 
         else:
             print("Such VM '" + vm_name + "' doesn't exist!")
