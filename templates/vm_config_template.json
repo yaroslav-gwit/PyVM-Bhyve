@@ -3,7 +3,7 @@
     "cpu_cores": "1",
     "memory": "1G",
     "loader": "uefi",
-    "live_status": "{{ live_status }}",
+    "live_status": "{{ output_dict['live_status'] }}",
     "os_type": "ubuntu2004",
     "os_comment": "No comment",
     "owner": "System",
@@ -12,9 +12,9 @@
     "networks": [
         {
             "network_adaptor_type": "virtio-net",
-            "network_bridge": "{{ network_bridge }}",
-            "network_mac": "{{ network_mac }}",
-            "ip_address": "{{ ip_address }}",
+            "network_bridge": "{{ output_dict['network_bridge'] }}",
+            "network_mac": "{{ output_dict['network_mac'] }}",
+            "ip_address": "{{ output_dict['ip_address'] }}",
             "comment": "Internal Network"
         }
     ],
