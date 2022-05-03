@@ -12,8 +12,8 @@
     "networks": [
         {
             "network_adaptor_type": "virtio-net",
-            "network_bridge": "{{ output_dict['network_bridge'] }}",
-            "network_mac": "{{ output_dict['network_mac'] }}",
+            "network_bridge": "{{ output_dict['network_bridge_name'] }}",
+            "network_mac": "{{ output_dict['mac_address'] }}",
             "ip_address": "{{ output_dict['ip_address'] }}",
             "comment": "Internal Network"
         }
