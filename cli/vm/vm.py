@@ -542,15 +542,22 @@ class VmDeploy:
         output_dict = VmDeploy().output_dict()
 
         dataset_id = self.dataset_id
-        default_dataset = dataset.DatasetList().datasets["datasets"][dataset_id]["zfs_path"]
-        default_dataset_path = dataset.DatasetList().datasets["datasets"][dataset_id]["mount_path"]
+        working_dataset = dataset.DatasetList().datasets["datasets"][dataset_id]["zfs_path"]
+        working_dataset_path = dataset.DatasetList().datasets["datasets"][dataset_id]["mount_path"]
         
         # Clone a template using ZFS clone
-        template_ds = default_dataset + "/template-" + output_dict["os_type"]
-        template_folder = default_dataset_path + "template-" + output_dict["os_type"]
+        template_ds = working_dataset + "/template-" + output_dict["os_type"]
+        template_folder = working_dataset_path + "template-" + output_dict["os_type"]
         if exists(template_folder):
-            command = "zfs snapshot " + template_ds + "@deployment_" + output_dict["vm_name"] + "_" + VmDeploy.random_password_generator(lenght=4)
+            snapshot_name = "@deployment_" + output_dict["vm_name"] + "_" + VmDeploy.random_password_generator(lenght=7, numbers=True)
+            command = "zfs snapshot " + template_ds + snapshot_name
             print(command)
+            # subprocess.run(command)
+            
+            command = "zfs clone " + template_ds + snapshot_name + " " + working_dataset + "/" + output_dict["vm_name"]
+            print(command)
+            # subprocess.run(command)
+
 
         # Read VM template
         with open("./templates/vm_config_template.json", "r") as file:
