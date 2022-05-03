@@ -455,14 +455,14 @@ class VmDeploy:
         for item in letters_var:
             valid_chars_list.append(item)
         if capitals:
-            for item in capitals_var:
-                valid_chars_list.append(item)
+            for c_item in capitals_var:
+                valid_chars_list.append(c_item)
         if numbers:
-            for item in numbers_var:
-                valid_chars_list.append(item)
+            for n_item in numbers_var:
+                valid_chars_list.append(n_item)
         if specials:
-            for item in specials_var:
-                valid_chars_list.append(item)
+            for s_item in specials_var:
+                valid_chars_list.append(s_item)
         
         password = ""
         for iteration in range(0, lenght):
@@ -538,6 +538,8 @@ class VmDeploy:
     
     
     def deploy(self):
+        # Get the default dataset
+        default_dataset = dataset.DatasetList()[0]["zfs_path"]
         # Read VM template
         with open("./templates/vm_config_template.json", "r") as file:
             template = file.read()
@@ -545,38 +547,48 @@ class VmDeploy:
         output_dict = VmDeploy().output_dict()
         template = Template(template)
         template = template.render(output_dict=output_dict)
-        # Write Unbould template
+        # Write VM template
         # with open("/var/unbound/unbound.conf", "w") as file:
             # file.write(template)
         
         # Read Cloud Init Metadata
         with open("./templates/cloudinit/meta-data", "r") as file:
             md_template = file.read()
-        # Render loud Init Metadata
+        # Render Cloud Init Metadata Template
         md_template = Template(md_template)
         md_template = md_template.render(output_dict=output_dict)
+        # Write Cloud Init Metadata Template
+        # with open("/var/unbound/unbound.conf", "w") as file:
+            # file.write(template)
 
-        # Read Cloud Init Network
+        # Read Cloud Init Network Template
         with open("./templates/cloudinit/network-config", "r") as file:
             nw_template = file.read()
-        # Render loud Init Network
+        # Render Cloud Init Network Template
         nw_template = Template(nw_template)
         nw_template = nw_template.render(output_dict=output_dict)
+        # Write Cloud Init Network
+        # with open("/var/unbound/unbound.conf", "w") as file:
+            # file.write(template)
 
-        # Read Cloud Init User
+        # Read Cloud Init User Template
         with open("./templates/cloudinit/user-data", "r") as file:
             usr_template = file.read()
-        # Render loud Init User
+        # Render loud Init User Template
         usr_template = Template(usr_template)
         usr_template = usr_template.render(output_dict=output_dict)
+        # Write Cloud Init User Template
+        # with open("/var/unbound/unbound.conf", "w") as file:
+            # file.write(template)
 
-        print(template)
-        print()
-        print(md_template)
-        print()
-        print(nw_template)
-        print()
-        print(usr_template)
+        # print(template)
+        # print()
+        # print(md_template)
+        # print()
+        # print(nw_template)
+        # print()
+        # print(usr_template)
+        print(default_dataset)
 
 class Operation:
     @staticmethod
