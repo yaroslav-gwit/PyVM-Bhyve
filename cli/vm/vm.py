@@ -710,7 +710,7 @@ class Operation:
             tap_interface_list = shell_command.decode("utf-8").split()
 
             command = "bhyvectl --destroy --vm=" + vm_name
-            shell_command = subprocess.run(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            subprocess.run(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             
             time.sleep(1)
 
