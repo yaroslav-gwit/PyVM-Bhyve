@@ -552,11 +552,11 @@ class VmDeploy:
             snapshot_name = "@deployment_" + output_dict["vm_name"] + "_" + VmDeploy.random_password_generator(lenght=7, numbers=True)
             command = "zfs snapshot " + template_ds + snapshot_name
             # print(command)
-            subprocess.run(command)
+            subprocess.run(command, shell=True)
             
             command = "zfs clone " + template_ds + snapshot_name + " " + working_dataset + "/" + output_dict["vm_name"]
             # print(command)
-            subprocess.run(command)
+            subprocess.run(command, shell=True)
 
         new_vm_folder = working_dataset_path + output_dict["vm_name"] + "/"
         if exists(new_vm_folder):
