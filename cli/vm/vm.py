@@ -552,13 +552,22 @@ class VmDeploy:
         # Read Cloud Init Metadata
         with open("./templates/cloudinit/meta-data", "r") as file:
             md_template = file.read()
-        # Render VM template
+        # Render loud Init Metadata
         md_template = Template(md_template)
         md_template = md_template.render(output_dict=output_dict)
+
+        # Read Cloud Init Network
+        with open("./templates/cloudinit/network-config", "r") as file:
+            nw_template = file.read()
+        # Render loud Init Network
+        nw_template = Template(nw_template)
+        nw_template = nw_template.render(output_dict=output_dict)
 
         print(template)
         print()
         print(md_template)
+        print()
+        print(nw_template)
 
 class Operation:
     @staticmethod

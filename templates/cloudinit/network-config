@@ -2,15 +2,15 @@ version: 2
 ethernets:
   interface0:
      match:
-         macaddress: "{{ mac_address }}"
+         macaddress: "{{ output_dict['mac_address'] }}"
      
-     {% if vm_os_type != "freebsd13zfs" %}{% if vm_os_type != "freebsd13ufs" %}set-name: eth0{% endif %}{% endif %}
+     {% if output_dict["os_type"] != "freebsd13zfs" %}{% if vm_os_type != "freebsd13ufs" %}set-name: eth0{% endif %}{% endif %}
      
      addresses:
-     - {{ ip_address }}/24
+     - {{ output_dict['ip_address'] }}/24
      
-     gateway4: {{ gateway }}
+     gateway4: {{ output_dict["network_bridge_address"] }}
      
      nameservers:
        search: [gateway-it.internal, ]
-       addresses: [{{ gateway }}, ]
+       addresses: [ {{ output_dict["network_bridge_address"] }}, ]
