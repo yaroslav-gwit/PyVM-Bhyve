@@ -718,7 +718,7 @@ class Operation:
                 for tap in tap_interface_list:
                     if tap:
                         command = "ifconfig " + tap + " destroy"
-                        shell_command = subprocess.run(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                        subprocess.run(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             print("Killed the VM: " + vm_name)
         else:
             # This block is a duplicate. Creating a function would be a good idea for the future!
@@ -729,7 +729,7 @@ class Operation:
                 for tap in tap_interface_list:
                     if tap:
                         command = "ifconfig " + tap + " destroy"
-                        shell_command = subprocess.run(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                        subprocess.run(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             print("VM is already dead: " + vm_name + "!")
 
     @staticmethod
@@ -883,7 +883,7 @@ class Operation:
             
             for tap in tap_interface_list:
                 command = "ifconfig " + tap + " destroy"
-                subprocess.run(command, shell=True)
+                subprocess.run(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             
             print("The VM is fully stopped now: " + vm_name)
         else:
