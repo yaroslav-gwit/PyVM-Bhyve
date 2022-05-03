@@ -551,53 +551,61 @@ class VmDeploy:
         if exists(template_folder):
             snapshot_name = "@deployment_" + output_dict["vm_name"] + "_" + VmDeploy.random_password_generator(lenght=7, numbers=True)
             command = "zfs snapshot " + template_ds + snapshot_name
-            print(command)
-            # subprocess.run(command)
+            # print(command)
+            subprocess.run(command)
             
             command = "zfs clone " + template_ds + snapshot_name + " " + working_dataset + "/" + output_dict["vm_name"]
-            print(command)
-            # subprocess.run(command)
+            # print(command)
+            subprocess.run(command)
 
+        new_vm_folder = working_dataset_path + output_dict["vm_name"] + "/"
+        if exists(new_vm_folder):
+            # Read VM template
+            with open("./templates/vm_config_template.json", "r") as file:
+                template = file.read()
+            # Render VM template
+            template = Template(template)
+            template = template.render(output_dict=output_dict)
+            # Write VM template
+            with open(new_vm_folder + "vm_config.json", "w") as file:
+                file.write(template)
 
-        # Read VM template
-        with open("./templates/vm_config_template.json", "r") as file:
-            template = file.read()
-        # Render VM template
-        template = Template(template)
-        template = template.render(output_dict=output_dict)
-        # Write VM template
-        # with open("/var/unbound/unbound.conf", "w") as file:
-            # file.write(template)
-        
-        # Read Cloud Init Metadata
-        with open("./templates/cloudinit/meta-data", "r") as file:
-            md_template = file.read()
-        # Render Cloud Init Metadata Template
-        md_template = Template(md_template)
-        md_template = md_template.render(output_dict=output_dict)
-        # Write Cloud Init Metadata Template
-        # with open("/var/unbound/unbound.conf", "w") as file:
-            # file.write(template)
+            cloud_init_files_folder = new_vm_folder + "/cloud-init-files"
+            if not exists(cloud_init_files_folder):
+                os.mkdir(cloud_init_files_folder)
 
-        # Read Cloud Init Network Template
-        with open("./templates/cloudinit/network-config", "r") as file:
-            nw_template = file.read()
-        # Render Cloud Init Network Template
-        nw_template = Template(nw_template)
-        nw_template = nw_template.render(output_dict=output_dict)
-        # Write Cloud Init Network
-        # with open("/var/unbound/unbound.conf", "w") as file:
-            # file.write(template)
+            # Read Cloud Init Metadata
+            with open("./templates/cloudinit/meta-data", "r") as file:
+                md_template = file.read()
+            # Render Cloud Init Metadata Template
+            md_template = Template(md_template)
+            md_template = md_template.render(output_dict=output_dict)
+            # Write Cloud Init Metadata Template
+            with open(cloud_init_files_folder + "/meta-data", "w") as file:
+                file.write(md_template)
 
-        # Read Cloud Init User Template
-        with open("./templates/cloudinit/user-data", "r") as file:
-            usr_template = file.read()
-        # Render loud Init User Template
-        usr_template = Template(usr_template)
-        usr_template = usr_template.render(output_dict=output_dict)
-        # Write Cloud Init User Template
-        # with open("/var/unbound/unbound.conf", "w") as file:
-            # file.write(template)
+            # Read Cloud Init Network Template
+            with open("./templates/cloudinit/network-config", "r") as file:
+                nw_template = file.read()
+            # Render Cloud Init Network Template
+            nw_template = Template(nw_template)
+            nw_template = nw_template.render(output_dict=output_dict)
+            # Write Cloud Init Network
+            with open(cloud_init_files_folder + "/network-config", "w") as file:
+                file.write(nw_template)
+
+            # Read Cloud Init User Template
+            with open("./templates/cloudinit/user-data", "r") as file:
+                usr_template = file.read()
+            # Render loud Init User Template
+            usr_template = Template(usr_template)
+            usr_template = usr_template.render(output_dict=output_dict)
+            # Write Cloud Init User Template
+            with open(cloud_init_files_folder + "/user-data", "w") as file:
+                file.write(usr_template)
+
+        else:
+            sys.exit("FATAL: VM folder doesn't exist!")
 
         # print(template)
         # print()
