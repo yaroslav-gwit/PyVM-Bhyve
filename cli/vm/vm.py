@@ -526,6 +526,13 @@ class VmDeploy:
         output_dict["network_bridge_address"] = network_bridge_address
         output_dict["live_status"] = self.live_status
 
+        if self.os_type == "ubuntu2004":
+            output_dict["os_comment"] = "Ubuntu 20.04"
+        elif self.os_type == "debian11":
+            output_dict["os_comment"] = "Debian 11"
+        else:
+            output_dict["os_comment"] = "Unknown OS"
+
         # Cloud Init Section
         host_dict = self.host_dict
         vm_ssh_keys = []
@@ -534,8 +541,6 @@ class VmDeploy:
             vm_ssh_keys.append(_ssh_key)
         output_dict["random_instanse_id"] = VmDeploy.random_password_generator(lenght=5)
         output_dict["vm_ssh_keys"] = vm_ssh_keys
-
-        # output_dict = VmDeploy().output_dict()
 
         dataset_id = self.dataset_id
         working_dataset = dataset.DatasetList().datasets["datasets"][dataset_id]["zfs_path"]
