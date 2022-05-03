@@ -332,7 +332,7 @@ class VmList:
 
 
 class VmDeploy:
-    def __init__(self, vm_name:str = "test-vm", ip_address:str = "10.0.0.0", os_type:str = "debian11", vnc_port:int = 5900, dataset_id:int = 0):
+    def __init__(self, vm_name:str = "test-vm", ip_address:str = "10.0.0.0", os_type:str = "ubuntu2004", vnc_port:int = 5900, dataset_id:int = 0):
         #_ Load networks config _#
         with open("./configs/networks.json", "r") as file:
             networks_file = file.read()
@@ -1046,7 +1046,7 @@ def stop_all(wait:int = typer.Option(5, help="Seconds to wait before stopping ne
 
 @app.command()
 def deploy(vm_name:str = typer.Argument("test-vm", help="New VM name"),
-        os_type:str = typer.Option("debian11", help="OS Type, for example: debian11 or ubuntu2004"),
+        os_type:str = typer.Option("ubuntu2004", help="OS Type, for example: debian11 or ubuntu2004"),
         ip_address:str = typer.Option("10.0.0.0", help="Specify the IP address or leave at default to generate a random address")
         ):
         """
