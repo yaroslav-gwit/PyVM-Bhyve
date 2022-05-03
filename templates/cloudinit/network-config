@@ -13,4 +13,4 @@ ethernets:
      
      nameservers:
        search: [gateway-it.internal, ]
-       addresses: [ {{ output_dict["network_bridge_address"] }}, ]
+       addresses: [{{ output_dict["network_bridge_address"] }}, ]
