@@ -5,7 +5,7 @@
     "loader": "uefi",
     "live_status": "{{ output_dict['live_status'] }}",
     "os_type": "ubuntu2004",
-    "os_comment": "No comment",
+    "os_comment": "Ubuntu 20.04",
     "owner": "System",
     "parent_host": "hoster-test-0101",
 
