@@ -7,3 +7,4 @@ if [[ -z "$1" ]]; then
     ./hoster vm list
 else
     ./hoster $@
+fi
