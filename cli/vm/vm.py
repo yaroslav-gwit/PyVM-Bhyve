@@ -702,7 +702,7 @@ class Operation:
                 command = "kill -SIGKILL " + running_vm_pid
                 subprocess.run(command, shell=True)
             except:
-                print("ERROR! Could not find the process for VM " + vm_name)
+                print("ERROR! Could not find the process for the VM: " + vm_name)
 
             # This block is a duplicate. Creating a function would be a good idea for the future!
             command = "ifconfig | grep " + vm_name + " | awk '{ print $2 }'"
