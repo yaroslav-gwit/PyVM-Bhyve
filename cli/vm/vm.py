@@ -544,7 +544,7 @@ class VmDeploy:
         # Render Unbound template
         output_dict = VmDeploy().output_dict()
         template = Template(template)
-        template = template.render(output_dict=self.output_dict)
+        template = template.render(output_dict=output_dict)
         # Write Unbould template
         # with open("/var/unbound/unbound.conf", "w") as file:
             # file.write(template)
