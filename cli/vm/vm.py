@@ -534,8 +534,7 @@ class VmDeploy:
         output_dict["random_instanse_id"] = "id_" + VmDeploy.random_password_generator(lenght=10, capitals=True, numbers=True)
         output_dict["vm_ssh_keys"] = vm_ssh_keys
 
-        self.output_dict = output_dict
-        return self.output_dict
+        return output_dict
     
     
     def deploy(self):
@@ -543,6 +542,7 @@ class VmDeploy:
         with open("./templates/vm_config_template.json", "r") as file:
             template = file.read()
         # Render Unbound template
+        output_dict = VmDeploy().output_dict()
         template = Template(template)
         template = template.render(output_dict=self.output_dict)
         # Write Unbould template
