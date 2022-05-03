@@ -539,7 +539,7 @@ class VmDeploy:
     
     def deploy(self):
         # Get the default dataset
-        default_dataset = dataset.DatasetList().datasets[0]["zfs_path"]
+        default_dataset = dataset.DatasetList().datasets["datasets"][0]["zfs_path"]
         # Read VM template
         with open("./templates/vm_config_template.json", "r") as file:
             template = file.read()
