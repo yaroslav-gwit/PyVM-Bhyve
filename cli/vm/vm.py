@@ -554,7 +554,7 @@ class VmDeploy:
             # print(command)
             subprocess.run(command, shell=True)
         else:
-            sys.exit("FATAL: Template specified doesn't exist: " + working_dataset + "/" + output_dict["vm_name"])
+            sys.exit("FATAL! Template specified doesn't exist: " + template_folder)
 
         new_vm_folder = working_dataset_path + output_dict["vm_name"] + "/"
         if exists(new_vm_folder):
@@ -607,7 +607,7 @@ class VmDeploy:
             subprocess.run(command, shell=True, stderr = subprocess.DEVNULL, stdout=subprocess.DEVNULL)
 
         else:
-            sys.exit("FATAL: Template specified doesn't exist: " + working_dataset + "/" + output_dict["vm_name"])
+            sys.exit("FATAL! Template specified doesn't exist: " + template_folder)
         
         return {"status": "success", "vm_name": output_dict["vm_name"]}
 
