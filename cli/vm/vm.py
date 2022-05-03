@@ -532,7 +532,7 @@ class VmDeploy:
         for _key in host_dict["host_ssh_keys"]:
             _ssh_key = _key["key_value"]
             vm_ssh_keys.append(_ssh_key)
-        output_dict["random_instanse_id"] = VmDeploy.random_password_generator(lenght=10, capitals=True, numbers=True)
+        output_dict["random_instanse_id"] = VmDeploy.random_password_generator(lenght=5)
         output_dict["vm_ssh_keys"] = vm_ssh_keys
 
         # output_dict = VmDeploy().output_dict()
