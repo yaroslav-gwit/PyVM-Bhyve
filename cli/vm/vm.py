@@ -692,7 +692,7 @@ class Operation:
             for _console in console_list:
                 if _console:
                     command = "kill -SIGKILL " + _console
-                    subprocess.run(command, shell=True)
+                    subprocess.run(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
             # Find and kill the VM process
             command = "ps axf | grep -v grep | grep " + vm_name + " | grep bhyve: | awk '{ print $1 }'"
@@ -857,7 +857,7 @@ class Operation:
             for _console in console_list:
                 if _console:
                     command = "kill -SIGKILL " + _console
-                    subprocess.run(command, shell=True)
+                    subprocess.run(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             
 
             command = "ps axf | grep -v grep | grep " + vm_name + " | grep bhyve: | awk '{ print $1 }'"
