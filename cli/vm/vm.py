@@ -879,7 +879,7 @@ class Operation:
                 time.sleep(2)
             
             command = "bhyvectl --destroy --vm=" + vm_name
-            subprocess.run(command, shell=True)
+            subprocess.run(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             
             for tap in tap_interface_list:
                 command = "ifconfig " + tap + " destroy"
