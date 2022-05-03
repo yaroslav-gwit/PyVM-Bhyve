@@ -599,7 +599,10 @@ class VmDeploy:
             # Write Cloud Init User Template
             with open(cloud_init_files_folder + "/user-data", "w") as file:
                 file.write(usr_template)
-            
+
+            # Create ISO file
+            command = "genisoimage -output " + new_vm_folder + "/seed.iso -volid cidata -joliet -rock " + cloud_init_files_folder + "/user-data " + cloud_init_files_folder + "/meta-data " + cloud_init_files_folder + "/network-config"
+            subprocess.run(command, shell=True, stderr = subprocess.DEVNULL, stdout=subprocess.DEVNULL)
 
         else:
             sys.exit("FATAL: VM folder doesn't exist!")
