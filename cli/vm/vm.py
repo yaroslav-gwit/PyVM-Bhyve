@@ -332,7 +332,7 @@ class VmList:
 
 
 class VmDeploy:
-    def __init__(self, vm_name:str = "test-vm", ip_address:str = "10.0.0.0", os_type:str = "debian11", vnc_port:int = 5900):
+    def __init__(self, vm_name:str = "test-vm", ip_address:str = "10.0.0.0", os_type:str = "debian11", vnc_port:int = 5900, dataset_id:int = 0):
         #_ Load networks config _#
         with open("./configs/networks.json", "r") as file:
             networks_file = file.read()
@@ -370,6 +370,7 @@ class VmDeploy:
         else:
             self.live_status = "production"
 
+        self.dataset_id = dataset_id
 
     @staticmethod
     def vm_vnc_port_generator(vnc_port):
@@ -538,13 +539,20 @@ class VmDeploy:
     
     
     def deploy(self):
-        # Get the default dataset
-        default_dataset = dataset.DatasetList().datasets["datasets"][0]["zfs_path"]
+        output_dict = VmDeploy().output_dict()
+
+        dataset_id = self.dataset_id
+        default_dataset = dataset.DatasetList().datasets["datasets"][dataset_id]["zfs_path"]
+        default_dataset_path = dataset.DatasetList().datasets["datasets"][dataset_id]["mount_path"]
+        
+        # Clone a template using ZFS clone
+        if exists(default_dataset_path + "template-" + output_dict["os_type"]):
+            print("Found your template!")
+
         # Read VM template
         with open("./templates/vm_config_template.json", "r") as file:
             template = file.read()
         # Render VM template
-        output_dict = VmDeploy().output_dict()
         template = Template(template)
         template = template.render(output_dict=output_dict)
         # Write VM template
@@ -588,7 +596,7 @@ class VmDeploy:
         # print(nw_template)
         # print()
         # print(usr_template)
-        print(default_dataset)
+        # print(default_dataset)
 
 class Operation:
     @staticmethod
