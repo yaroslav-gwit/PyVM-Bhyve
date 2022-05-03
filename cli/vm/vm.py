@@ -509,7 +509,7 @@ class VmDeploy:
         return
 
 
-    def output_dict(self):
+    def deploy(self):
         output_dict = {}
         output_dict["vm_name"] = VmDeploy.vm_name_generator(vm_name=self.vm_name, existing_vms=self.existing_vms)
         output_dict["ip_address"] = VmDeploy.ip_address_generator(ip_address=self.ip_address, networks=self.networks, existing_ip_addresses=self.existing_ip_addresses)
@@ -535,11 +535,7 @@ class VmDeploy:
         output_dict["random_instanse_id"] = VmDeploy.random_password_generator(lenght=10, capitals=True, numbers=True)
         output_dict["vm_ssh_keys"] = vm_ssh_keys
 
-        return output_dict
-    
-    
-    def deploy(self):
-        output_dict = VmDeploy().output_dict()
+        # output_dict = VmDeploy().output_dict()
 
         dataset_id = self.dataset_id
         working_dataset = dataset.DatasetList().datasets["datasets"][dataset_id]["zfs_path"]
@@ -603,18 +599,13 @@ class VmDeploy:
             # Write Cloud Init User Template
             with open(cloud_init_files_folder + "/user-data", "w") as file:
                 file.write(usr_template)
+            
 
         else:
             sys.exit("FATAL: VM folder doesn't exist!")
+        
+        return "VM was deployed successfully: " + vm_name
 
-        # print(template)
-        # print()
-        # print(md_template)
-        # print()
-        # print(nw_template)
-        # print()
-        # print(usr_template)
-        # print(default_dataset)
 
 class Operation:
     @staticmethod
