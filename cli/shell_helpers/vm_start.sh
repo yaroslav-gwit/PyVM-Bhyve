@@ -4,7 +4,7 @@ VM_NAME=$2
 echo "This bhyve command was executed:"
 echo $COMMAND
 echo ""
-echo "VM name was: $VM_NAME"
+echo "VM name: $VM_NAME"
 echo ""
 
 $COMMAND
@@ -15,10 +15,11 @@ do
     sleep 5
 done
 
-sleep 2
+sleep 3
 
 if [[ $(ifconfig | grep -c $VM_NAME) > 0 ]]
 then
     echo ""
     hoster vm kill $VM_NAME
+    echo ""
 fi
