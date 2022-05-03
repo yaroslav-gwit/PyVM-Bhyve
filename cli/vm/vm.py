@@ -604,7 +604,7 @@ class VmDeploy:
         else:
             sys.exit("FATAL: VM folder doesn't exist!")
         
-        return "VM was deployed successfully: " + vm_name
+        return "VM was deployed successfully: " + self.vm_name
 
 
 class Operation:
