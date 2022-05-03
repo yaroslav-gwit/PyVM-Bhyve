@@ -19,5 +19,6 @@ sleep 2
 
 if [[ $(ifconfig | grep -c $VM_NAME) > 0 ]]
 then
-    pyvm --vmkill $VM_NAME
+    echo ""
+    hoster vm kill $VM_NAME
 fi
