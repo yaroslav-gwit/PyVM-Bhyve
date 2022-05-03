@@ -830,9 +830,7 @@ class Operation:
                 print("Loader is not supported!")
 
             vm_folder = CoreChecks(vm_name).vm_folder()
-            # command = "nohup /root/bin/startvm " + '"' + command + '"' + " " + vm_name + " > " + vm_folder + "vm.log 2>&1 &"
-            command = "nohup ./cli/shell_helpers/vm_start.sh " + '"' + command + '"' + " " + vm_name + " > " + vm_folder + "vm.log 2>&1 &"
-            # command = "nohup ./cli/shell_helpers/vm_start.sh " + '"' + command + '"' + " " + vm_name + " &> " + vm_folder + "/vm.log &"
+            command = "nohup ./cli/shell_helpers/vm_start.sh " + '"' + command + '"' + " " + vm_name + " > " + vm_folder + "/vm.log 2>&1 &"
             # print(command)
             subprocess.run(command, shell=True)
 
