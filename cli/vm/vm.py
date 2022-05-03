@@ -539,7 +539,16 @@ class VmDeploy:
     
     
     def deploy(self):
-        pass
+        # Read Unbound template
+        with open("./templates/vm_config_template.json", "r") as file:
+            template = file.read()
+        # Render Unbound template
+        template = Template(template)
+        template = template.render(output_dict=self.output_dict)
+        # Write Unbould template
+        # with open("/var/unbound/unbound.conf", "w") as file:
+            # file.write(template)
+        print(template)
 
 class Operation:
     @staticmethod
