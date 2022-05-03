@@ -1070,12 +1070,12 @@ def deploy(vm_name:str = typer.Argument("test-vm", help="New VM name"),
         """
         New VM deployment
         """
-        printout = VmDeploy(vm_name=vm_name, ip_address=ip_address, os_type=os_type).output_dict()
-        print(printout)
+        # printout = VmDeploy(vm_name=vm_name, ip_address=ip_address, os_type=os_type).output_dict()
+        # print(printout)
+        VmDeploy(vm_name=vm_name, ip_address=ip_address, os_type=os_type).deploy()
         
         # Reload DNS 
         VmDeploy().dns_registry()
-        VmDeploy().deploy()
 
 
 """ If this file is executed from the command line, activate Typer """
