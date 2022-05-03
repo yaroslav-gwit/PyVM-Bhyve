@@ -553,6 +553,8 @@ class VmDeploy:
             command = "zfs clone " + template_ds + snapshot_name + " " + working_dataset + "/" + output_dict["vm_name"]
             # print(command)
             subprocess.run(command, shell=True)
+        else:
+            sys.exit("FATAL: Template specified doesn't exist: " + working_dataset + "/" + output_dict["vm_name"])
 
         new_vm_folder = working_dataset_path + output_dict["vm_name"] + "/"
         if exists(new_vm_folder):
@@ -605,7 +607,7 @@ class VmDeploy:
             subprocess.run(command, shell=True, stderr = subprocess.DEVNULL, stdout=subprocess.DEVNULL)
 
         else:
-            sys.exit("FATAL: VM folder doesn't exist!")
+            sys.exit("FATAL: Template specified doesn't exist: " + working_dataset + "/" + output_dict["vm_name"])
         
         return {"status": "success", "vm_name": output_dict["vm_name"]}
 
