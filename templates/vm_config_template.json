@@ -44,7 +44,7 @@
     ],
 
     "vnc_port": "{{ output_dict['vnc_port'] }}",
-    "vnc_password": "{{ vnc_password }}",
+    "vnc_password": "{{ output_dict['vnc_password'] }}",
     
     "description": "-"
 }
