@@ -7,7 +7,7 @@ users:
     ssh_pwauth: true
     disable_root: false
     ssh_authorized_keys:
-      {%- for sshkey in sshkeys %}
+      {%- for sshkey in output_dict["vm_ssh_keys"] %}
       - {{ sshkey }}
       {%- endfor %}
 
@@ -17,14 +17,14 @@ users:
     ssh_pwauth: true
     lock_passwd: false
     ssh_authorized_keys:
-      {%- for sshkey in sshkeys %}
+      {%- for sshkey in output_dict["vm_ssh_keys"] %}
       - {{ sshkey }}
       {%- endfor %}
 
 chpasswd:
   list: |
-    root:{{ root_password }}
-    gwitsuper:{{ user_password }}
+    root:{{ output_dict["root_password"] }}
+    gwitsuper:{{ output_dict["user_password"] }}
   expire: False
 
 package_update: true
