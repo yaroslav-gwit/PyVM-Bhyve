@@ -694,6 +694,13 @@ class Operation:
                     command = "kill -SIGTERM " + _console
                     subprocess.run(command, shell=True)
 
+            # Find and kill the VM process
+            command = "ps axf | grep -v grep | grep " + vm_name + " | grep bhyve: | awk '{ print $1 }'"
+            shell_command = subprocess.check_output(command, shell=True)
+            running_vm_pid = shell_command.decode("utf-8").split()[0]
+            command = "kill -SIGTERM " + running_vm_pid
+            subprocess.run(command, shell=True)
+
             # This block is a duplicate. Creating a function would be a good idea for the future!
             command = "ifconfig | grep " + vm_name + " | awk '{ print $2 }'"
             shell_command = subprocess.check_output(command, shell=True)
