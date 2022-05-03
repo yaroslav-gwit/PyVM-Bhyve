@@ -1,2 +1,2 @@
-instance-id: id-{{ random_instanse_id }}
-local-hostname: {{ vm_name }}
+instance-id: id-{{ output_dict['random_instanse_id'] }}
+local-hostname: {{ output_dict['vm_name'] }}

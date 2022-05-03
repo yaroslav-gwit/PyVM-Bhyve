@@ -538,17 +538,27 @@ class VmDeploy:
     
     
     def deploy(self):
-        # Read Unbound template
+        # Read VM template
         with open("./templates/vm_config_template.json", "r") as file:
             template = file.read()
-        # Render Unbound template
+        # Render VM template
         output_dict = VmDeploy().output_dict()
         template = Template(template)
         template = template.render(output_dict=output_dict)
         # Write Unbould template
         # with open("/var/unbound/unbound.conf", "w") as file:
             # file.write(template)
+        
+        # Read Cloud Init Metadata
+        with open("./templates/cloudinit/meta-data", "r") as file:
+            md_template = file.read()
+        # Render VM template
+        md_template = Template(md_template)
+        md_template = md_template.render(output_dict=output_dict)
+
         print(template)
+        print()
+        print(md_template)
 
 class Operation:
     @staticmethod
