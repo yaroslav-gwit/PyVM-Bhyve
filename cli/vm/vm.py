@@ -607,7 +607,7 @@ class VmDeploy:
         else:
             sys.exit("FATAL: VM folder doesn't exist!")
         
-        return "success"
+        return {"status": "success", "vm_name": output_dict["vm_name"]}
 
 
 class Operation:
@@ -1064,13 +1064,13 @@ def deploy(vm_name:str = typer.Argument("test-vm", help="New VM name"),
         """
         New VM deployment
         """
-        VmDeploy(vm_name=vm_name, ip_address=ip_address, os_type=os_type).deploy()
+        deployment_output = VmDeploy(vm_name=vm_name, ip_address=ip_address, os_type=os_type).deploy()
         
         # Reload DNS 
         VmDeploy().dns_registry()
 
         # Let user know, that everything went well
-        print ("VM was deployed successfully: " + vm_name)
+        print ("VM was deployed successfully: " + deployment_output["vm_name"])
 
 
 """ If this file is executed from the command line, activate Typer """
