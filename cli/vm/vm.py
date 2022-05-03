@@ -695,7 +695,7 @@ class Operation:
                     subprocess.run(command, shell=True)
 
             # This block is a duplicate. Creating a function would be a good idea for the future!
-            command = "ifconfig | grep " +  + " | awk '{ print $2 }'"
+            command = "ifconfig | grep " + vm_name + " | awk '{ print $2 }'"
             shell_command = subprocess.check_output(command, shell=True)
             tap_interface_list = shell_command.decode("utf-8").split()
 
