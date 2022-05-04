@@ -58,7 +58,7 @@ class HostInfo:
 
     
     def table_output(self):
-        hostTable = [   ["HostName", "RAM", "Uptime", "RunningVMs", "ZfsArcSize", "ZfsStatus", "ZfsFree", "Average Load"],
+        hostTable = [   ["HostName", "RAM (Used/Total)", "Uptime", "RunningVMs", "ZfsArcSize", "ZfsStatus", "ZfsFree", "Average Load"],
                         [self.hostName, self.finalRam, self.uptime, self.numberOfRunningVMs, self.arcSize, self.zfsStatus, self.zfsFree, self.averageLoad]
                     ]
         return tabulate(hostTable, headers="firstrow", tablefmt="fancy_grid", )
