@@ -21,7 +21,8 @@ class NetworkInit:
             _network_name = _network["bridge_name"]
             command = "ifconfig | grep -c vm-" + _network_name
             output = subprocess.check_output(command, shell=True).split()[0]
-            if output != "0":
-                print("Output is not 1!" + _network_name)
+            # if output != "0":
+                # print("Output is not 1!" + _network_name)
+            print(output)
 
 NetworkInit().init
