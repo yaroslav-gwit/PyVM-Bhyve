@@ -8,6 +8,15 @@
             "range_end": 200,
             "bridge_subnet": 24,
             "comment": "Internal Network"
+        },
+        {
+            "bridge_name": "external",
+            "bridge_address": "192.168.120.254",
+            "apply_bridge_address": false,
+            "range_start": 40,
+            "range_end": 45,
+            "bridge_subnet": 24,
+            "comment": "External Network"
         }
     ]
 }
