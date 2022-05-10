@@ -20,9 +20,11 @@ class NetworkInit:
         for _network in self.network_config_location_dict["networks"]:
             _network_name = _network["bridge_name"]
             command = "ifconfig | grep -c vm-" + _network_name
-            output = subprocess.check_output(command, shell=True).split()[0]
+            output = subprocess.check_output(command, shell=True)
+            output = output.decode("utf-8").split()[0]
             # if output != "0":
                 # print("Output is not 1!" + _network_name)
+            print(command)
             print(output)
 
 NetworkInit().init
