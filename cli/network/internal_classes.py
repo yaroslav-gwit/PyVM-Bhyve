@@ -1,4 +1,3 @@
-from distutils.filelist import FileList
 import json
 import os
 import subprocess
