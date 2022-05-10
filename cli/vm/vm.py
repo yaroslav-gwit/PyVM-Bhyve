@@ -414,9 +414,9 @@ class VmDeploy:
     
     
     @staticmethod
-    def ip_address_generator(ip_address:str, networks, existing_ip_addresses):
+    def ip_address_generator(ip_address:str, networks, existing_ip_addresses, vm_name:str):
         if ip_address in existing_ip_addresses and vm_name != "test-vm":
-            print("VM with such IP exists: " + vm_name + "/" + self.ip_address)
+            print("VM with such IP exists: " + vm_name + "/" + ip_address)
         
         elif ip_address == "10.0.0.0":
             bridge_address = networks["bridge_address"]
@@ -512,7 +512,7 @@ class VmDeploy:
     def deploy(self):
         output_dict = {}
         output_dict["vm_name"] = VmDeploy.vm_name_generator(vm_name=self.vm_name, existing_vms=self.existing_vms)
-        output_dict["ip_address"] = VmDeploy.ip_address_generator(ip_address=self.ip_address, networks=self.networks, existing_ip_addresses=self.existing_ip_addresses)
+        output_dict["ip_address"] = VmDeploy.ip_address_generator(ip_address=self.ip_address, networks=self.networks, existing_ip_addresses=self.existing_ip_addresses, vm_name=self.vm_name)
         output_dict["os_type"] = self.os_type
         output_dict["root_password"] = VmDeploy.random_password_generator(lenght=41, capitals=True, numbers=True)
         output_dict["user_password"] = VmDeploy.random_password_generator(lenght=41, capitals=True, numbers=True)
@@ -1104,7 +1104,7 @@ def deploy(vm_name:str = typer.Argument("test-vm", help="New VM name"),
         """
         New VM deployment
         """
-        deployment_output = VmDeploy(vm_name=vm_name, ip_address=ip_address, os_type=os_type, dataset_id=ds_id).deploy()
+        deployment_output = VmDeploy(vm_name=vm_name, os_type=os_type, dataset_id=ds_id).deploy()
         
         # Reload DNS 
         VmDeploy().dns_registry()
