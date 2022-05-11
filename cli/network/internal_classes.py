@@ -25,16 +25,32 @@ class NetworkInit:
         self.network_config_location_dict = FileLocations().network_config_location_dict
     
     def init(self):
-        ls = []
+        network_list_output = []
+
         for _network in self.network_config_location_dict["networks"]:
             _network_name = _network["bridge_name"]
             command = "ifconfig | grep -c vm-" + _network_name
             output = subprocess.check_output(command, shell=True)
             output = output.decode("utf-8").split()[0]
+            
             if output != "1":
-                ls.append("Result is not 1!")
+                command = "ifconfig bridge create name vm-" + _network_name
+                # subprocess.run(command, shell=True)
+                print(command)
+                
+                if _network["bridge_interface"] and _network["bridge_interface"] != "None":
+                    command = "ifconfig vm-external addm " + _network["bridge_interface"]
+                    # subprocess.run(command, shell=True)
+                    print(command)
+
+                if _network["apply_bridge_address"] == True:
+                    command = "ifconfig vm-" +  _network_name + " inet " + _network["bridge_address"] + "/" + _network["bridge_subnet"]
+                    # subprocess.run(command, shell=True)
+                    print(command)
+            
             elif output == "1":
-                ls.append("Result is 1 :)")
+                print("DEBUG! Network exists.")
+            
             else:
-                ls.append("No result at all :(")
-        return ls
+                print("ERROR! Something unexpected happened!")
+        

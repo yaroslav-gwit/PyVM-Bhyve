@@ -12,5 +12,5 @@ def init(json:bool = typer.Option(False, help="Output json instead of a table"))
     """
     List the VMs using table or JSON output
     """
-    init_info = IC.NetworkInit().init()
-    print(init_info)
+    IC.NetworkInit().init()
+    # print(init_info)
