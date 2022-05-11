@@ -33,7 +33,7 @@ class NetworkInit:
             output = output.decode("utf-8").split()[0]
             if output != "1":
                 ls.append("Result is not 1!")
-            elif output != "1":
+            elif output == "1":
                 ls.append("Result is 1 :)")
             else:
                 ls.append("No result at all :(")
