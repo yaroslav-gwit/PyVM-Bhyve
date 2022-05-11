@@ -33,7 +33,7 @@ class NetworkInit:
             output = subprocess.check_output(command, shell=True)
             output = output.decode("utf-8").split()[0]
             
-            if output != "1":
+            if output != "0":
                 command = "ifconfig bridge create name vm-" + _network_name
                 # subprocess.run(command, shell=True)
                 print(command)
