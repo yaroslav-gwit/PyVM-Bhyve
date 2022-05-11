@@ -25,8 +25,9 @@ class NetworkInit:
             output = output.decode("utf-8").split()[0]
             # if output != "0":
                 # print("Output is not 1!" + _network_name)
-            print(command)
-            print(output)
+            # print(command)
+            # print(output)
+            return {"command": command, "output": output}
 
 
 ranran = NetworkInit().init
