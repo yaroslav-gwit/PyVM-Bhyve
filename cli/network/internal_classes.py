@@ -28,7 +28,9 @@ class NetworkInit:
         network_list_output = []
 
         for _network in self.network_config_location_dict["networks"]:
+            
             _network_name = _network["bridge_name"]
+            
             command = "ifconfig | grep -c vm-" + _network_name
             output = subprocess.check_output(command, shell=True)
             output = output.decode("utf-8").split()[0]
@@ -52,5 +54,5 @@ class NetworkInit:
                 print("DEBUG: Network " + _network_name + " is already configured!")
             
             else:
-                print("ERROR! Something unexpected happened!")
+                print("ERROR: Something unexpected happened!")
         
