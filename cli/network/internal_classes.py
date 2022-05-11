@@ -29,5 +29,6 @@ class NetworkInit:
             print(output)
 
 
-NetworkInit().init
+ranran = NetworkInit().init
+print(ranran)
 print("End")
