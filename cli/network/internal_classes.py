@@ -28,4 +28,6 @@ class NetworkInit:
             print(command)
             print(output)
 
+
 NetworkInit().init
+print("End")
