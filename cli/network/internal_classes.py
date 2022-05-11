@@ -25,8 +25,6 @@ class NetworkInit:
         self.network_config_location_dict = FileLocations().network_config_location_dict
     
     def init(self):
-        network_list_output = []
-
         for _network in self.network_config_location_dict["networks"]:
             
             _network_name = _network["bridge_name"]
