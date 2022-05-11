@@ -49,7 +49,7 @@ class NetworkInit:
                     print("DEBUG: " + command)
             
             elif output == "1":
-                print("DEBUG! Network " + _network_name + " is already configured!")
+                print("DEBUG: Network " + _network_name + " is already configured!")
             
             else:
                 print("ERROR! Something unexpected happened!")
