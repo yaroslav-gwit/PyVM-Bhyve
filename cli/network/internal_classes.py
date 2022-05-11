@@ -36,17 +36,17 @@ class NetworkInit:
             if output != "0":
                 command = "ifconfig bridge create name vm-" + _network_name
                 # subprocess.run(command, shell=True)
-                print(command)
+                print("DEBUG: " + command)
                 
                 if _network["bridge_interface"] and _network["bridge_interface"] != "None":
                     command = "ifconfig vm-external addm " + _network["bridge_interface"]
                     # subprocess.run(command, shell=True)
-                    print(command)
+                    print("DEBUG: " + command)
 
                 if _network["apply_bridge_address"] == True:
                     command = "ifconfig vm-" +  _network_name + " inet " + _network["bridge_address"] + "/" + str(_network["bridge_subnet"])
                     # subprocess.run(command, shell=True)
-                    print(command)
+                    print("DEBUG: " + command)
             
             elif output == "1":
                 print("DEBUG! Network " + _network_name + " is already configured!")
