@@ -34,7 +34,3 @@ class NetworkInit:
             # print(output)
             return {"command": command, "output": output}
 
-
-ranran = NetworkInit().init
-print(ranran)
-print("End")
