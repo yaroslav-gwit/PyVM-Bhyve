@@ -13,6 +13,7 @@ class FileLocations:
         #     sys.exit(1)
 
         self.network_config_location = network_config_location
+        
         with open(self.network_config_location, "r") as file:
             network_config_location_dict = file.read()
         
@@ -29,9 +30,7 @@ class NetworkInit:
             command = "ifconfig | grep -c vm-" + _network_name
             output = subprocess.check_output(command, shell=True)
             output = output.decode("utf-8").split()[0]
-            # if output != "0":
-                # print("Output is not 1!" + _network_name)
-            # print(command)
-            # print(output)
-            return {"command": command, "output": output}
-
+            if output != "1":
+                return "Result is not 1!"
+            elif output != "1":
+                return "Result is 1 :)"
