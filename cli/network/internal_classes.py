@@ -23,7 +23,8 @@ class FileLocations:
 class NetworkInit:
     def __init__(self):
         self.network_config_location_dict = FileLocations().network_config_location_dict
-        
+    
+    ls = []
     def init(self):
         for _network in self.network_config_location_dict["networks"]:
             _network_name = _network["bridge_name"]
@@ -31,6 +32,7 @@ class NetworkInit:
             output = subprocess.check_output(command, shell=True)
             output = output.decode("utf-8").split()[0]
             if output != "1":
-                return "Result is not 1!"
+                ls.append("Result is not 1!")
             elif output != "1":
-                return "Result is 1 :)"
+                ls.append("Result is 1 :)")
+        return ls
