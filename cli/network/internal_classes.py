@@ -35,4 +35,6 @@ class NetworkInit:
                 ls.append("Result is not 1!")
             elif output != "1":
                 ls.append("Result is 1 :)")
+            else:
+                ls.append("No result at all :(")
         return ls
