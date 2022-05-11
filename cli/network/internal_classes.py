@@ -24,8 +24,8 @@ class NetworkInit:
     def __init__(self):
         self.network_config_location_dict = FileLocations().network_config_location_dict
     
-    ls = []
     def init(self):
+        ls = []
         for _network in self.network_config_location_dict["networks"]:
             _network_name = _network["bridge_name"]
             command = "ifconfig | grep -c vm-" + _network_name
