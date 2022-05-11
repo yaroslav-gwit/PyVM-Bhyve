@@ -4,7 +4,7 @@ import os
 import subprocess
 
 class FileLocations:
-    def __init__(self, network_config_location:str = "./configs/networks.json") -> None:
+    def __init__(self, network_config_location:str = "./configs/networks.json"):
         self.network_config_location = network_config_location
 
         with open(self.network_config_location, "r") as file:
@@ -14,7 +14,7 @@ class FileLocations:
 
 
 class NetworkInit:
-    def __init__(self) -> None:
+    def __init__(self):
         self.network_config_location_dict = FileLocations().network_config_location_dict
         
     def init(self):
