@@ -44,7 +44,7 @@ class NetworkInit:
                     print(command)
 
                 if _network["apply_bridge_address"] == True:
-                    command = "ifconfig vm-" +  _network_name + " inet " + _network["bridge_address"] + "/" + _network["bridge_subnet"]
+                    command = "ifconfig vm-" +  _network_name + " inet " + _network["bridge_address"] + "/" + str(_network["bridge_subnet"])
                     # subprocess.run(command, shell=True)
                     print(command)
             
