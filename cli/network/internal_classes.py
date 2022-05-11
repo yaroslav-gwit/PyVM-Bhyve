@@ -6,12 +6,13 @@ import sys
 
 class FileLocations:
     def __init__(self, network_config_location:str = "./configs/networks.json"):
-        if os._exists(network_config_location):
-            self.network_config_location = network_config_location
-        else:
-            print("File was not found!")
-            sys.exit(1)
+        # if os._exists(network_config_location):
+        #     self.network_config_location = network_config_location
+        # else:
+        #     print("File was not found!")
+        #     sys.exit(1)
 
+        self.network_config_location = network_config_location
         with open(self.network_config_location, "r") as file:
             network_config_location_dict = file.read()
         
