@@ -1,6 +1,5 @@
 # Important notice!
  > This repository will be archived as soon as HosterRed is released. Please keep an eye out for that.
-
 <br>https://github.com/yaroslav-gwit/HosterRed-HyperVisor
 
 # Welcome to the PyVM Bhyve community!
