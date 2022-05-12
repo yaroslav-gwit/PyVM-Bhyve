@@ -34,7 +34,7 @@ class LoadKernelModules:
         subprocess.run(command, shell=True)
         print("DEBUG: " + command)
 
-        command = "kldload if_tap"
+        command = "kldload if_tuntap"
         subprocess.run(command, shell=True)
         print("DEBUG: " + command)
 
