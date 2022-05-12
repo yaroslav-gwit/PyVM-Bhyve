@@ -87,7 +87,7 @@ app = typer.Typer(context_settings=dict(max_content_width=800))
 @app.command()
 def info(json: bool = typer.Option(False, help="Output json instead of a table")):
     """
-    Example: hoster host info
+    Print out the host related info
     """
     if json:
         print(HostInfo().json_output())
@@ -97,7 +97,7 @@ def info(json: bool = typer.Option(False, help="Output json instead of a table")
 @app.command()
 def init():
     """
-    Example: hoster host info
+    Initialise Kernel modules and required services
     """
     IC.LoadKernelModules().init()
 
