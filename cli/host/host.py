@@ -14,7 +14,7 @@ from tabulate import tabulate
 
 # Own libs
 from cli import time_date_converter
-
+from cli.host import internal_classes as IC
 
 class HostInfo:
     def __init__(self):
@@ -93,6 +93,13 @@ def info(json: bool = typer.Option(False, help="Output json instead of a table")
         print(HostInfo().json_output())
     else:
         print(HostInfo().table_output())
+
+@app.command()
+def init():
+    """
+    Example: hoster host info
+    """
+    IC.LoadKernelModules().init()
 
 
 """ If this file is executed from the command line, activate Typer """
