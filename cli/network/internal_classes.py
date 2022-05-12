@@ -30,7 +30,7 @@ class NetworkInit:
             _network_name = _network["bridge_name"]
             
             command = "ifconfig | grep -c vm-" + _network_name + " || true"
-            output = subprocess.run(args)(command, shell=True, capture_output=True, stdout=subprocess.DEVNULL)
+            output = subprocess.run(command, shell=True, capture_output=True, stdout=subprocess.DEVNULL)
             output = output.decode("utf-8").split()[0]
             
             if output != "1":
