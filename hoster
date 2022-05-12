@@ -24,6 +24,13 @@ def version(json: bool = typer.Option(False, help="JSON output")):
 
     print("Version: development-0.1-alpha")
 
+@app.command()
+def init():
+    """
+    Initialise all modules and services required by 'hoster'
+    """
+
+    print("Please use shell executor!")
 
 
 """ If this file is executed from the command line, activate Typer """
