@@ -186,7 +186,7 @@ class VmList:
                 sys.exit(1)
         
         if not vmColumnNames:
-            print("\nThere are no VMs on this system. To deploy one, use:\n pyvm --vmdeploy\n")
+            print("\nERROR: There are no VMs on this system. To deploy one, use:\n hoster vm deploy\n")
             sys.exit(0)
 
         self.plainList = vmColumnNames.copy()
@@ -196,7 +196,7 @@ class VmList:
         vmColumnNames = self.vmColumnNames
 
         if len(vmColumnNames) < 1:
-            print("\nThere are no VMs on this system. To deploy one, use:\n pyvm --vmdeploy\n")
+            print("\nERROR: There are no VMs on this system. To deploy one, use:\n hoster vm deploy\n")
             sys.exit(0)
 
         
