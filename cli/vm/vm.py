@@ -633,8 +633,7 @@ class Operation:
             command = "zfs snapshot " + CoreChecks(vm_name).vm_location() + "@" + snapshot_name
             subprocess.run(command, shell=True, stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
             # DEBUG
-            # print(command)
-            print("New snapshot was taken: " + command)
+            print(" 🔷 DEBUG: New snapshot was taken: " + command)
         else:
             sys.exit("VM doesn't exist on this system.")
             
@@ -654,7 +653,7 @@ class Operation:
                 for vm_zfs_snapshot_to_delete in vm_zfs_snapshots_to_delete:
                     command = "zfs destroy " + vm_zfs_snapshot_to_delete
                     subprocess.run(command, shell=True)
-                    print("Old snapshot was removed: " + command)
+                    print(" 🔷 DEBUG: Old snapshot was removed: " + command)
             else:
                 print("VM " + vm_name + " doesn't have any '" + snapshot_type + "' snapshots to delete")
 
@@ -1028,7 +1027,9 @@ def snapshot_all(stype:str = typer.Option("custom", help="Snapshot type: daily, 
     """
     vm_list = VmList().plainList
     for _vm in vm_list:
-        Operation.snapshot(vm_name=_vm, keep=keep, stype=stype)
+        _vm_live_status = CoreChecks(vm_name=_vm).vm_cpus()["live_status"]
+        if _vm_live_status == "production":
+            Operation.snapshot(vm_name=_vm, keep=keep, stype=stype)
 
 
 @app.command()
