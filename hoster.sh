@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# ICONS
-# 🚫 ⛔ 🚦
+# ICONS USED IN THIS LIBRARY. USED AS A REFERENCE.
+# 🚫 ⛔ 🚦 🟢 🔒 🔁 🔴 🔶 🔷
 
 #_ CHECK IF USER IS ROOT _#
 if [ "$EUID" -ne 0 ]
@@ -30,4 +30,3 @@ elif [[ $1 == "init" ]]; then
 else
     ./hoster $@
 fi
- 
