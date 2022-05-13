@@ -5,7 +5,7 @@
 
 #_ CHECK IF USER IS ROOT _#
 if [ "$EUID" -ne 0 ]
-  then echo "🚦ERROR: Only root can control VMs!"
+  then echo " 🚦 ERROR: Only root can control VMs!"
   exit 1
 fi
 
