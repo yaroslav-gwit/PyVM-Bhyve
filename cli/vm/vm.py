@@ -635,7 +635,7 @@ class Operation:
             # DEBUG
             print(" 🔷 DEBUG: New snapshot was taken: " + command)
         else:
-            sys.exit("VM doesn't exist on this system.")
+            sys.exit(" 🚫 CRITICAL: VM doesn't exist on this system!")
             
         # Remove old snapshots
         if snapshot_type != "custom":
@@ -655,7 +655,7 @@ class Operation:
                     subprocess.run(command, shell=True)
                     print(" 🔷 DEBUG: Old snapshot was removed: " + command)
             else:
-                print("VM " + vm_name + " doesn't have any '" + snapshot_type + "' snapshots to delete")
+                print(" 🔷 DEBUG: VM " + vm_name + " doesn't have any '" + snapshot_type + "' snapshots to delete")
 
     @staticmethod
     def destroy(vm_name:str, force:bool=False):
