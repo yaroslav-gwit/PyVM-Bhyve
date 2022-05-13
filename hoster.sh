@@ -1,6 +1,21 @@
-#!/usr/local/bin/bash
-cd /root/pyVM/
-source bin/activate
+#!/usr/bin/env bash
+
+if [ "$EUID" -ne 0 ]
+  then echo "ERROR: Only root can control VMs"
+  exit 1
+fi
+
+
+if [[ ! -z $HOSTER_RED_WD ]]; then
+    cd $HOSTER_RED_WD
+else
+    cd /root/pyVM/
+fi
+
+if [[ $VENV == "yes" ]]; then
+    source bin/activate
+fi
+
 
 if [[ -z "$1" ]]; then
     ./hoster host info
