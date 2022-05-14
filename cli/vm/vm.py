@@ -641,7 +641,7 @@ class Operation:
         if snapshot_type != "custom":
             # Get the snapshot list
             command = "zfs list -r -t snapshot " + CoreChecks(vm_name).vm_location() + " | tail +2 | awk '{ print $1 }' | grep " + snapshot_type
-            shell_command = subprocess.check_output(command, shell=True, stderr=subprocess.DEVNULL)
+            shell_command = subprocess.check_output(command, shell=True, stderr=STDOUT)
             vm_zfs_snapshot_list = shell_command.decode("utf-8").split()
 
             # Generate list of snapshots to delete
