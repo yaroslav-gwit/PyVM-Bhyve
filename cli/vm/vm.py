@@ -849,9 +849,9 @@ class Operation:
                 command = "ifconfig " + tap + " destroy"
                 subprocess.run(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             
-            print("The VM is fully stopped now: " + vm_name)
+            print(" 🔶 INFO: The VM is fully stopped now: " + vm_name)
         else:
-            print("VM is already stopped: " + vm_name)
+            print(" 🔶 INFO: VM is already stopped: " + vm_name)
 
 
 """ Section below is responsible for the CLI input/output """
