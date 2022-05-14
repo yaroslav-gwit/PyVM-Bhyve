@@ -59,6 +59,8 @@ class CloudInit:
         self.output_dict["ip_address"] = ip_address
         self.output_dict["network_bridge_address"] = network_bridge_address
         self.output_dict["vm_ssh_keys"] = vm_ssh_keys
+        self.output_dict["root_password"] = root_password
+        self.output_dict["user_password"] = user_password
 
     def rename(self):
         pass
