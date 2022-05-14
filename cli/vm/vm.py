@@ -1111,7 +1111,7 @@ def deploy(vm_name:str = typer.Argument("test-vm", help="New VM name"),
         VmDeploy().dns_registry()
 
         # Let user know, that everything went well
-        print ("VM was deployed successfully: " + deployment_output["vm_name"])
+        print (" 🟢 INFO: VM was deployed successfully: " + deployment_output["vm_name"])
 
 
 """ If this file is executed from the command line, activate Typer """
