@@ -20,7 +20,7 @@ from jinja2 import Template
 
 # Own functions
 from cli.host import dataset
-
+from cli.vm import internal_classes as IC
 
 
 class CoreChecks:
@@ -572,43 +572,10 @@ class VmDeploy:
             with open(new_vm_folder + "vm_config.json", "w") as file:
                 file.write(template)
 
-            cloud_init_files_folder = new_vm_folder + "/cloud-init-files"
-            if not exists(cloud_init_files_folder):
-                os.mkdir(cloud_init_files_folder)
-
-            # Read Cloud Init Metadata
-            with open("./templates/cloudinit/meta-data", "r") as file:
-                md_template = file.read()
-            # Render Cloud Init Metadata Template
-            md_template = Template(md_template)
-            md_template = md_template.render(output_dict=output_dict)
-            # Write Cloud Init Metadata Template
-            with open(cloud_init_files_folder + "/meta-data", "w") as file:
-                file.write(md_template)
-
-            # Read Cloud Init Network Template
-            with open("./templates/cloudinit/network-config", "r") as file:
-                nw_template = file.read()
-            # Render Cloud Init Network Template
-            nw_template = Template(nw_template)
-            nw_template = nw_template.render(output_dict=output_dict)
-            # Write Cloud Init Network
-            with open(cloud_init_files_folder + "/network-config", "w") as file:
-                file.write(nw_template)
-
-            # Read Cloud Init User Template
-            with open("./templates/cloudinit/user-data", "r") as file:
-                usr_template = file.read()
-            # Render loud Init User Template
-            usr_template = Template(usr_template)
-            usr_template = usr_template.render(output_dict=output_dict)
-            # Write Cloud Init User Template
-            with open(cloud_init_files_folder + "/user-data", "w") as file:
-                file.write(usr_template)
-
-            # Create ISO file
-            command = "genisoimage -output " + new_vm_folder + "/seed.iso -volid cidata -joliet -rock " + cloud_init_files_folder + "/user-data " + cloud_init_files_folder + "/meta-data " + cloud_init_files_folder + "/network-config"
-            subprocess.run(command, shell=True, stderr = subprocess.DEVNULL, stdout=subprocess.DEVNULL)
+            IC.CloudInit(vm_name=output_dict["vm_name"], vm_folder=new_vm_folder, vm_ssh_keys=vm_ssh_keys,
+                        os_type=output_dict["os_type"], ip_address=output_dict["ip_address"],
+                        network_bridge_address=network_bridge_address, root_password=output_dict["root_password"],
+                        user_password=output_dict["user_password"], mac_addess=output_dict["mac_address"]).deploy()
 
         else:
             sys.exit(" ⛔ FATAL! Template specified doesn't exist: " + template_folder)

@@ -8,3 +8,4 @@ python-generate-mac
 natsort
 typer
 tabulate[widechars]
+pyyaml
