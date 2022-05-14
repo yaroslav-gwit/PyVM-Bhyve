@@ -635,7 +635,7 @@ class Operation:
             # DEBUG
             print(" 🔷 DEBUG: New snapshot was taken: " + command)
         else:
-            sys.exit(" 🚫 CRITICAL: VM " + vm_name + " doesn't exist on this system!")
+            sys.exit(" 🚫 CRITICAL: Can't snapshot! VM " + vm_name + " doesn't exist on this system!")
             
         # Remove old snapshots
         if snapshot_type != "custom":
