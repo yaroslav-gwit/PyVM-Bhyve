@@ -999,7 +999,8 @@ def destroy_all(force:bool = typer.Option(False, help="Kill and destroy all VMs,
     
     # Let user know that he can remove deployment snapshots
     print()
-    print("Execute this command to find and remove old deployment snapshots:\nzfs list -t all | grep \"@deployment_\" | awk '{ print $1 }'")
+    print(" 🔶 INFO: Execute this command to find and remove old deployment snapshots:")
+    print("          zfs list -t all | grep \"@deployment_\" | awk '{ print $1 }'")
     
     # Reload DNS 
     VmDeploy().dns_registry()
