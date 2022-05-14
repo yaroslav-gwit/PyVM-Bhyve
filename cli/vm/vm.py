@@ -635,7 +635,7 @@ class Operation:
         if vm_name not in VmList().plainList:
             print(" 🔶 INFO: VM doesn't exist on this system.")
         elif CoreChecks(vm_name).vm_is_live():
-            print(" 🔶 INFO: VM is still running, you'll have to stop (or kill) it first: " + vm_name)
+            print(" 🔴 WARNING: VM is still running, you'll have to stop (or kill) it first: " + vm_name)
         else:
             command = "zfs destroy -rR " + CoreChecks(vm_name).vm_location()
             # ADD DEBUG/FAKE RUN
