@@ -1,9 +1,12 @@
 #!/usr/local/bin/bash
 COMMAND=$1
 VM_NAME=$2
+
 echo "This bhyve command was executed:"
 echo $COMMAND
+
 echo ""
+
 echo "VM name: $VM_NAME"
 echo ""
 
