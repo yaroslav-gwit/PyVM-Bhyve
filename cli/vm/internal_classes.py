@@ -2,6 +2,7 @@
 import json
 import os
 import subprocess
+import random
 
 # 3rd party imports
 from jinja2 import Template
