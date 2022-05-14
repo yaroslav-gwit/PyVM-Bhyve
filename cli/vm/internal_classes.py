@@ -71,7 +71,7 @@ class CloudInit:
         output_dict = self.output_dict
 
         cloud_init_files_folder = new_vm_folder + "/cloud-init-files"
-        if not exists(cloud_init_files_folder):
+        if not os.path.exists(cloud_init_files_folder):
             os.mkdir(cloud_init_files_folder)
 
         # Read Cloud Init Metadata
