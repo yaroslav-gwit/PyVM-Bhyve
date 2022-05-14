@@ -23,21 +23,21 @@ class LoadKernelModules:
     
     def init(self):
         command = "kldload vmm"
-        print("DEBUG: " + command)
+        print(" 🔷 DEBUG: " + command)
         subprocess.run(command, shell=True)
 
         command = "kldload nmdm"
-        print("DEBUG: " + command)
+        print(" 🔷 DEBUG: " + command)
         subprocess.run(command, shell=True)
 
         command = "kldload if_bridge"
-        print("DEBUG: " + command)
+        print(" 🔷 DEBUG: " + command)
         subprocess.run(command, shell=True)
 
         command = "kldload if_tuntap"
-        print("DEBUG: " + command)
+        print(" 🔷 DEBUG: " + command)
         subprocess.run(command, shell=True)
 
         command = "sysctl net.link.tap.up_on_open=1"
-        print("DEBUG: " + command)
+        print(" 🔷 DEBUG: " + command)
         subprocess.run(command, shell=True)

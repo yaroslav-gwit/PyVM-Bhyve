@@ -182,11 +182,10 @@ class VmList:
                     if exists("/" + ds + "/" + vm_directory + "/vm_config.json"):
                         vmColumnNames.append(vm_directory)
             else:
-                print("Please create 2 zfs datasets: " + zfs_datasets_list)
-                sys.exit(1)
+                sys.exit(" 🚦 ERROR: Please create 2 zfs datasets: " + zfs_datasets_list)
         
         if not vmColumnNames:
-            print("\nERROR: There are no VMs on this system. To deploy one, use:\n hoster vm deploy\n")
+            print("\n 🚦 ERROR: There are no VMs on this system. To deploy one, use:\n hoster vm deploy\n")
             sys.exit(0)
 
         self.plainList = vmColumnNames.copy()
@@ -196,7 +195,7 @@ class VmList:
         vmColumnNames = self.vmColumnNames
 
         if len(vmColumnNames) < 1:
-            print("\nERROR: There are no VMs on this system. To deploy one, use:\n hoster vm deploy\n")
+            print("\n 🚦 ERROR: There are no VMs on this system. To deploy one, use:\n hoster vm deploy\n")
             sys.exit(0)
 
         
@@ -361,7 +360,7 @@ class VmDeploy:
             self.os_type = os_type
         else:
             os_type_list = " ".join(os_type_list)
-            sys.exit("Sorry this OS is not supported. Here is the list of supported OSes:\n" + os_type_list)
+            sys.exit(" 🚦 ERROR: Sorry this OS is not supported. Here is the list of supported OSes:\n" + os_type_list)
         
         self.vnc_port = vnc_port
 
@@ -466,7 +465,7 @@ class VmDeploy:
                 valid_chars_list.append(s_item)
         
         password = ""
-        for iteration in range(0, lenght):
+        for _i in range(0, lenght):
             password = password + random.choice(valid_chars_list)
         
         return password
@@ -559,7 +558,7 @@ class VmDeploy:
             # print(command)
             subprocess.run(command, shell=True)
         else:
-            sys.exit("FATAL! Template specified doesn't exist: " + template_folder)
+            sys.exit(" ⛔ FATAL! Template specified doesn't exist: " + template_folder)
 
         new_vm_folder = working_dataset_path + output_dict["vm_name"] + "/"
         if exists(new_vm_folder):
@@ -612,7 +611,7 @@ class VmDeploy:
             subprocess.run(command, shell=True, stderr = subprocess.DEVNULL, stdout=subprocess.DEVNULL)
 
         else:
-            sys.exit("FATAL! Template specified doesn't exist: " + template_folder)
+            sys.exit(" ⛔ FATAL! Template specified doesn't exist: " + template_folder)
         
         return {"status": "success", "vm_name": output_dict["vm_name"]}
 
@@ -667,14 +666,14 @@ class Operation:
             time.sleep(3)
 
         if vm_name not in VmList().plainList:
-            sys.exit("VM doesn't exist on this system.")
+            print(" 🔶 INFO: VM doesn't exist on this system.")
         elif CoreChecks(vm_name).vm_is_live():
-            print("VM is still running, you'll have to stop (or kill) it first: " + vm_name)
+            print(" 🔶 INFO: VM is still running, you'll have to stop (or kill) it first: " + vm_name)
         else:
             command = "zfs destroy -rR " + CoreChecks(vm_name).vm_location()
             # ADD DEBUG/FAKE RUN
             shell_command = subprocess.check_output(command, shell=True)
-            print("The VM was destroyed: " + command)
+            print(" 🔶 INFO: The VM was destroyed: " + command)
 
     @staticmethod
     def kill(vm_name:str):
@@ -701,7 +700,7 @@ class Operation:
                 command = "kill -SIGKILL " + running_vm_pid
                 subprocess.run(command, shell=True)
             except:
-                print("ERROR! Could not find the process for the VM: " + vm_name)
+                print(" 🔶 INFO: Could not find the process for the VM: " + vm_name)
 
             # This block is a duplicate. Creating a function would be a good idea for the future!
             command = "ifconfig | grep " + vm_name + " | awk '{ print $2 }'"
@@ -718,7 +717,7 @@ class Operation:
                     if tap:
                         command = "ifconfig " + tap + " destroy"
                         subprocess.run(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-            print("Killed the VM: " + vm_name)
+            print(" 🔶 INFO: Killed the VM: " + vm_name)
         else:
             # This block is a duplicate. Creating a function would be a good idea for the future!
             command = "ifconfig | grep " + vm_name + " | awk '{ print $2 }'"
@@ -729,14 +728,14 @@ class Operation:
                     if tap:
                         command = "ifconfig " + tap + " destroy"
                         subprocess.run(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-            print("VM is already dead: " + vm_name + "!")
+            print(" 🔶 INFO: VM is already dead: " + vm_name + "!")
 
     @staticmethod
     def start(vm_name:str):
         if CoreChecks(vm_name).vm_is_live():
-            print("VM is already live: " + vm_name)
+            print(" 🔶 INFO: VM is already live: " + vm_name)
         elif vm_name in VmList().plainList:
-            print("Starting the VM: " + vm_name)
+            print(" 🔶 INFO: Starting the VM: " + vm_name)
         
             #_ NETWORKING - Create required TAP interfaces _#
             vm_network_interfaces = CoreChecks(vm_name).vm_network_interfaces()
@@ -811,7 +810,6 @@ class Operation:
 
             command3 = disk_final
 
-
             os_type = CoreChecks(vm_name).vm_os_type()
             vm_cpus = CoreChecks(vm_name).vm_cpus()
             command5 = " -c sockets=" + vm_cpus["cpu_sockets"] + ",cores=" + vm_cpus["cpu_cores"] + " -m " + vm_cpus["memory"]
@@ -829,7 +827,7 @@ class Operation:
                 # command = command1 + command2 + command3 + command4 + command5 + command6 + command7
                 command = command1 + command2 + command3 + command5 + command6 + command7
             else:
-                print("Loader is not supported!")
+                print(" 🚦 ERROR: Loader is not supported!")
 
             vm_folder = CoreChecks(vm_name).vm_folder()
             command = "nohup ./cli/shell_helpers/vm_start.sh " + '"' + command + '"' + " " + vm_name + " > " + vm_folder + "/vm.log 2>&1 &"
@@ -837,7 +835,7 @@ class Operation:
             subprocess.run(command, shell=True)
 
         else:
-            print("Such VM '" + vm_name + "' doesn't exist!")
+            print(" 🚦 ERROR: Such VM '" + vm_name + "' doesn't exist!")
 
     @staticmethod
     def stop(vm_name:str):
@@ -845,9 +843,9 @@ class Operation:
         Gracefully stop the VM
         """
         if vm_name not in VmList().plainList:
-            sys.exit("VM doesn't exist on this system.")
+            print(" 🚦 ERROR: VM doesn't exist on this system.")
         elif CoreChecks(vm_name).vm_is_live():
-            print("Gracefully stopping the VM: " + vm_name)
+            print(" 🔶 INFO: Gracefully stopping the VM: " + vm_name)
 
             # This code block is a duplicate. Another one exists in kill section.
             command = "ps axf | grep -v grep | grep 'nmdm-" + vm_name + "' | awk '{ print $1 }'"
