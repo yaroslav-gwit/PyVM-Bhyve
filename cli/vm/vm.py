@@ -574,8 +574,8 @@ class VmDeploy:
 
             IC.CloudInit(vm_name=output_dict["vm_name"], vm_folder=new_vm_folder, vm_ssh_keys=vm_ssh_keys,
                         os_type=output_dict["os_type"], ip_address=output_dict["ip_address"],
-                        network_bridge_address=network_bridge_address, root_password=output_dict["root_password"],
-                        user_password=output_dict["user_password"], mac_addess=output_dict["mac_address"]).deploy()
+                        network_bridge_address=output_dict["network_bridge_address"], root_password=output_dict["root_password"],
+                        user_password=output_dict["user_password"], mac_address=output_dict["mac_address"]).deploy()
 
         else:
             sys.exit(" ⛔ FATAL! Template specified doesn't exist: " + template_folder)

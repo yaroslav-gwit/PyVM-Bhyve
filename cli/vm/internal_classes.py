@@ -45,7 +45,7 @@ def mac_address_generator(prefix:str = "58:9C:FC"):
 # CLASSES
 class CloudInit:
     def __init__(self, vm_name, vm_folder, vm_ssh_keys, os_type, ip_address, network_bridge_address,
-                    root_password, user_password, mac_addess, new_vm_name=False):
+                    root_password, user_password, mac_address, new_vm_name=False):
         
         self.vm_name = vm_name
         self.vm_folder = vm_folder
@@ -54,7 +54,7 @@ class CloudInit:
         self.output_dict = {}
         self.output_dict["random_instanse_id"] = random_password_generator(lenght=5)
         self.output_dict["vm_name"] = vm_name
-        self.output_dict["mac_addess"] = mac_addess
+        self.output_dict["mac_address"] = mac_address
         self.output_dict["os_type"] = os_type
         self.output_dict["ip_address"] = ip_address
         self.output_dict["network_bridge_address"] = network_bridge_address
