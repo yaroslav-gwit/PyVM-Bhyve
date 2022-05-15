@@ -931,7 +931,7 @@ def rename(vm_name:str = typer.Argument(..., help="VM Name"),
     """
     if vm_name not in VmList().plainList:
         sys.exit(" 🚦 ERROR: This VM doesn't exist: " + vm_name)
-    elif CoreChecks.vm_is_live:
+    elif CoreChecks(vm_name=vm_name).vm_is_live():
         sys.exit(" 🚦 ERROR: VM is live! Please turn it off first: hoster vm stop " + vm_name)
     
     vm_folder = CoreChecks(vm_name=vm_name).vm_folder()
