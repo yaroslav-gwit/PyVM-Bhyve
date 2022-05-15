@@ -97,12 +97,14 @@ class CloudInit:
 
         # Create ISO file
         command = "genisoimage -output " + new_vm_folder + "/seed.iso -volid cidata -joliet -rock " + cloud_init_files_folder + "/user-data " + cloud_init_files_folder + "/meta-data " + cloud_init_files_folder + "/network-config"
+        # print(command)
         subprocess.run(command, shell=True, stderr = subprocess.DEVNULL, stdout=subprocess.DEVNULL)
 
         # Rename ZFS dataset
         # Check if VM is Live
         command = "zfs rename " + old_zfs_ds + " " + new_zfs_ds
-        print(command)
+        # print(command)
+        subprocess.run(command, shell=True, stderr = subprocess.DEVNULL, stdout=subprocess.DEVNULL)
 
 
     def reset(self):

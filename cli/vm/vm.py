@@ -947,9 +947,14 @@ def rename(vm_name:str = typer.Argument(..., help="VM Name"),
     user_password = ""
     mac_address = ""
 
-    IC.CloudInit(vm_name=vm_name, vm_folder=vm_folder, vm_ssh_keys=vm_ssh_keys, os_type=os_type, ip_address=ip_address,
+    cloud_init = IC.CloudInit(vm_name=vm_name, vm_folder=vm_folder, vm_ssh_keys=vm_ssh_keys, os_type=os_type, ip_address=ip_address,
     network_bridge_address=network_bridge_address, root_password=root_password, user_password=user_password, mac_address=mac_address,
-    new_vm_name=new_name, old_zfs_ds=old_zfs_ds, new_zfs_ds=new_zfs_ds).rename()
+    new_vm_name=new_name, old_zfs_ds=old_zfs_ds, new_zfs_ds=new_zfs_ds)
+    
+    cloud_init.rename()
+    
+    # Reload DNS
+    VmDeploy().dns_registry()
     
 
 @app.command()
