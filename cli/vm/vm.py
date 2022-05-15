@@ -2,6 +2,7 @@
 
 # Native Python functions
 # from ipaddress import ip_address
+from ipaddress import ip_address
 import typer
 import sys
 import os
@@ -81,7 +82,15 @@ class CoreChecks:
                 return vm_folder
             elif ds == len(self.zfs_datasets["datasets"]) and not exists(ds["mount_path"]+self.vm_name):
                 sys.exit("VM doesn't exist!")
-    
+
+    def vm_dataset(self):
+        for ds in self.zfs_datasets["datasets"]:
+            if exists("/" + ds["zfs_path"] + "/" + self.vm_name):
+                vm_dataset = ds["zfs_path"]
+                return vm_dataset
+            elif ds == len(self.zfs_datasets["datasets"]) and not exists(ds["mount_path"]+self.vm_name):
+                sys.exit("VM doesn't exist!")
+
     def vm_ip_address(self):
         """
         Get VM's IP address
@@ -908,18 +917,40 @@ def diskexpand(vm_name:str = typer.Argument(..., help="VM name"),
             subprocess.run(shell_command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             print("Disk was enlarged by " + str(size) + "G. Reboot or start the VM now to apply new settings.")
         else:
-            sys.exit("Sorry, could not find the disk: " + disk)
+            sys.exit(" 🚦 ERROR: Sorry, could not find the disk: " + disk)
     else:
-        sys.exit("Sorry, could not find the VM with such name: " + vm_name)
+        sys.exit(" 🚦 ERROR: Sorry, could not find the VM with such name: " + vm_name)
 
 
 @app.command()
-def rename(vm_name:str = typer.Argument("Default", help="VM Name")):
+def rename(vm_name:str = typer.Argument(..., help="VM Name"),
+    new_name:str = typer.Option(..., help="New VM Name"),
+    ):
     """
     Rename the VM
     """
-    print("This feature is not available. To rename your VM use cireset, like so: 'hoster vm cireset old_vm_name --new-name new_vm_name'.")
+    if vm_name not in VmList().plainList:
+        sys.exit(" 🚦 ERROR: This VM doesn't exist: " + vm_name)
+    elif CoreChecks.vm_is_live:
+        sys.exit(" 🚦 ERROR: VM is live! Please turn it off first: hoster vm stop " + vm_name)
+    
+    vm_folder = CoreChecks(vm_name=vm_name).vm_folder()
+    vm_dataset = CoreChecks(vm_name=vm_name).vm_dataset()
+    old_zfs_ds = vm_dataset + "/" + vm_name
+    new_zfs_ds = vm_dataset + "/" + new_name
 
+    vm_ssh_keys = []
+    os_type = ""
+    ip_address = ""
+    network_bridge_address = ""
+    root_password = ""
+    user_password = ""
+    mac_address = ""
+
+    IC.CloudInit(vm_name=vm_name, vm_folder=vm_folder, vm_ssh_keys=vm_ssh_keys, os_type=os_type, ip_address=ip_address,
+    network_bridge_address=network_bridge_address, root_password=root_password, user_password=user_password, mac_address=mac_address,
+    new_vm_name=new_name, old_zfs_ds=old_zfs_ds, new_zfs_ds=new_zfs_ds).rename()
+    
 
 @app.command()
 def console(vm_name:str = typer.Argument(..., help="VM Name")):

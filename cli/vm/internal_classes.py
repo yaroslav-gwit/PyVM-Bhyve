@@ -3,12 +3,15 @@ import json
 import os
 import subprocess
 import random
+import sys
 
 # 3rd party imports
 from jinja2 import Template
 from generate_mac import generate_mac
 import yaml
 
+# internal imports
+# from cli.dataset import internal_classes as DatasetIC
 
 # STANDALONE FUNCTIONS
 def random_password_generator(capitals:bool = False, numbers:bool = False, lenght:int = 8, specials:bool = False):
@@ -45,11 +48,14 @@ def mac_address_generator(prefix:str = "58:9C:FC"):
 # CLASSES
 class CloudInit:
     def __init__(self, vm_name, vm_folder, vm_ssh_keys, os_type, ip_address, network_bridge_address,
-                    root_password, user_password, mac_address, new_vm_name=False):
+                    root_password, user_password, mac_address, new_vm_name=False, old_zfs_ds=False, new_zfs_ds=False):
         
         self.vm_name = vm_name
         self.vm_folder = vm_folder
         self.new_vm_name = new_vm_name
+
+        self.old_zfs_ds = old_zfs_ds
+        self.new_zfs_ds = new_zfs_ds
 
         self.output_dict = {}
         self.output_dict["random_instanse_id"] = random_password_generator(lenght=5)
@@ -62,11 +68,46 @@ class CloudInit:
         self.output_dict["root_password"] = root_password
         self.output_dict["user_password"] = user_password
 
+
     def rename(self):
-        pass
+        # Check if VM exists
+        vm_name = self.vm_name
+        new_vm_name = self.new_vm_name
+
+        old_zfs_ds = self.old_zfs_ds
+        new_zfs_ds = self.new_zfs_ds
+
+        new_vm_folder = self.vm_folder
+        output_dict = self.output_dict
+        output_dict["vm_name"] = new_vm_name
+
+        cloud_init_files_folder = new_vm_folder + "/cloud-init-files"
+        if not os.path.exists(cloud_init_files_folder):
+            sys.exit(" ⛔ CRITICAL: CloudInit folder doesn't exist here: /" + old_zfs_ds)
+
+        # Read Cloud Init Metadata
+        with open("./templates/cloudinit/meta-data", "r") as file:
+            md_template = file.read()
+        # Render Cloud Init Metadata Template
+        md_template = Template(md_template)
+        md_template = md_template.render(output_dict=output_dict)
+        # Write Cloud Init Metadata Template
+        with open(cloud_init_files_folder + "/meta-data", "w") as file:
+            file.write(md_template)
+
+        # Create ISO file
+        command = "genisoimage -output " + new_vm_folder + "/seed.iso -volid cidata -joliet -rock " + cloud_init_files_folder + "/user-data " + cloud_init_files_folder + "/meta-data " + cloud_init_files_folder + "/network-config"
+        subprocess.run(command, shell=True, stderr = subprocess.DEVNULL, stdout=subprocess.DEVNULL)
+
+        # Rename ZFS dataset
+        # Check if VM is Live
+        command = "zfs rename " + old_zfs_ds + " " + new_zfs_ds
+        print(command)
+
 
     def reset(self):
         pass
+
 
     def deploy(self):
         new_vm_folder = self.vm_folder
