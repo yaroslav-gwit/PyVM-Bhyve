@@ -616,7 +616,7 @@ class Operation:
         if snapshot_type != "custom":
             # Get the snapshot list
             command = "zfs list -r -t snapshot " + CoreChecks(vm_name).vm_location() + " | tail +2 | awk '{ print $1 }' | grep " + snapshot_type
-            shell_command = subprocess.check_output(command, shell=True, stderr=STDOUT)
+            shell_command = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
             vm_zfs_snapshot_list = shell_command.decode("utf-8").split()
 
             # Generate list of snapshots to delete
@@ -1117,6 +1117,41 @@ def deploy(vm_name:str = typer.Argument("test-vm", help="New VM name"),
 
         # Let user know, that everything went well
         print (" 🟢 INFO: VM was deployed successfully: " + deployment_output["vm_name"])
+
+@app.command()
+def cireset(vm_name:str = typer.Argument(..., help="VM name"),
+        ):
+        """
+        Reset the VM settings, including passwords, network settings, user keys, etc.
+        """
+        if vm_name not in VmList().plainList:
+            sys.exit(" 🚦 ERROR: This VM doesn't exist: " + vm_name)
+        elif CoreChecks(vm_name=vm_name).vm_is_live():
+            sys.exit(" 🚦 ERROR: VM is live! Please turn it off first: hoster vm stop " + vm_name)
+
+        vm_folder = CoreChecks(vm_name=vm_name).vm_folder()
+        vm_ssh_keys = []
+        old_zfs_ds = ""
+        new_zfs_ds = ""
+
+        os_type = ""
+        ip_address = ""
+        network_bridge_address = ""
+        root_password = ""
+        user_password = ""
+        mac_address = ""
+
+        cloud_init = IC.CloudInit(vm_name=vm_name, vm_folder=vm_folder, vm_ssh_keys=vm_ssh_keys, os_type=os_type, ip_address=ip_address,
+        network_bridge_address=network_bridge_address, root_password=root_password, user_password=user_password, mac_address=mac_address,
+        new_vm_name=vm_name, old_zfs_ds=old_zfs_ds, new_zfs_ds=new_zfs_ds)
+
+        cloud_init.rename()
+
+        # Reload DNS 
+        VmDeploy().dns_registry()
+
+        # Let user know, that everything went well
+        print (" 🟢 INFO: VM was reset successfully: " + vm_name)
 
 
 """ If this file is executed from the command line, activate Typer """

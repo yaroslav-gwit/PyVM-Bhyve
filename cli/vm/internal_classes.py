@@ -71,7 +71,7 @@ class CloudInit:
 
     def rename(self):
         # Check if VM exists
-        vm_name = self.vm_name
+        # vm_name = self.vm_name
         new_vm_name = self.new_vm_name
 
         old_zfs_ds = self.old_zfs_ds
@@ -108,7 +108,57 @@ class CloudInit:
 
 
     def reset(self):
-        pass
+        vm_name = self.vm_name
+        output_dict = self.output_dict
+        vm_folder = self.vm_folder
+
+        cloud_init_files_folder = vm_folder + "/cloud-init-files"
+        if not os.path.exists(cloud_init_files_folder):
+            sys.exit(" ⛔ CRITICAL: CloudInit folder doesn't exist here: " + vm_folder)
+
+        with open("./templates/vm_config_template.json", "r") as file:
+            template = file.read()
+
+        # Render VM template
+        template = Template(template)
+        template = template.render(output_dict=output_dict)
+        # Write VM template
+        with open(vm_folder + "vm_config.json", "w") as file:
+            file.write(template)
+
+        # Read Cloud Init Metadata
+        with open("./templates/cloudinit/meta-data", "r") as file:
+            md_template = file.read()
+        # Render Cloud Init Metadata Template
+        md_template = Template(md_template)
+        md_template = md_template.render(output_dict=output_dict)
+        # Write Cloud Init Metadata Template
+        with open(cloud_init_files_folder + "/meta-data", "w") as file:
+            file.write(md_template)
+
+        # Read Cloud Init Network Template
+        with open("./templates/cloudinit/network-config", "r") as file:
+            nw_template = file.read()
+        # Render Cloud Init Network Template
+        nw_template = Template(nw_template)
+        nw_template = nw_template.render(output_dict=output_dict)
+        # Write Cloud Init Network
+        with open(cloud_init_files_folder + "/network-config", "w") as file:
+            file.write(nw_template)
+
+        # Read Cloud Init User Template
+        with open("./templates/cloudinit/user-data", "r") as file:
+            usr_template = file.read()
+        # Render loud Init User Template
+        usr_template = Template(usr_template)
+        usr_template = usr_template.render(output_dict=output_dict)
+        # Write Cloud Init User Template
+        with open(cloud_init_files_folder + "/user-data", "w") as file:
+            file.write(usr_template)
+
+        # Create ISO file
+        command = "genisoimage -output " + vm_folder + "/seed.iso -volid cidata -joliet -rock " + cloud_init_files_folder + "/user-data " + cloud_init_files_folder + "/meta-data " + cloud_init_files_folder + "/network-config"
+        subprocess.run(command, shell=True, stderr = subprocess.DEVNULL, stdout=subprocess.DEVNULL)
 
 
     def deploy(self):
@@ -152,3 +202,15 @@ class CloudInit:
         # Create ISO file
         command = "genisoimage -output " + new_vm_folder + "/seed.iso -volid cidata -joliet -rock " + cloud_init_files_folder + "/user-data " + cloud_init_files_folder + "/meta-data " + cloud_init_files_folder + "/network-config"
         subprocess.run(command, shell=True, stderr = subprocess.DEVNULL, stdout=subprocess.DEVNULL)
+
+
+
+class ZFSReplication:
+    def __init__(self):
+        pass
+
+    def pull(self):
+        pass
+
+    def push(self):
+        pass
