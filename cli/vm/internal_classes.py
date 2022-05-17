@@ -48,7 +48,7 @@ def mac_address_generator(prefix:str = "58:9C:FC"):
 # CLASSES
 class CloudInit:
     def __init__(self, vm_name, vm_folder, vm_ssh_keys, os_type, ip_address, network_bridge_address,
-                    root_password, user_password, mac_address, new_vm_name=False, old_zfs_ds=False, new_zfs_ds=False):
+                    root_password, user_password, mac_address, new_vm_name=False, old_zfs_ds=False, new_zfs_ds=False, os_comment=False):
         
         self.vm_name = vm_name
         self.vm_folder = vm_folder
@@ -67,6 +67,7 @@ class CloudInit:
         self.output_dict["vm_ssh_keys"] = vm_ssh_keys
         self.output_dict["root_password"] = root_password
         self.output_dict["user_password"] = user_password
+        self.output_dict["os_comment"] = os_comment
 
 
     def rename(self):

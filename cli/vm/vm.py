@@ -1120,6 +1120,8 @@ def deploy(vm_name:str = typer.Argument("test-vm", help="New VM name"),
 
 @app.command()
 def cireset(vm_name:str = typer.Argument(..., help="VM name"),
+        os_type:str = typer.Option(..., help="OS type"),
+        os_comment:str = typer.Option(..., help="OS Comment")
         ):
         """
         Reset the VM settings, including passwords, network settings, user keys, etc.
@@ -1130,20 +1132,28 @@ def cireset(vm_name:str = typer.Argument(..., help="VM name"),
             sys.exit(" 🚦 ERROR: VM is live! Please turn it off first: hoster vm stop " + vm_name)
 
         vm_folder = CoreChecks(vm_name=vm_name).vm_folder()
+
+        host_dict = VmDeploy().host_dict
         vm_ssh_keys = []
+        for _key in host_dict["host_ssh_keys"]:
+            _ssh_key = _key["key_value"]
+            vm_ssh_keys.append(_ssh_key)
+
+        networks = VmDeploy().networks
+        existing_ip_addresses = VmDeploy().existing_ip_addresses
+        ip_address = VmDeploy().ip_address_generator(ip_address="10.0.0.0", networks=networks, existing_ip_addresses=existing_ip_addresses, vm_name=vm_name)
+
+        network_bridge_address = networks["bridge_address"]
+        root_password = IC.random_password_generator(capitals=True, numbers=True, lenght=53)
+        user_password = IC.random_password_generator(capitals=True, numbers=True, lenght=53)
+        mac_address = IC.mac_address_generator()
+
         old_zfs_ds = ""
         new_zfs_ds = ""
 
-        os_type = ""
-        ip_address = ""
-        network_bridge_address = ""
-        root_password = ""
-        user_password = ""
-        mac_address = ""
-
         cloud_init = IC.CloudInit(vm_name=vm_name, vm_folder=vm_folder, vm_ssh_keys=vm_ssh_keys, os_type=os_type, ip_address=ip_address,
         network_bridge_address=network_bridge_address, root_password=root_password, user_password=user_password, mac_address=mac_address,
-        new_vm_name=vm_name, old_zfs_ds=old_zfs_ds, new_zfs_ds=new_zfs_ds)
+        new_vm_name=vm_name, old_zfs_ds=old_zfs_ds, new_zfs_ds=new_zfs_ds, os_comment=os_comment)
 
         cloud_init.rename()
 
