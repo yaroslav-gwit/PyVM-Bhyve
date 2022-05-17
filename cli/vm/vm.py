@@ -1155,7 +1155,7 @@ def cireset(vm_name:str = typer.Argument(..., help="VM name"),
         network_bridge_address=network_bridge_address, root_password=root_password, user_password=user_password, mac_address=mac_address,
         new_vm_name=vm_name, old_zfs_ds=old_zfs_ds, new_zfs_ds=new_zfs_ds, os_comment=os_comment)
 
-        cloud_init.rename()
+        cloud_init.reset()
 
         # Reload DNS 
         VmDeploy().dns_registry()
