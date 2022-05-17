@@ -135,6 +135,10 @@ class CoreChecks:
         os_type = vm_config.get("os_type", "default_os_type")
         return os_type
 
+    def existing_ip_addresses(self):
+        for _vm in VmList().plainList:
+            ip_address = CoreChecks(vm_name=_vm).vm_ip_address()
+            self.existing_ip_addresses.append(ip_address)
 
 
 class VmConfigs:

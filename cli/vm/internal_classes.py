@@ -44,6 +44,42 @@ def mac_address_generator(prefix:str = "58:9C:FC"):
     mac_addess = mac_addess.lower()
     return mac_addess
 
+def ip_address_generator(ip_address:str = "10.0.0.0", existing_ip_addresses:list = []):
+
+    with open("./configs/networks.json", "r") as file:
+        networks_file = file.read()
+    networks_dict = json.loads(networks_file)
+    networks = networks_dict["networks"][0]
+
+    if ip_address in existing_ip_addresses:
+        print("VM with such IP exists: " + ip_address)
+
+    elif ip_address == "10.0.0.0":
+        bridge_address = networks["bridge_address"]
+        range_start = networks["range_start"]
+        range_end = networks["range_end"]
+
+        # Generate full list of IPs for the specified range
+        bridge_split = bridge_address.split(".")
+        del bridge_split[-1]
+        bridge_join = ".".join(bridge_split) + "."
+
+        ip_address_list = []
+        for number in range(range_start, range_end+1):
+            _ip_address = bridge_join + str(number)
+            ip_address_list.append(_ip_address)
+
+        ip_address = ip_address_list[0]
+        number = range_start
+        while ip_address in existing_ip_addresses:
+            number = number + 1
+            if number > range_end:
+                sys.exit("There are no free IPs left!")
+            else:
+                ip_address = bridge_join + str(number)
+
+    return ip_address
+
 
 # CLASSES
 class CloudInit:
@@ -107,11 +143,16 @@ class CloudInit:
         # print(command)
         subprocess.run(command, shell=True, stderr = subprocess.DEVNULL, stdout=subprocess.DEVNULL)
 
-
-    def reset(self):
-        vm_name = self.vm_name
-        output_dict = self.output_dict
-        vm_folder = self.vm_folder
+    @staticmethod
+    def reset(vm_name, ip_address, vm_folder, network_bridge_address, vm_ssh_keys, root_password, user_password):
+        output_dict = {}
+        output_dict["vm_name"] = vm_name
+        output_dict["random_instanse_id"] = random_password_generator(lenght=5)
+        output_dict["ip_address"] = ip_address
+        output_dict["network_bridge_address"] = network_bridge_address
+        output_dict["vm_ssh_keys"] = vm_ssh_keys
+        output_dict["root_password"] = root_password
+        output_dict["user_password"] = user_password
 
         cloud_init_files_folder = vm_folder + "/cloud-init-files"
         if not os.path.exists(cloud_init_files_folder):
@@ -122,7 +163,7 @@ class CloudInit:
 
         # Render VM template
         template = Template(template)
-        template = template.render(output_dict=output_dict)
+        template = template.render(output_dict)
         # Write VM template
         with open(vm_folder + "vm_config.json", "w") as file:
             file.write(template)
@@ -132,7 +173,7 @@ class CloudInit:
             md_template = file.read()
         # Render Cloud Init Metadata Template
         md_template = Template(md_template)
-        md_template = md_template.render(output_dict=output_dict)
+        md_template = md_template.render(output_dict)
         # Write Cloud Init Metadata Template
         with open(cloud_init_files_folder + "/meta-data", "w") as file:
             file.write(md_template)
@@ -142,7 +183,7 @@ class CloudInit:
             nw_template = file.read()
         # Render Cloud Init Network Template
         nw_template = Template(nw_template)
-        nw_template = nw_template.render(output_dict=output_dict)
+        nw_template = nw_template.render(output_dict)
         # Write Cloud Init Network
         with open(cloud_init_files_folder + "/network-config", "w") as file:
             file.write(nw_template)
@@ -152,7 +193,7 @@ class CloudInit:
             usr_template = file.read()
         # Render loud Init User Template
         usr_template = Template(usr_template)
-        usr_template = usr_template.render(output_dict=output_dict)
+        usr_template = usr_template.render(output_dict)
         # Write Cloud Init User Template
         with open(cloud_init_files_folder + "/user-data", "w") as file:
             file.write(usr_template)
