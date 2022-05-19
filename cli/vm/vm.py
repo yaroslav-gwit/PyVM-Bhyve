@@ -799,7 +799,7 @@ class Operation:
             command5 = " -c sockets=" + vm_cpus["cpu_sockets"] + ",cores=" + vm_cpus["cpu_cores"] + " -m " + vm_cpus["memory"]
 
             bhyve_pci = bhyve_pci + 1
-            command6 = " -s " + str(bhyve_pci) + ":" + str(bhyve_pci_2) + ",fbuf,tcp=0.0.0.0:" + vm_cpus["vnc_port"] + ",w=1280,h=1024,password=" + vm_cpus["vnc_password"]
+            command6 = " -s " + str(bhyve_pci) + ":" + str(bhyve_pci_2) + ",fbuf,tcp=0.0.0.0:" + str(vm_cpus["vnc_port"]) + ",w=1280,h=1024,password=" + vm_cpus["vnc_password"]
             
             bhyve_pci = bhyve_pci + 1
             if vm_cpus["loader"] == "bios":
