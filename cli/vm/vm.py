@@ -1169,6 +1169,15 @@ def cireset(vm_name:str = typer.Argument(..., help="VM name"),
         network_ip_address = IC.ip_address_generator(existing_ip_addresses=existing_ip_addresses)
         print(network_ip_address)
 
+        vm_ssh_keys = []
+        for _key in host_dict["host_ssh_keys"]:
+            _ssh_key = _key["key_value"]
+            vm_ssh_keys.append(_ssh_key)
+        for _key in vm_config_dict["vm_ssh_keys"]:
+            _ssh_key = _key["key_value"]
+            vm_ssh_keys.append(_ssh_key)
+        print(vm_ssh_keys)
+        
         # host_dict = VmDeploy().host_dict
         # vm_ssh_keys = []
         # for _key in host_dict["host_ssh_keys"]:
