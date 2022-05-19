@@ -1159,8 +1159,8 @@ def cireset(vm_name:str = typer.Argument(..., help="VM name"),
         with open("./configs/networks.json", "r") as file:
             networks_file = file.read()
         networks_dict = json.loads(networks_file)
-        network_bridge_name = networks_dict[0]["bridge_name"]
-        print(network_bridge_name)
+        # network_bridge_name = networks_dict[0]["bridge_name"]
+        print(networks_dict)
 
         # host_dict = VmDeploy().host_dict
         # vm_ssh_keys = []
