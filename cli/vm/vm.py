@@ -21,6 +21,7 @@ from jinja2 import Template
 
 # Own functions
 from cli.host import dataset
+from cli.host import host
 from cli.vm import internal_classes as IC
 
 
@@ -1146,6 +1147,10 @@ def cireset(vm_name:str = typer.Argument(..., help="VM name"),
             host_file = file.read()
         host_dict = json.loads(host_file)
         print(host_dict)
+        print()
+
+        host_name = host.HostInfo().hostName
+        print(host_name)
         print()
 
         # host_dict = VmDeploy().host_dict
