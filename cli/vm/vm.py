@@ -1140,34 +1140,34 @@ def cireset(vm_name:str = typer.Argument(..., help="VM name"),
             sys.exit(" 🚦 ERROR: VM is live! Please turn it off first: hoster vm stop " + vm_name)
 
         vm_config_dict = VmConfigs(vm_name).vm_config_read()
-        print(vm_config_dict)
-        print()
+        # print(vm_config_dict)
+        # print()
         
         vm_folder = CoreChecks(vm_name=vm_name).vm_folder()
-        print(vm_folder)
-        print()
+        # print(vm_folder)
+        # print()
         
         #_ Load host config _#
         with open("./configs/host.json", "r") as file:
             host_file = file.read()
         host_dict = json.loads(host_file)
-        print(host_dict)
-        print()
+        # print(host_dict)
+        # print()
 
         host_name = host.HostInfo().hostName
-        print(host_name)
-        print()
+        # print(host_name)
+        # print()
 
         #_ Load networks config _#
         with open("./configs/networks.json", "r") as file:
             networks_file = file.read()
         networks_dict = json.loads(networks_file)
         network_bridge_name = networks_dict["networks"][0]["bridge_name"]
-        print(network_bridge_name)
+        # print(network_bridge_name)
         
         existing_ip_addresses = CoreChecks.existing_ip_addresses()
         network_ip_address = IC.ip_address_generator(existing_ip_addresses=existing_ip_addresses)
-        print(network_ip_address)
+        # print(network_ip_address)
 
         vm_ssh_keys = []
         for _key in host_dict["host_ssh_keys"]:
@@ -1176,10 +1176,10 @@ def cireset(vm_name:str = typer.Argument(..., help="VM name"),
         for _key in vm_config_dict["vm_ssh_keys"]:
             _ssh_key = _key["key_value"]
             vm_ssh_keys.append(_ssh_key)
-        print(vm_ssh_keys)
+        # print(vm_ssh_keys)
         
         vnc_port = VmDeploy.vm_vnc_port_generator()
-        print(vnc_port)
+        # print(vnc_port)
 
         vm_config_dict["parent_host"] = host_name
         vm_config_dict["networks"][0]["ip_address"] = network_ip_address
