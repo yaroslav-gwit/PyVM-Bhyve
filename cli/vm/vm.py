@@ -3,6 +3,7 @@
 # Native Python functions
 # from ipaddress import ip_address
 from ipaddress import ip_address
+from httplib2 import ProxiesUnavailableError
 import typer
 import sys
 import os
@@ -1137,8 +1138,16 @@ def cireset(vm_name:str = typer.Argument(..., help="VM name"),
 
         vm_config_dict = VmConfigs(vm_name).vm_config_read()
         print(vm_config_dict)
+        print()
         vm_folder = CoreChecks(vm_name=vm_name).vm_folder()
         print(vm_folder)
+        print()
+        #_ Load host config _#
+        with open("./configs/host.json", "r") as file:
+            host_file = file.read()
+        host_dict = json.loads(host_file)
+        print(host_dict)
+        print()
 
         # host_dict = VmDeploy().host_dict
         # vm_ssh_keys = []
