@@ -963,6 +963,9 @@ def rename(vm_name:str = typer.Argument(..., help="VM Name"),
     
     # Reload DNS
     VmDeploy().dns_registry()
+
+    # Let user know, that everything went well
+    print (" 🟢 INFO: VM was renamed successfully, from " + vm_name + " to " + new_name)
     
 
 @app.command()
