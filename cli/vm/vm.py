@@ -1180,32 +1180,19 @@ def cireset(vm_name:str = typer.Argument(..., help="VM name"),
         
         vnc_port = VmDeploy.vm_vnc_port_generator()
         print(vnc_port)
-        # host_dict = VmDeploy().host_dict
-        # vm_ssh_keys = []
-        # for _key in host_dict["host_ssh_keys"]:
-        #     _ssh_key = _key["key_value"]
-        #     vm_ssh_keys.append(_ssh_key)
 
-        # networks = VmDeploy().networks
-        # existing_ip_addresses = VmDeploy().existing_ip_addresses
-        # ip_address = VmDeploy().ip_address_generator(ip_address="10.0.0.0", networks=networks, existing_ip_addresses=existing_ip_addresses, vm_name=vm_name)
+        vm_config_dict["parent_host"] = host_name
+        vm_config_dict["networks"][0]["ip_address"] = network_ip_address
+        vm_config_dict["networks"][0]["network_bridge"] = network_bridge_name
+        vm_config_dict["vm_ssh_keys"] = vm_ssh_keys
+        vm_config_dict["vnc_port"] = vnc_port
 
-        # network_bridge_address = networks["bridge_address"]
-        # root_password = IC.random_password_generator(capitals=True, numbers=True, lenght=53)
-        # user_password = IC.random_password_generator(capitals=True, numbers=True, lenght=53)
-        # mac_address = IC.mac_address_generator()
-
-        # old_zfs_ds = ""
-        # new_zfs_ds = ""
-
-        # cloud_init = IC.CloudInit(vm_name=vm_name, vm_folder=vm_folder, vm_ssh_keys=vm_ssh_keys, os_type=os_type, ip_address=ip_address,
-        # network_bridge_address=network_bridge_address, root_password=root_password, user_password=user_password, mac_address=mac_address,
-        # new_vm_name=vm_name, old_zfs_ds=old_zfs_ds, new_zfs_ds=new_zfs_ds, os_comment=os_comment)
+        print(json.dumps(vm_config_dict, indent=3))
 
         # cloud_init.reset()
 
         # Reload DNS 
-        VmDeploy().dns_registry()
+        # VmDeploy().dns_registry()
 
         # Let user know, that everything went well
         print (" 🟢 INFO: VM was reset successfully: " + vm_name)
