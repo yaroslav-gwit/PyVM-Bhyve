@@ -1141,22 +1141,18 @@ def cireset(vm_name:str = typer.Argument(..., help="VM name"),
 
         vm_config_dict = VmConfigs(vm_name).vm_config_read()
         # print(vm_config_dict)
-        # print()
         
         vm_folder = CoreChecks(vm_name=vm_name).vm_folder()
         # print(vm_folder)
-        # print()
         
         #_ Load host config _#
         with open("./configs/host.json", "r") as file:
             host_file = file.read()
         host_dict = json.loads(host_file)
         # print(host_dict)
-        # print()
 
         host_name = host.HostInfo().hostName
         # print(host_name)
-        # print()
 
         #_ Load networks config _#
         with open("./configs/networks.json", "r") as file:
@@ -1193,18 +1189,69 @@ def cireset(vm_name:str = typer.Argument(..., help="VM name"),
         vm_config_dict["vm_ssh_keys"] = vm_ssh_keys
         vm_config_dict["vnc_port"] = vnc_port
 
-        final_output = (json.dumps(vm_config_dict, indent=3))
+        final_output = json.dumps(vm_config_dict, indent=3)
 
         # Write VM template
         vm_folder = CoreChecks(vm_name=vm_name).vm_folder()
-        print(vm_folder)
-        # with open(vm_folder + "vm_config.json", "w") as file:
-        #     file.write(final_output)
+        # print(vm_folder)
+        with open(vm_folder + "/vm_config.json", "w") as file:
+            file.write(final_output)
 
         # cloud_init.reset()
+        cloud_init_files_folder = vm_folder + "/cloud-init-files"
+        if not os.path.exists(cloud_init_files_folder):
+            sys.exit(" ⛔ CRITICAL: CloudInit folder doesn't exist at this location: " + vm_folder)
+
+        output_dict = {}
+        output_dict["random_instanse_id"] = IC.random_password_generator(lenght=5)
+        output_dict["vm_name"] = vm_name
+
+        output_dict["mac_address"] = vm_config_dict["networks"][0]["network_mac"]
+        output_dict["os_type"] = vm_config_dict["os_type"]
+        output_dict["ip_address"] = vm_config_dict["networks"][0]["ip_address"]
+        output_dict["network_bridge_address"] = networks_dict["networks"][0]["bridge_address"]
+        
+        ci_vm_ssh_keys = []
+        for _ssh_key in vm_ssh_keys["vm_ssh_keys"]["key_value"]:
+            ci_vm_ssh_keys.append(_ssh_key)
+        output_dict["vm_ssh_keys"] = ci_vm_ssh_keys
+
+        # Read Cloud Init Metadata
+        with open("./templates/cloudinit/meta-data", "r") as file:
+            md_template = file.read()
+        # Render Cloud Init Metadata Template
+        md_template = Template(md_template)
+        md_template = md_template.render(output_dict)
+        # Write Cloud Init Metadata Template
+        with open(cloud_init_files_folder + "/meta-data", "w") as file:
+            file.write(md_template)
+
+        # Read Cloud Init Network Template
+        with open("./templates/cloudinit/network-config", "r") as file:
+            nw_template = file.read()
+        # Render Cloud Init Network Template
+        nw_template = Template(nw_template)
+        nw_template = nw_template.render(output_dict)
+        # Write Cloud Init Network
+        with open(cloud_init_files_folder + "/network-config", "w") as file:
+            file.write(nw_template)
+
+        # Read Cloud Init User Template
+        with open("./templates/cloudinit/user-data", "r") as file:
+            usr_template = file.read()
+        # Render loud Init User Template
+        usr_template = Template(usr_template)
+        usr_template = usr_template.render(output_dict)
+        # Write Cloud Init User Template
+        with open(cloud_init_files_folder + "/user-data", "w") as file:
+            file.write(usr_template)
+
+        # Create ISO file
+        command = "genisoimage -output " + vm_folder + "/seed.iso -volid cidata -joliet -rock " + cloud_init_files_folder + "/user-data " + cloud_init_files_folder + "/meta-data " + cloud_init_files_folder + "/network-config"
+        subprocess.run(command, shell=True, stderr = subprocess.DEVNULL, stdout=subprocess.DEVNULL)
 
         # Reload DNS 
-        # VmDeploy().dns_registry()
+        VmDeploy().dns_registry()
 
         # Let user know, that everything went well
         print (" 🟢 INFO: VM was reset successfully: " + vm_name)
