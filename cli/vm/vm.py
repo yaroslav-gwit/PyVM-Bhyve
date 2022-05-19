@@ -1162,7 +1162,7 @@ def cireset(vm_name:str = typer.Argument(..., help="VM name"),
         network_bridge_name = networks_dict["networks"][0]["bridge_name"]
         print(network_bridge_name)
         
-        existing_ip_addresses = CoreChecks().existing_ip_addresses()
+        existing_ip_addresses = CoreChecks(vm_name=vm_name).existing_ip_addresses()
         network_ip_address = IC.ip_address_generator(existing_ip_addresses=existing_ip_addresses)
         print(network_ip_address)
 
