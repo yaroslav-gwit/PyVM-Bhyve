@@ -1139,9 +1139,11 @@ def cireset(vm_name:str = typer.Argument(..., help="VM name"),
         vm_config_dict = VmConfigs(vm_name).vm_config_read()
         print(vm_config_dict)
         print()
+        
         vm_folder = CoreChecks(vm_name=vm_name).vm_folder()
         print(vm_folder)
         print()
+        
         #_ Load host config _#
         with open("./configs/host.json", "r") as file:
             host_file = file.read()
