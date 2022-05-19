@@ -389,7 +389,7 @@ class VmDeploy:
         self.dataset_id = dataset_id
 
     @staticmethod
-    def vm_vnc_port_generator(vnc_port):
+    def vm_vnc_port_generator(vnc_port:int = 5900):
         existing_vnc_ports = []
         allowed_vnc_ports = []
         for _port in range(5900, 6100):
