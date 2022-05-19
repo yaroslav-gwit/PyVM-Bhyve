@@ -1216,6 +1216,9 @@ def cireset(vm_name:str = typer.Argument(..., help="VM name"),
             ci_vm_ssh_keys.append(_ssh_key)
         output_dict["vm_ssh_keys"] = ci_vm_ssh_keys
 
+        output_dict["root_password"] = IC.random_password_generator(capitals=True, numbers=True, lenght=53)
+        output_dict["user_password"] = IC.random_password_generator(capitals=True, numbers=True, lenght=53)
+
         # Read Cloud Init Metadata
         with open("./templates/cloudinit/meta-data", "r") as file:
             md_template = file.read()
