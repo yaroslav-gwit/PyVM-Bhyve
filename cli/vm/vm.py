@@ -1124,8 +1124,8 @@ def deploy(vm_name:str = typer.Argument("test-vm", help="New VM name"),
 
 @app.command()
 def cireset(vm_name:str = typer.Argument(..., help="VM name"),
-        os_type:str = typer.Option(..., help="OS type"),
-        os_comment:str = typer.Option(..., help="OS Comment")
+        # os_type:str = typer.Option(..., help="OS type"),
+        # os_comment:str = typer.Option(..., help="OS Comment")
         ):
         """
         Reset the VM settings, including passwords, network settings, user keys, etc.
