@@ -1212,8 +1212,8 @@ def cireset(vm_name:str = typer.Argument(..., help="VM name"),
         output_dict["network_bridge_address"] = networks_dict["networks"][0]["bridge_address"]
         
         ci_vm_ssh_keys = []
-        for _ssh_key in vm_ssh_keys["vm_ssh_keys"]["key_value"]:
-            ci_vm_ssh_keys.append(_ssh_key)
+        for _ssh_key in vm_ssh_keys:
+            ci_vm_ssh_keys.append(_ssh_key["key_value"])
         output_dict["vm_ssh_keys"] = ci_vm_ssh_keys
 
         output_dict["root_password"] = IC.random_password_generator(capitals=True, numbers=True, lenght=53)
