@@ -3,7 +3,6 @@
 # Native Python functions
 # from ipaddress import ip_address
 from ipaddress import ip_address
-from httplib2 import ProxiesUnavailableError
 import typer
 import sys
 import os
