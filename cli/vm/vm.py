@@ -1193,7 +1193,13 @@ def cireset(vm_name:str = typer.Argument(..., help="VM name"),
         vm_config_dict["vm_ssh_keys"] = vm_ssh_keys
         vm_config_dict["vnc_port"] = vnc_port
 
-        print(json.dumps(vm_config_dict, indent=3))
+        final_output = (json.dumps(vm_config_dict, indent=3))
+
+        # Write VM template
+        vm_folder = CoreChecks(vm_name=vm_name).vm_folder
+        print(vm_folder)
+        # with open(vm_folder + "vm_config.json", "w") as file:
+        #     file.write(final_output)
 
         # cloud_init.reset()
 
