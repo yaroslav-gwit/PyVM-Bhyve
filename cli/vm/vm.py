@@ -1226,7 +1226,7 @@ def cireset(vm_name:str = typer.Argument(..., help="VM name"),
             md_template = file.read()
         # Render Cloud Init Metadata Template
         md_template = Template(md_template)
-        md_template = md_template.render(output_dict)
+        md_template = md_template.render(output_dict=output_dict)
         # Write Cloud Init Metadata Template
         with open(cloud_init_files_folder + "/meta-data", "w") as file:
             file.write(md_template)
@@ -1236,7 +1236,7 @@ def cireset(vm_name:str = typer.Argument(..., help="VM name"),
             nw_template = file.read()
         # Render Cloud Init Network Template
         nw_template = Template(nw_template)
-        nw_template = nw_template.render(output_dict)
+        nw_template = nw_template.render(output_dict=output_dict)
         # Write Cloud Init Network
         with open(cloud_init_files_folder + "/network-config", "w") as file:
             file.write(nw_template)
@@ -1246,7 +1246,7 @@ def cireset(vm_name:str = typer.Argument(..., help="VM name"),
             usr_template = file.read()
         # Render loud Init User Template
         usr_template = Template(usr_template)
-        usr_template = usr_template.render(output_dict)
+        usr_template = usr_template.render(output_dict=output_dict)
         # Write Cloud Init User Template
         with open(cloud_init_files_folder + "/user-data", "w") as file:
             file.write(usr_template)
