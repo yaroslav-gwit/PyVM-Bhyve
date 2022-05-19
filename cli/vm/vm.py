@@ -1219,7 +1219,7 @@ def cireset(vm_name:str = typer.Argument(..., help="VM name"),
         output_dict["root_password"] = IC.random_password_generator(capitals=True, numbers=True, lenght=53)
         output_dict["user_password"] = IC.random_password_generator(capitals=True, numbers=True, lenght=53)
 
-        print(output_dict)
+        # print(output_dict)
 
         # Read Cloud Init Metadata
         with open("./templates/cloudinit/meta-data", "r") as file:
