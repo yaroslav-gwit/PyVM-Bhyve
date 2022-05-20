@@ -1076,7 +1076,7 @@ def start(vm_name:str = typer.Argument(..., help="VM name"),
     Operation.start(vm_name=vm_name)
 
 @app.command()
-def start_all(wait:int = typer.Option(5, help="Seconds to wait before starting next VM on the list")
+def start_all(wait:int = typer.Option(5, help="Seconds to wait before starting the next VM on the list")
     ):
     """
     Power on all production VMs
@@ -1088,6 +1088,7 @@ def start_all(wait:int = typer.Option(5, help="Seconds to wait before starting n
             if _vm_live_status == "production":
                 Operation.start(vm_name=_vm)
                 time.sleep(wait)
+                wait = wait + 3
         else:
             print("VM is already live: " + _vm)
 
@@ -1101,7 +1102,7 @@ def stop(vm_name:str = typer.Argument(..., help="VM name"),
         Operation.stop(vm_name=vm_name)
 
 @app.command()
-def stop_all(wait:int = typer.Option(5, help="Seconds to wait before stopping next VM on the list")
+def stop_all(wait:int = typer.Option(5, help="Seconds to wait before stopping the next VM on the list")
     ):
     """
     Gracefully stop all VMs running on this system
