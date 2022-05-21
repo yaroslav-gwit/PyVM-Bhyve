@@ -1390,10 +1390,10 @@ def replicate(vm_name:str = typer.Argument(..., help="VM name"),
         for snapshot_index, snapshot_value in enumerate(vm_zfs_snapshot_list):
             if snapshot_index != len(vm_zfs_snapshot_list)-1:
                 command = "zfs send -vi " + snapshot_value + " " + vm_zfs_snapshot_list[snapshot_index + 1] + " | ssh " + ep_address + " zfs receive " + vm_dataset
-                print(" 🔷 DEBUG: Sending snapshot " + str(snapshot_index) + " out of " + str(len(vm_zfs_snapshot_list)))
+                print(" 🔷 DEBUG: Sending snapshot " + str(snapshot_index + 1) + " out of " + str(len(vm_zfs_snapshot_list)-1))
                 # subprocess.run(command, shell=True)
-                print(" 🔷 DEBUG: Snapshot " + str(snapshot_index) + " job is finished")
                 print(command)
+                print(" 🔷 DEBUG: Snapshot " + str(snapshot_index + 1) + " job is finished")
         print()
     else:
         print("Starting replication (single):")
