@@ -1290,6 +1290,7 @@ def replicate(vm_name:str = typer.Argument(..., help="VM name"),
     Operation.snapshot(vm_name=vm_name, stype="replication")
 
     vm_dataset = CoreChecks(vm_name).vm_dataset() + "/" + vm_name
+    print("Dataset we are working with:")
     print(vm_dataset)
     print()
 
