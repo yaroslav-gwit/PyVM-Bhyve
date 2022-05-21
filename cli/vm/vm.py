@@ -1288,8 +1288,6 @@ def replicate(vm_name:str = typer.Argument(..., help="VM name"),
         sys.exit(" 🚦 ERROR: This VM doesn't exist: " + vm_name)
 
     Operation.snapshot(vm_name=vm_name, stype="replication")
-    time.sleep(5)
-    Operation.snapshot(vm_name=vm_name, stype="replication")
 
     vm_dataset = CoreChecks(vm_name).vm_dataset() + "/" + vm_name
     print("Dataset we are working with:")
