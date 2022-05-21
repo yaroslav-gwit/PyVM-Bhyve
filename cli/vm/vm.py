@@ -1292,6 +1292,9 @@ def replicate(vm_name:str = typer.Argument(..., help="VM name"),
         command = "zfs list -r -t snapshot " + vm_dataset + " | tail +2 | awk '{ print $1 }'"
         shell_command = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
         vm_zfs_snapshot_list = shell_command.decode("utf-8").split("\n")
+        for item in vm_zfs_snapshot_list:
+            if not item:
+                vm_zfs_snapshot_list.remove(item)
         print(vm_zfs_snapshot_list)
 
 """ If this file is executed from the command line, activate Typer """
