@@ -1325,7 +1325,7 @@ def replicate(vm_name:str = typer.Argument(..., help="VM name"),
         for item_index, item_value in enumerate(local_snaps_to_delete):
             command = "zfs destroy " + item_value
             print(command)
-            # subprocess.run(command, shell=True)
+            subprocess.run(command, shell=True)
     print()
 
     # Remote snapshot list
@@ -1351,9 +1351,9 @@ def replicate(vm_name:str = typer.Argument(..., help="VM name"),
     # Revert to a last snapshot to avoid dealing with differences
     if len(remote_zfs_snapshot_list) >= 1:
         command = "ssh " + ep_address + " zfs rollback -r " + remote_zfs_snapshot_list[-1]
-        # subprocess.run(command, shell=True)
         print("Reverting back to a latest snapshot:")
         print(command)
+        subprocess.run(command, shell=True)
         print()
 
     # Difference list
@@ -1372,7 +1372,7 @@ def replicate(vm_name:str = typer.Argument(..., help="VM name"),
         for item in to_delete_snapshot_list:
             command = "ssh " + ep_address + " zfs destroy " + item
             print(command)
-            # subprocess.run(command, shell=True)
+            subprocess.run(command, shell=True)
         print()
 
     # Generate a lists of snapshots to transfer
@@ -1392,16 +1392,16 @@ def replicate(vm_name:str = typer.Argument(..., help="VM name"),
             if snapshot_index != len(vm_zfs_snapshot_list)-1:
                 command = "zfs send -vi " + snapshot_value + " " + vm_zfs_snapshot_list[snapshot_index + 1] + " | ssh " + ep_address + " zfs receive " + vm_dataset
                 print(" 🔷 DEBUG: Sending snapshot " + str(snapshot_index + 1) + " out of " + str(len(vm_zfs_snapshot_list)-1))
-                # subprocess.run(command, shell=True)
                 print(command)
+                subprocess.run(command, shell=True)
                 print(" 🔷 DEBUG: Snapshot " + str(snapshot_index + 1) + " job is finished")
         print()
     else:
         print("Starting replication (single):")
         command = "zfs send -v " + vm_zfs_snapshot_list[0] + " | ssh " + ep_address + " zfs receive " + vm_dataset
         print(" 🔷 DEBUG: Sending the initial snapshot to remote machine")
-        # subprocess.run(command, shell=True)
         print(command)
+        subprocess.run(command, shell=True)
         print(" 🔷 DEBUG: Initial replication job done")
         print()
 
