@@ -1401,7 +1401,7 @@ def replicate(vm_name:str = typer.Argument(..., help="VM name"),
         print(" 🔷 DEBUG: Sending the initial snapshot to remote machine")
         # subprocess.run(command, shell=True)
         print(command)
-        print(" 🔷 DEBUG: Snapshot job finished")
+        print(" 🔷 DEBUG: Initial replication job done")
         print()
 
 """ If this file is executed from the command line, activate Typer """
