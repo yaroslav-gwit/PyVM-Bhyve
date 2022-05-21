@@ -219,6 +219,7 @@ class VmList:
 
         vmColumnState = []
         for vm_name in vmColumnNames:
+            vm_config = VmConfigs(vm_name).vm_config_read()
             if CoreChecks(vm_name).vm_is_live():
                 state = "🟢"
             elif vm_config.get("parent_host") != host.HostInfo().hostName:
