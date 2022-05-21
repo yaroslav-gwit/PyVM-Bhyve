@@ -1290,9 +1290,7 @@ def replicate(vm_name:str = typer.Argument(..., help="VM name"),
     Operation.snapshot(vm_name=vm_name, stype="replication")
 
     vm_dataset = CoreChecks(vm_name).vm_dataset() + "/" + vm_name
-    print("Dataset we are working with:")
-    print(vm_dataset)
-    print()
+    print(" 🔷 DEBUG: Dataset we are working with: " + vm_dataset)
 
     command = "zfs list -r -t snapshot " + vm_dataset + " | tail +2 | awk '{ print $1 }'"
     shell_command = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
@@ -1303,10 +1301,10 @@ def replicate(vm_name:str = typer.Argument(..., help="VM name"),
         elif item == "no datasets available":
             vm_zfs_snapshot_list.remove(item)
     
-    print("List of local snapshots:")
-    for item in vm_zfs_snapshot_list:
-        print(item)
-    print()
+    # print("List of local snapshots:")
+    # for item in vm_zfs_snapshot_list:
+    #     print(item)
+    # print()
     
     # Leave only 2 replication snapshots
     # local_snaps_to_delete = []
@@ -1339,22 +1337,21 @@ def replicate(vm_name:str = typer.Argument(..., help="VM name"),
         elif item == "no datasets available":
             remote_zfs_snapshot_list.remove(item)
     
-    print("List of remote snapshots:")
-    for item in remote_zfs_snapshot_list:
-        print(item)
-    print()
+    # print("List of remote snapshots:")
+    # for item in remote_zfs_snapshot_list:
+        # print(item)
+    # print()
 
     if vm_zfs_snapshot_list == remote_zfs_snapshot_list:
-        print("The backup system is already up to date!")
+        print(" 🔷 DEBUG: The backup system is already up to date.")
         sys.exit(0)
 
     # Revert to a last snapshot to avoid dealing with differences
     if len(remote_zfs_snapshot_list) >= 1:
         command = "ssh " + ep_address + " zfs rollback -r " + remote_zfs_snapshot_list[-1]
-        print("Reverting back to a latest snapshot:")
-        print(command)
+        print(" 🔷 DEBUG: Reverting back to a latest snapshot: " + command)
         subprocess.run(command, shell=True)
-        print()
+        # print()
 
     # Difference list
     to_delete_snapshot_list = []
@@ -1362,48 +1359,48 @@ def replicate(vm_name:str = typer.Argument(..., help="VM name"),
     for zfs_snapshot in vm_zfs_snapshot_list:
         if zfs_snapshot in to_delete_snapshot_list:
             to_delete_snapshot_list.remove(zfs_snapshot)
-    print("To delete list: ")
-    for item in to_delete_snapshot_list:
-        print(item)
-    print()
+    # print("To delete list: ")
+    # for item in to_delete_snapshot_list:
+        # print(item)
+    # print()
     
     if len(to_delete_snapshot_list) != 0:
-        print("Removing old snapshots from the remote system:")
+        # print("Removing old snapshots from the remote system:")
         for item in to_delete_snapshot_list:
             command = "ssh " + ep_address + " zfs destroy " + item
-            print(command)
+            # print(command)
             subprocess.run(command, shell=True)
-        print()
+        # print()
 
     # Generate a lists of snapshots to transfer
     for rsnapshot_index, rsnapshot_value in enumerate(remote_zfs_snapshot_list):
         if rsnapshot_index != len(remote_zfs_snapshot_list)-1:
             if rsnapshot_value in vm_zfs_snapshot_list:
                 vm_zfs_snapshot_list.remove(rsnapshot_value)
-    print("Snapshots to transfer:")
-    for item in vm_zfs_snapshot_list:
-        print(item)
-    print()
+    # print("Snapshots to transfer:")
+    # for item in vm_zfs_snapshot_list:
+        # print(item)
+    # print()
 
     # Start the replication
     if len(remote_zfs_snapshot_list) > 0:
-        print("Starting replication (multi):")
+        print(" 🔷 DEBUG: Starting replication (multi):")
         for snapshot_index, snapshot_value in enumerate(vm_zfs_snapshot_list):
             if snapshot_index != len(vm_zfs_snapshot_list)-1:
                 command = "zfs send -vi " + snapshot_value + " " + vm_zfs_snapshot_list[snapshot_index + 1] + " | ssh " + ep_address + " zfs receive " + vm_dataset
                 print(" 🔷 DEBUG: Sending snapshot " + str(snapshot_index + 1) + " out of " + str(len(vm_zfs_snapshot_list)-1))
-                print(command)
+                # print(command)
                 subprocess.run(command, shell=True)
                 print(" 🔷 DEBUG: Snapshot " + str(snapshot_index + 1) + " job is finished")
-        print()
+        # print()
     else:
-        print("Starting replication (single):")
+        print(" 🔷 DEBUG: Starting replication (single):")
         command = "zfs send -v " + vm_zfs_snapshot_list[0] + " | ssh " + ep_address + " zfs receive " + vm_dataset
         print(" 🔷 DEBUG: Sending the initial snapshot to remote machine")
-        print(command)
+        # print(command)
         subprocess.run(command, shell=True)
         print(" 🔷 DEBUG: Initial replication job done")
-        print()
+        # print()
 
 """ If this file is executed from the command line, activate Typer """
 if __name__ == "__main__":
