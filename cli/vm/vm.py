@@ -1319,8 +1319,8 @@ def replicate(vm_name:str = typer.Argument(..., help="VM name"),
     print("Temporary replication snapshots that should be removed:")
     for item_index, item_value in enumerate(local_snaps_to_delete):
         if item_value in vm_zfs_snapshot_list:
-            if item_index != len(local_snaps_to_delete):
-                vm_zfs_snapshot_list.remove(item_value)
+            # if item_index != len(local_snaps_to_delete):
+            vm_zfs_snapshot_list.remove(item_value)
     if len(local_snaps_to_delete) > 1:
         for item_index, item_value in enumerate(local_snaps_to_delete):
             command = "zfs destroy " + item_value
