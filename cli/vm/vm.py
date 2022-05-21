@@ -1173,11 +1173,13 @@ def cireset(vm_name:str = typer.Argument(..., help="VM name"),
 
         vm_ssh_keys = []
         if vm_config_dict["include_hostwide_ssh_keys"]:
+            key_index = 0
             for _key in host_dict["host_ssh_keys"]:
                 _ssh_key = {}
                 _ssh_key["key_value"] = _key["key_value"]
                 _ssh_key["key_owner"] = host_name
-                _ssh_key["comment"] = "One of the host keys"
+                _ssh_key["comment"] = "Host key " + str(key_index)
+                key_index = key_index + 1
                 vm_ssh_keys.append(_ssh_key)
         for _key in vm_config_dict["vm_ssh_keys"]:
             _ssh_key = {}
