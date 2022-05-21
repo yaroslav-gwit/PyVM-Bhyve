@@ -1191,9 +1191,9 @@ def cireset(vm_name:str = typer.Argument(..., help="VM name"),
         
         # Remove duplicate keys
         vm_ssh_keys_copy = vm_ssh_keys.copy()
-        for _key_index, _key_value in enumerate(vm_ssh_keys):
-            if _key_value in vm_ssh_keys_copy:
-                vm_ssh_keys_copy.pop(_key_index)
+        for _key in vm_ssh_keys:
+            if _key in vm_ssh_keys_copy:
+                vm_ssh_keys_copy.remove(_key)
         print(vm_ssh_keys_copy)
         if len(vm_ssh_keys_copy) > 0:
             for _key_index, _key_value in enumerate(vm_ssh_keys_copy):
