@@ -230,7 +230,6 @@ class VmList:
                 state = state + "🔒"
             if CoreChecks(vm_name).vm_in_production():
                 state = state + "🔁"
-                #This is the icon to display if the VM is backed up 💾!
             vmColumnState.append(state)
 
 
