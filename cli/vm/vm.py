@@ -1122,204 +1122,222 @@ def deploy(vm_name:str = typer.Argument("test-vm", help="New VM name"),
         # ip_address:str = typer.Option("10.0.0.0", help="Specify the IP address or leave at default to generate a random address"),
         ds_id:int = typer.Option(0, help="Dataset ID to which this VM will be deployed"),
         ):
-        """
-        New VM deployment
-        """
-        deployment_output = VmDeploy(vm_name=vm_name, os_type=os_type, dataset_id=ds_id).deploy()
+    """
+    New VM deployment
+    """
+    deployment_output = VmDeploy(vm_name=vm_name, os_type=os_type, dataset_id=ds_id).deploy()
 
-        # Reload DNS
-        VmDeploy().dns_registry()
+    # Reload DNS
+    VmDeploy().dns_registry()
 
-        # Let user know, that everything went well
-        print (" 🟢 INFO: VM was deployed successfully: " + deployment_output["vm_name"])
+    # Let user know, that everything went well
+    print (" 🟢 INFO: VM was deployed successfully: " + deployment_output["vm_name"])
 
 @app.command()
 def cireset(vm_name:str = typer.Argument(..., help="VM name"),
         # os_type:str = typer.Option(..., help="OS type"),
         # os_comment:str = typer.Option(..., help="OS Comment")
         ):
-        """
-        Reset the VM settings, including passwords, network settings, user keys, etc.
-        """
-        if vm_name not in VmList().plainList:
-            sys.exit(" 🚦 ERROR: This VM doesn't exist: " + vm_name)
-        elif CoreChecks(vm_name=vm_name).vm_is_live():
-            sys.exit(" 🚦 ERROR: VM is live! Please turn it off first: hoster vm stop " + vm_name)
+    """
+    Reset the VM settings, including passwords, network settings, user keys, etc.
+    """
+    if vm_name not in VmList().plainList:
+        sys.exit(" 🚦 ERROR: This VM doesn't exist: " + vm_name)
+    elif CoreChecks(vm_name=vm_name).vm_is_live():
+        sys.exit(" 🚦 ERROR: VM is live! Please turn it off first: hoster vm stop " + vm_name)
 
-        vm_config_dict = VmConfigs(vm_name).vm_config_read()
-        # print(vm_config_dict)
+    vm_config_dict = VmConfigs(vm_name).vm_config_read()
+    # print(vm_config_dict)
 
-        vm_folder = CoreChecks(vm_name=vm_name).vm_folder()
-        # print(vm_folder)
+    vm_folder = CoreChecks(vm_name=vm_name).vm_folder()
+    # print(vm_folder)
 
-        #_ Load host config _#
-        with open("./configs/host.json", "r") as file:
-            host_file = file.read()
-        host_dict = json.loads(host_file)
-        # print(host_dict)
+    #_ Load host config _#
+    with open("./configs/host.json", "r") as file:
+        host_file = file.read()
+    host_dict = json.loads(host_file)
+    # print(host_dict)
 
-        host_name = host.HostInfo().hostName
-        # print(host_name)
+    host_name = host.HostInfo().hostName
+    # print(host_name)
 
-        #_ Load networks config _#
-        with open("./configs/networks.json", "r") as file:
-            networks_file = file.read()
-        networks_dict = json.loads(networks_file)
-        network_bridge_name = networks_dict["networks"][0]["bridge_name"]
-        # print(network_bridge_name)
+    #_ Load networks config _#
+    with open("./configs/networks.json", "r") as file:
+        networks_file = file.read()
+    networks_dict = json.loads(networks_file)
+    network_bridge_name = networks_dict["networks"][0]["bridge_name"]
+    # print(network_bridge_name)
 
-        existing_ip_addresses = CoreChecks.existing_ip_addresses()
-        network_ip_address = IC.ip_address_generator(existing_ip_addresses=existing_ip_addresses)
-        # print(network_ip_address)
+    existing_ip_addresses = CoreChecks.existing_ip_addresses()
+    network_ip_address = IC.ip_address_generator(existing_ip_addresses=existing_ip_addresses)
+    # print(network_ip_address)
 
-        vm_ssh_keys = []
-        host_ssh_keys = []
-        if vm_config_dict["include_hostwide_ssh_keys"]:
-            key_index = 0
-            for _key in host_dict["host_ssh_keys"]:
-                _ssh_key = {}
-                _ssh_key["key_value"] = _key["key_value"]
-                _ssh_key["key_owner"] = host_name
-                _ssh_key["comment"] = "Host SSH key"
-                key_index = key_index + 1
-                host_ssh_keys.append(_ssh_key)
-        for _key in vm_config_dict["vm_ssh_keys"]:
+    vm_ssh_keys = []
+    host_ssh_keys = []
+    if vm_config_dict["include_hostwide_ssh_keys"]:
+        key_index = 0
+        for _key in host_dict["host_ssh_keys"]:
             _ssh_key = {}
             _ssh_key["key_value"] = _key["key_value"]
-            _ssh_key["key_owner"] = _key["key_owner"]
-            _ssh_key["comment"] = _key["comment"]
-            vm_ssh_keys.append(_ssh_key)
-        # print(vm_ssh_keys)
+            _ssh_key["key_owner"] = host_name
+            _ssh_key["comment"] = "Host SSH key"
+            key_index = key_index + 1
+            host_ssh_keys.append(_ssh_key)
+    for _key in vm_config_dict["vm_ssh_keys"]:
+        _ssh_key = {}
+        _ssh_key["key_value"] = _key["key_value"]
+        _ssh_key["key_owner"] = _key["key_owner"]
+        _ssh_key["comment"] = _key["comment"]
+        vm_ssh_keys.append(_ssh_key)
+    # print(vm_ssh_keys)
 
-        for _host_ssh_key in host_ssh_keys:
-            if _host_ssh_key not in vm_ssh_keys:
-                vm_ssh_keys.append(_host_ssh_key)
+    for _host_ssh_key in host_ssh_keys:
+        if _host_ssh_key not in vm_ssh_keys:
+            vm_ssh_keys.append(_host_ssh_key)
 
-        vnc_port = VmDeploy.vm_vnc_port_generator()
-        # print(vnc_port)
+    vnc_port = VmDeploy.vm_vnc_port_generator()
+    # print(vnc_port)
 
-        vm_config_dict["parent_host"] = host_name
-        vm_config_dict["networks"][0]["ip_address"] = network_ip_address
-        vm_config_dict["networks"][0]["network_bridge"] = network_bridge_name
-        vm_config_dict["vm_ssh_keys"] = vm_ssh_keys
-        vm_config_dict["vnc_port"] = vnc_port
+    vm_config_dict["parent_host"] = host_name
+    vm_config_dict["networks"][0]["ip_address"] = network_ip_address
+    vm_config_dict["networks"][0]["network_bridge"] = network_bridge_name
+    vm_config_dict["vm_ssh_keys"] = vm_ssh_keys
+    vm_config_dict["vnc_port"] = vnc_port
 
-        final_output = json.dumps(vm_config_dict, indent=3)
+    final_output = json.dumps(vm_config_dict, indent=3)
 
-        # Write VM template
-        vm_folder = CoreChecks(vm_name=vm_name).vm_folder()
-        # print(vm_folder)
-        with open(vm_folder + "/vm_config.json", "w") as file:
-            file.write(final_output)
+    # Write VM template
+    vm_folder = CoreChecks(vm_name=vm_name).vm_folder()
+    # print(vm_folder)
+    with open(vm_folder + "/vm_config.json", "w") as file:
+        file.write(final_output)
 
-        # cloud_init.reset()
-        cloud_init_files_folder = vm_folder + "/cloud-init-files"
-        if not os.path.exists(cloud_init_files_folder):
-            sys.exit(" ⛔ CRITICAL: CloudInit folder doesn't exist at this location: " + vm_folder)
+    # cloud_init.reset()
+    cloud_init_files_folder = vm_folder + "/cloud-init-files"
+    if not os.path.exists(cloud_init_files_folder):
+        sys.exit(" ⛔ CRITICAL: CloudInit folder doesn't exist at this location: " + vm_folder)
 
-        output_dict = {}
-        output_dict["random_instanse_id"] = IC.random_password_generator(lenght=5)
-        output_dict["vm_name"] = vm_name
+    output_dict = {}
+    output_dict["random_instanse_id"] = IC.random_password_generator(lenght=5)
+    output_dict["vm_name"] = vm_name
 
-        output_dict["mac_address"] = vm_config_dict["networks"][0]["network_mac"]
-        output_dict["os_type"] = vm_config_dict["os_type"]
-        output_dict["ip_address"] = vm_config_dict["networks"][0]["ip_address"]
-        output_dict["network_bridge_address"] = networks_dict["networks"][0]["bridge_address"]
+    output_dict["mac_address"] = vm_config_dict["networks"][0]["network_mac"]
+    output_dict["os_type"] = vm_config_dict["os_type"]
+    output_dict["ip_address"] = vm_config_dict["networks"][0]["ip_address"]
+    output_dict["network_bridge_address"] = networks_dict["networks"][0]["bridge_address"]
 
-        ci_vm_ssh_keys = []
-        for _ssh_key in vm_ssh_keys:
-            ci_vm_ssh_keys.append(_ssh_key["key_value"])
-        output_dict["vm_ssh_keys"] = ci_vm_ssh_keys
+    ci_vm_ssh_keys = []
+    for _ssh_key in vm_ssh_keys:
+        ci_vm_ssh_keys.append(_ssh_key["key_value"])
+    output_dict["vm_ssh_keys"] = ci_vm_ssh_keys
 
-        output_dict["root_password"] = IC.random_password_generator(capitals=True, numbers=True, lenght=53)
-        output_dict["user_password"] = IC.random_password_generator(capitals=True, numbers=True, lenght=53)
+    output_dict["root_password"] = IC.random_password_generator(capitals=True, numbers=True, lenght=53)
+    output_dict["user_password"] = IC.random_password_generator(capitals=True, numbers=True, lenght=53)
 
-        # Read Cloud Init Metadata
-        with open("./templates/cloudinit/meta-data", "r") as file:
-            md_template = file.read()
-        # Render Cloud Init Metadata Template
-        md_template = Template(md_template)
-        md_template = md_template.render(output_dict=output_dict)
-        # Write Cloud Init Metadata Template
-        with open(cloud_init_files_folder + "/meta-data", "w") as file:
-            file.write(md_template)
+    # Read Cloud Init Metadata
+    with open("./templates/cloudinit/meta-data", "r") as file:
+        md_template = file.read()
+    # Render Cloud Init Metadata Template
+    md_template = Template(md_template)
+    md_template = md_template.render(output_dict=output_dict)
+    # Write Cloud Init Metadata Template
+    with open(cloud_init_files_folder + "/meta-data", "w") as file:
+        file.write(md_template)
 
-        # Read Cloud Init Network Template
-        with open("./templates/cloudinit/network-config", "r") as file:
-            nw_template = file.read()
-        # Render Cloud Init Network Template
-        nw_template = Template(nw_template)
-        nw_template = nw_template.render(output_dict=output_dict)
-        # Write Cloud Init Network
-        with open(cloud_init_files_folder + "/network-config", "w") as file:
-            file.write(nw_template)
+    # Read Cloud Init Network Template
+    with open("./templates/cloudinit/network-config", "r") as file:
+        nw_template = file.read()
+    # Render Cloud Init Network Template
+    nw_template = Template(nw_template)
+    nw_template = nw_template.render(output_dict=output_dict)
+    # Write Cloud Init Network
+    with open(cloud_init_files_folder + "/network-config", "w") as file:
+        file.write(nw_template)
 
-        # Read Cloud Init User Template
-        with open("./templates/cloudinit/user-data", "r") as file:
-            usr_template = file.read()
-        # Render loud Init User Template
-        usr_template = Template(usr_template)
-        usr_template = usr_template.render(output_dict=output_dict)
-        # Write Cloud Init User Template
-        with open(cloud_init_files_folder + "/user-data", "w") as file:
-            file.write(usr_template)
+    # Read Cloud Init User Template
+    with open("./templates/cloudinit/user-data", "r") as file:
+        usr_template = file.read()
+    # Render loud Init User Template
+    usr_template = Template(usr_template)
+    usr_template = usr_template.render(output_dict=output_dict)
+    # Write Cloud Init User Template
+    with open(cloud_init_files_folder + "/user-data", "w") as file:
+        file.write(usr_template)
 
-        # Create ISO file
-        command = "genisoimage -output " + vm_folder + "/seed.iso -volid cidata -joliet -rock " + cloud_init_files_folder + "/user-data " + cloud_init_files_folder + "/meta-data " + cloud_init_files_folder + "/network-config"
-        subprocess.run(command, shell=True, stderr = subprocess.DEVNULL, stdout=subprocess.DEVNULL)
+    # Create ISO file
+    command = "genisoimage -output " + vm_folder + "/seed.iso -volid cidata -joliet -rock " + cloud_init_files_folder + "/user-data " + cloud_init_files_folder + "/meta-data " + cloud_init_files_folder + "/network-config"
+    subprocess.run(command, shell=True, stderr = subprocess.DEVNULL, stdout=subprocess.DEVNULL)
 
-        # Reload DNS
-        VmDeploy().dns_registry()
+    # Reload DNS
+    VmDeploy().dns_registry()
 
-        # Let user know, that everything went well
-        print (" 🟢 INFO: VM was reset successfully: " + vm_name)
+    # Let user know, that everything went well
+    print (" 🟢 INFO: VM was reset successfully: " + vm_name)
 
 
 @app.command()
 def replicate(vm_name:str = typer.Argument(..., help="VM name"),
-        ep_address:str = typer.Option("192.168.120.1", help="Endpoint server address, i.e. 192.168.120.1"),
+        ep_address:str = typer.Option("192.168.120.18", help="Endpoint server address, i.e. 192.168.1.1"),
         ep_port:str = typer.Option("22", help="Endpoint server SSH port"),
         ):
-        """
-        Replicate the VM to another host
-        """
+    """
+    Replicate the VM to another host
+    """
 
-        if vm_name not in VmList().plainList:
-            sys.exit(" 🚦 ERROR: This VM doesn't exist: " + vm_name)
+    if vm_name not in VmList().plainList:
+        sys.exit(" 🚦 ERROR: This VM doesn't exist: " + vm_name)
 
-        vm_dataset = CoreChecks(vm_name).vm_dataset() + "/" + vm_name
-        print(vm_dataset)
-        print()
+    vm_dataset = CoreChecks(vm_name).vm_dataset() + "/" + vm_name
+    print(vm_dataset)
+    print()
 
-        command = "zfs list -r -t snapshot " + vm_dataset + " | tail +2 | awk '{ print $1 }'"
-        shell_command = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
-        vm_zfs_snapshot_list = shell_command.decode("utf-8").split("\n")
-        for item in vm_zfs_snapshot_list:
-            if not item:
-                vm_zfs_snapshot_list.remove(item)
-            elif item == "no datasets available":
-                vm_zfs_snapshot_list.remove(item)
-        
-        print("List of local snapshots:")
-        for item in vm_zfs_snapshot_list:
-            print(item)
-        print()
-        
-        # Leave only 2 replication snapshots
-        local_snaps_to_delete = []
-        for item in vm_zfs_snapshot_list:
-            if re.match(".*replication.*", item):
-                local_snaps_to_delete.append(item)
-        if local_snaps_to_delete:
-            local_snaps_to_delete.pop()
-        
-        print("Temporary replication snapshots that should be removed:")
-        if len(local_snaps_to_delete) > 1:
-            for item_index, item_value in enumerate(local_snaps_to_delete):
-                command = "zfs destroy " + item_value
-                print(command)
-                # subprocess.run(command, shell=True)
-        print()
+    command = "zfs list -r -t snapshot " + vm_dataset + " | tail +2 | awk '{ print $1 }'"
+    shell_command = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
+    vm_zfs_snapshot_list = shell_command.decode("utf-8").split("\n")
+    for item in vm_zfs_snapshot_list:
+        if not item:
+            vm_zfs_snapshot_list.remove(item)
+        elif item == "no datasets available":
+            vm_zfs_snapshot_list.remove(item)
+    
+    print("List of local snapshots:")
+    for item in vm_zfs_snapshot_list:
+        print(item)
+    print()
+    
+    # Leave only 2 replication snapshots
+    local_snaps_to_delete = []
+    for item in vm_zfs_snapshot_list:
+        if re.match(".*replication.*", item):
+            local_snaps_to_delete.append(item)
+    if local_snaps_to_delete:
+        local_snaps_to_delete.pop()
+    
+    print("Temporary replication snapshots that should be removed:")
+    if len(local_snaps_to_delete) > 1:
+        for item_index, item_value in enumerate(local_snaps_to_delete):
+            command = "zfs destroy " + item_value
+            print(command)
+            # subprocess.run(command, shell=True)
+    print()
+
+    # Remote snapshot list
+    command = 'echo "if [[ -d /' + vm_dataset + ' ]]; then zfs list -r -t snapshot ' + vm_dataset + '; fi" | ssh ' + ep_address + ' /usr/local/bin/bash | tail +2 | ' + "awk '{ print $1 }'"
+    shell_command = subprocess.check_output(command, shell=True)
+    remote_zfs_snapshot_list = shell_command.decode("utf-8").split()
+
+    for item in remote_zfs_snapshot_list:
+        if not item:
+            remote_zfs_snapshot_list.remove(item)
+        elif item == "no datasets available":
+            remote_zfs_snapshot_list.remove(item)
+    
+    print("List of local snapshots:")
+    for item in remote_zfs_snapshot_list:
+        print(item)
+    print()
+
+
 
 """ If this file is executed from the command line, activate Typer """
 if __name__ == "__main__":
