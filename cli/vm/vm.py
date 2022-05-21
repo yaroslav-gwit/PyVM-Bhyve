@@ -1302,7 +1302,7 @@ def replicate(vm_name:str = typer.Argument(..., help="VM name"),
         print("List of local snapshots:")
         for item in vm_zfs_snapshot_list:
             print(item)
-            print()
+        print()
 
 """ If this file is executed from the command line, activate Typer """
 if __name__ == "__main__":
