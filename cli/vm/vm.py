@@ -1287,10 +1287,12 @@ def replicate(vm_name:str = typer.Argument(..., help="VM name"),
             sys.exit(" 🚦 ERROR: This VM doesn't exist: " + vm_name)
 
         vm_dataset = CoreChecks(vm_name).vm_dataset() + "/" + vm_name
-        command = "zfs list -r -t snapshot " + vm_dataset + " | tail +2 | awk '{ print $1 }'"
-        shell_command = subprocess.check_output(command, shell=True)
-        vm_zfs_snapshot_list = shell_command.decode("utf-8").split()
-        print(vm_zfs_snapshot_list)
+        print(vm_dataset)
+
+        # command = "zfs list -r -t snapshot " + vm_dataset + " | tail +2 | awk '{ print $1 }'"
+        # shell_command = subprocess.check_output(command, shell=True)
+        # vm_zfs_snapshot_list = shell_command.decode("utf-8").split()
+        # print(vm_zfs_snapshot_list)
 
 """ If this file is executed from the command line, activate Typer """
 if __name__ == "__main__":
