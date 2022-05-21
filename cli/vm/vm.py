@@ -1309,24 +1309,24 @@ def replicate(vm_name:str = typer.Argument(..., help="VM name"),
     print()
     
     # Leave only 2 replication snapshots
-    local_snaps_to_delete = []
-    for item in vm_zfs_snapshot_list:
-        if re.match(".*replication.*", item):
-            local_snaps_to_delete.append(item)
-    if local_snaps_to_delete:
-        local_snaps_to_delete.pop()
+    # local_snaps_to_delete = []
+    # for item in vm_zfs_snapshot_list:
+    #     if re.match(".*replication.*", item):
+    #         local_snaps_to_delete.append(item)
+    # if local_snaps_to_delete:
+    #     local_snaps_to_delete.pop()
     
-    print("Temporary replication snapshots that should be removed:")
-    for item_index, item_value in enumerate(local_snaps_to_delete):
-        if item_value in vm_zfs_snapshot_list:
-            # if item_index != len(local_snaps_to_delete):
-            vm_zfs_snapshot_list.remove(item_value)
-    if len(local_snaps_to_delete) > 1:
-        for item_index, item_value in enumerate(local_snaps_to_delete):
-            command = "zfs destroy " + item_value
-            print(command)
-            subprocess.run(command, shell=True)
-    print()
+    # print("Temporary replication snapshots that should be removed:")
+    # for item_index, item_value in enumerate(local_snaps_to_delete):
+    #     if item_value in vm_zfs_snapshot_list:
+    #         # if item_index != len(local_snaps_to_delete):
+    #         vm_zfs_snapshot_list.remove(item_value)
+    # if len(local_snaps_to_delete) > 1:
+    #     for item_index, item_value in enumerate(local_snaps_to_delete):
+    #         command = "zfs destroy " + item_value
+    #         print(command)
+    #         subprocess.run(command, shell=True)
+    # print()
 
     # Remote snapshot list
     command = 'echo "if [[ -d /' + vm_dataset + ' ]]; then zfs list -r -t snapshot ' + vm_dataset + '; fi" | ssh ' + ep_address + ' /usr/local/bin/bash | tail +2 | ' + "awk '{ print $1 }'"
