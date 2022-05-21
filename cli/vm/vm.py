@@ -12,6 +12,7 @@ from os import listdir
 import json
 import time
 import random
+import re
 
 # Installed packages/modules
 from tabulate import tabulate
@@ -1303,6 +1304,19 @@ def replicate(vm_name:str = typer.Argument(..., help="VM name"),
         for item in vm_zfs_snapshot_list:
             print(item)
         print()
+        
+        # Leave only 2 replication snapshots
+        local_snaps_to_delete = []
+        for item in vm_zfs_snapshot_list:
+            if re.match(".*replication.*", item):
+                local_snaps_to_delete.append(item)
+        local_snaps_to_delete.pop()
+        
+        if len(local_snaps_to_delete) > 1:
+            for item_index, item_value in enumerate(local_snaps_to_delete):
+                command = "zfs destroy " + item_value
+                print(command)
+                # subprocess.run(command, shell=True)
 
 """ If this file is executed from the command line, activate Typer """
 if __name__ == "__main__":
