@@ -327,8 +327,13 @@ class VmList:
         vmColumnDescription = []
         for vm_name in vmColumnNames:
             vm_config = VmConfigs(vm_name).vm_config_read()
-            vm_config = vm_config.get("description", "-")
-            vmColumnDescription.append(vm_config)
+            if vm_config.get("parent_host") != host.HostInfo().hostName:
+                vm_config = vm_config.get("parent_host", "-")
+                vmColumnDescription.append("Backup from " + vm_config)
+            else:
+                vm_config = VmConfigs(vm_name).vm_config_read()
+                vm_config = vm_config.get("description", "-")
+                vmColumnDescription.append(vm_config)
 
 
         vmTableHeader = [ ["Name", "State", "CPUs", "RAM", "Main IP", "VNC Port", "VNC Password", "OS Disk", "OS Comment", "Uptime", "Description", ] ]
