@@ -1345,7 +1345,8 @@ def replicate(vm_name:str = typer.Argument(..., help="VM name"),
     if len(remote_zfs_snapshot_list) >= 1:
         command = "ssh " + ep_address + " zfs rollback -r " + remote_zfs_snapshot_list[-1]
         # subprocess.run(command, shell=True)
-        print("Reverting back to a latest snapshot: " + command)
+        print("Reverting back to a latest snapshot:")
+        print(command)
         print()
 
     # Difference list
@@ -1359,11 +1360,13 @@ def replicate(vm_name:str = typer.Argument(..., help="VM name"),
         print(item)
     print()
     
-    # if len(_to_delete_snapshot_list) != 0:
-    #     for item in _to_delete_snapshot_list:
-    #         command = "ssh " + endpoint + " zfs destroy " + item
-    #         subprocess.run(command, shell=True)
-    #     print("Some old snapshots were removed from the backup system: " + str(_to_delete_snapshot_list))
+    if len(to_delete_snapshot_list) != 0:
+        print("Removing old snapshots from the remote system:")
+        for item in to_delete_snapshot_list:
+            command = "ssh " + endpoint + " zfs destroy " + item
+            print(command)
+            # subprocess.run(command, shell=True)
+        print()
 
     # for remote_zfs_snapshot in remote_zfs_snapshot_list:
     #     if remote_zfs_snapshot_list.index(remote_zfs_snapshot) != len(remote_zfs_snapshot_list) - 1:
