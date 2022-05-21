@@ -223,7 +223,7 @@ class VmList:
             if CoreChecks(vm_name).vm_is_live():
                 state = "🟢"
             elif vm_config.get("parent_host") != host.HostInfo().hostName:
-                state = "🔷"
+                state = "💾"
             else:
                 state = "🔴"
             if CoreChecks(vm_name).vm_is_encrypted():
