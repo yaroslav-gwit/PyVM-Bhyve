@@ -1341,7 +1341,7 @@ def replicate(vm_name:str = typer.Argument(..., help="VM name"),
     if len(remote_zfs_snapshot_list) >= 1:
         command = "ssh " + ep_address + " zfs rollback -r " + remote_zfs_snapshot_list[-1]
         # subprocess.run(command, shell=True)
-        print(command)
+        print("Reverting back to a latest snapshot: " + command)
         print()
 
 
