@@ -1276,7 +1276,7 @@ def cireset(vm_name:str = typer.Argument(..., help="VM name"),
 
 @app.command()
 def replicate(vm_name:str = typer.Argument(..., help="VM name"),
-        ep_address:str = typer.Option(..., help="Endpoint server address, i.e. 192.168.120.1"),
+        ep_address:str = typer.Option("192.168.120.1", help="Endpoint server address, i.e. 192.168.120.1"),
         ep_port:str = typer.Option("22", help="Endpoint server SSH port"),
         ):
         """
