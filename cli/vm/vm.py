@@ -1368,12 +1368,14 @@ def replicate(vm_name:str = typer.Argument(..., help="VM name"),
             # subprocess.run(command, shell=True)
         print()
 
-    # for remote_zfs_snapshot in remote_zfs_snapshot_list:
-    #     if remote_zfs_snapshot_list.index(remote_zfs_snapshot) != len(remote_zfs_snapshot_list) - 1:
-    #         if remote_zfs_snapshot in vm_zfs_snapshot_list:
-    #             vm_zfs_snapshot_list.remove(remote_zfs_snapshot)
-    # print("Updated snapshot list: " + str(vm_zfs_snapshot_list))
-    # print()
+    for rsnapshot_index, rsnapshot_value in enumerate(remote_zfs_snapshot_list):
+        if rsnapshot_index != len(remote_zfs_snapshot_list)-1:
+            if rsnapshot_value in vm_zfs_snapshot_list:
+                vm_zfs_snapshot_list.remove(rsnapshot_value)
+    print("Snapshots to transfer:")
+    for item in vm_zfs_snapshot_list:
+        print(item)
+    print()
 
 """ If this file is executed from the command line, activate Typer """
 if __name__ == "__main__":
