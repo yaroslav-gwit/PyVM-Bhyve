@@ -1310,7 +1310,8 @@ def replicate(vm_name:str = typer.Argument(..., help="VM name"),
         for item in vm_zfs_snapshot_list:
             if re.match(".*replication.*", item):
                 local_snaps_to_delete.append(item)
-        local_snaps_to_delete.pop()
+        if local_snaps_to_delete:
+            local_snaps_to_delete.pop()
         
         if len(local_snaps_to_delete) > 1:
             for item_index, item_value in enumerate(local_snaps_to_delete):
