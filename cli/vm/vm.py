@@ -1287,6 +1287,8 @@ def replicate(vm_name:str = typer.Argument(..., help="VM name"),
     if vm_name not in VmList().plainList:
         sys.exit(" 🚦 ERROR: This VM doesn't exist: " + vm_name)
 
+    Operation.snapshot(vm_name=vm_name, stype="replication")
+
     vm_dataset = CoreChecks(vm_name).vm_dataset() + "/" + vm_name
     print(vm_dataset)
     print()
