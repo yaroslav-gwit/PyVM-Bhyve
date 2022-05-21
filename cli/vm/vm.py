@@ -1299,8 +1299,8 @@ def replicate(vm_name:str = typer.Argument(..., help="VM name"),
             elif item == "no datasets available":
                 vm_zfs_snapshot_list.remove(item)
         
+        print("List of local snapshots:")
         for item in vm_zfs_snapshot_list:
-            print("List of local snapshots:")
             print(item)
             print()
 
