@@ -1391,7 +1391,7 @@ def replicate(vm_name:str = typer.Argument(..., help="VM name"),
                 print(" 🔷 DEBUG: Sending snapshot " + str(snapshot_index + 1) + " out of " + str(len(vm_zfs_snapshot_list)-1))
                 # print(command)
                 subprocess.run(command, shell=True)
-                print(" 🔷 DEBUG: Snapshot " + str(snapshot_index + 1) + " job is finished")
+                # print(" 🔷 DEBUG: Snapshot " + str(snapshot_index + 1) + " job is finished")
         # print()
     else:
         print(" 🔷 DEBUG: Starting replication (single):")
@@ -1399,7 +1399,7 @@ def replicate(vm_name:str = typer.Argument(..., help="VM name"),
         print(" 🔷 DEBUG: Sending the initial snapshot to remote machine")
         # print(command)
         subprocess.run(command, shell=True)
-        print(" 🔷 DEBUG: Initial replication job done")
+        # print(" 🔷 DEBUG: Initial replication job done")
         # print()
 
 """ If this file is executed from the command line, activate Typer """
