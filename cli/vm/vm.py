@@ -1363,7 +1363,7 @@ def replicate(vm_name:str = typer.Argument(..., help="VM name"),
     if len(to_delete_snapshot_list) != 0:
         print("Removing old snapshots from the remote system:")
         for item in to_delete_snapshot_list:
-            command = "ssh " + endpoint + " zfs destroy " + item
+            command = "ssh " + ep_address + " zfs destroy " + item
             print(command)
             # subprocess.run(command, shell=True)
         print()
