@@ -1337,6 +1337,12 @@ def replicate(vm_name:str = typer.Argument(..., help="VM name"),
         print(item)
     print()
 
+    # Revert to a last snapshot to avoid dealing with differences
+    if len(remote_zfs_snapshot_list) >= 1:
+        command = "ssh " + ep_address + " zfs rollback -r " + remote_zfs_snapshot_list[-1]
+        # subprocess.run(command, shell=True)
+        print(command)
+        print()
 
 
 """ If this file is executed from the command line, activate Typer """
