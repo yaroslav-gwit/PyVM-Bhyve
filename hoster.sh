@@ -18,6 +18,8 @@ fi
 #_ CHECK IF VENV IS USED _#
 if [[ $VENV == "yes" ]]; then
     source bin/activate
+elif [[ -z $VENV ]]; then
+    source bin/activate
 fi
 
 #_ EXECUTION BID _#
