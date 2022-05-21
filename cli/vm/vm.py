@@ -1172,6 +1172,7 @@ def cireset(vm_name:str = typer.Argument(..., help="VM name"),
         # print(network_ip_address)
 
         vm_ssh_keys = []
+        host_ssh_keys = []
         if vm_config_dict["include_hostwide_ssh_keys"]:
             key_index = 0
             for _key in host_dict["host_ssh_keys"]:
@@ -1180,7 +1181,7 @@ def cireset(vm_name:str = typer.Argument(..., help="VM name"),
                 _ssh_key["key_owner"] = host_name
                 _ssh_key["comment"] = "Host '" + host_name + "' key " + str(key_index)
                 key_index = key_index + 1
-                vm_ssh_keys.append(_ssh_key)
+                host_ssh_keys.append(_ssh_key)
         for _key in vm_config_dict["vm_ssh_keys"]:
             _ssh_key = {}
             _ssh_key["key_value"] = _key["key_value"]
@@ -1189,18 +1190,9 @@ def cireset(vm_name:str = typer.Argument(..., help="VM name"),
             vm_ssh_keys.append(_ssh_key)
         # print(vm_ssh_keys)
 
-        # Remove duplicate keys
-        vm_ssh_keys_copy = vm_ssh_keys.copy()
-        to_remove_list = []
-        for _key_index, _key_value in enumerate(vm_ssh_keys_copy):
-            if _key_value in vm_ssh_keys:
-                to_remove_list.append(_key_index)
-
-        print(to_remove_list)
-
-        # if len(vm_ssh_keys_copy) > 0:
-        #     for _key_index, _key_value in enumerate(vm_ssh_keys_copy):
-        #         vm_ssh_keys.remove(_key_value)
+        for _host_ssh_key in host_ssh_keys:
+            if _host_ssh_key not in vm_ssh_keys:
+                vm_ssh_keys.append(_host_ssh_key)
 
         vnc_port = VmDeploy.vm_vnc_port_generator()
         # print(vnc_port)
