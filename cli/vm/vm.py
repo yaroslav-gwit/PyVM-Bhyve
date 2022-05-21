@@ -1195,6 +1195,7 @@ def cireset(vm_name:str = typer.Argument(..., help="VM name"),
             if _key_value in vm_ssh_keys:
                 vm_ssh_keys_copy.pop(_key_index)
         if len(vm_ssh_keys_copy) > 0:
+            print("More than zero!")
             for _key_index, _key_value in enumerate(vm_ssh_keys_copy):
                 vm_ssh_keys.pop(_key_index)
 
