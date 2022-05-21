@@ -1313,11 +1313,13 @@ def replicate(vm_name:str = typer.Argument(..., help="VM name"),
         if local_snaps_to_delete:
             local_snaps_to_delete.pop()
         
+        print("Temporary replication snapshots that should be removed:")
         if len(local_snaps_to_delete) > 1:
             for item_index, item_value in enumerate(local_snaps_to_delete):
                 command = "zfs destroy " + item_value
                 print(command)
                 # subprocess.run(command, shell=True)
+        print()
 
 """ If this file is executed from the command line, activate Typer """
 if __name__ == "__main__":
