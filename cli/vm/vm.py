@@ -727,7 +727,7 @@ class Operation:
     def start(vm_name:str):
         vm_config = VmConfigs(vm_name).vm_config_read()
         if vm_config["parent_host"] != host.HostInfo().hostName:
-            sys.exit(" 🚦 ERROR: VM is a backup from another host" + vm_config["parent_host"] + ". Run 'cireset' first!")
+            sys.exit(" 🚦 ERROR: VM is a backup from another host: " + vm_config["parent_host"] + ". Run 'cireset' first!")
         elif CoreChecks(vm_name).vm_is_live():
             print(" 🔶 INFO: VM is already live: " + vm_name)
         elif vm_name in VmList().plainList:
