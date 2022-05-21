@@ -1397,7 +1397,7 @@ def replicate(vm_name:str = typer.Argument(..., help="VM name"),
         print()
     else:
         print("Starting replication (single):")
-        command = "zfs send -v " + vm_zfs_snapshot_list[0] + " | ssh " + endpoint + " zfs receive " + endpoint_dataset
+        command = "zfs send -v " + vm_zfs_snapshot_list[0] + " | ssh " + ep_address + " zfs receive " + vm_dataset
         print(" 🔷 DEBUG: Sending the initial snapshot to remote machine")
         # subprocess.run(command, shell=True)
         print(command)
