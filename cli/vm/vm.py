@@ -1193,7 +1193,7 @@ def cireset(vm_name:str = typer.Argument(..., help="VM name"),
         vm_ssh_keys_copy = vm_ssh_keys.copy()
         for _key_index, _key_value in enumerate(vm_ssh_keys_copy):
             if _key_value["key_value"] == vm_ssh_keys[_key_index]["key_value"]:
-                vm_ssh_keys_copy.remove(_key_value)
+                vm_ssh_keys_copy.pop(_key_index)
         print(vm_ssh_keys_copy)
         if len(vm_ssh_keys_copy) > 0:
             for _key_index, _key_value in enumerate(vm_ssh_keys_copy):
