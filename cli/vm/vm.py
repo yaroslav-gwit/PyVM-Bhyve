@@ -1171,6 +1171,10 @@ def cireset(vm_name:str = typer.Argument(..., help="VM name"),
     host_name = host.HostInfo().hostName
     # print(host_name)
 
+    # Check if VM is from this host:
+    if vm_config_dict["parent_host"] != host_name:
+        sys.exit(" 🚦 ERROR: VM is already a backup from another host, can't replicate: " + vm_name)
+
     #_ Load networks config _#
     with open("./configs/networks.json", "r") as file:
         networks_file = file.read()
