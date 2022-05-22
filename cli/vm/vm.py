@@ -1171,10 +1171,6 @@ def cireset(vm_name:str = typer.Argument(..., help="VM name"),
     host_name = host.HostInfo().hostName
     # print(host_name)
 
-    # Check if VM is from this host:
-    if vm_config_dict["parent_host"] != host_name:
-        sys.exit(" 🚦 ERROR: VM is already a backup from another host, can't replicate: " + vm_name)
-
     #_ Load networks config _#
     with open("./configs/networks.json", "r") as file:
         networks_file = file.read()
@@ -1301,6 +1297,13 @@ def replicate(vm_name:str = typer.Argument(..., help="VM name"),
     if vm_name not in VmList().plainList:
         sys.exit(" 🚦 ERROR: This VM doesn't exist: " + vm_name)
 
+    # Check if VM is from this host:
+    vm_config_dict = VmConfigs(vm_name).vm_config_read()
+    host_name = host.HostInfo().hostName
+    if vm_config_dict["parent_host"] != host_name:
+        sys.exit(" 🚦 ERROR: VM is already a backup from another host, can't replicate: " + vm_name)
+
+    # Make a replication snapshot
     Operation.snapshot(vm_name=vm_name, stype="replication")
 
     vm_dataset = CoreChecks(vm_name).vm_dataset() + "/" + vm_name
