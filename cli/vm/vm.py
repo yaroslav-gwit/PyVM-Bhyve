@@ -12,7 +12,6 @@ from os import listdir
 import json
 import time
 import random
-import re
 
 # Installed packages/modules
 from tabulate import tabulate
