@@ -1277,7 +1277,7 @@ def diskexpand(vm_name:str = typer.Argument(..., help="VM name"),
             disk_location = CoreChecks(vm_name=vm_name, disk_image_name=disk).disk_location()
             shell_command = "truncate -s +" + str(size) + "G " + disk_location
             subprocess.run(shell_command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-            print("Disk was enlarged by " + str(size) + "G. Reboot or start the VM now to apply new settings.")
+            print(" 🟢 INFO: Disk " + disk + "was enlarged by " + str(size) + "G. Reboot or start the VM to apply new settings: " + vm_name)
         else:
             sys.exit(" 🚦 ERROR: Sorry, could not find the disk: " + disk)
     else:
