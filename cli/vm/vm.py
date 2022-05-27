@@ -1645,7 +1645,9 @@ def replicate_all(vm_name:str = typer.Argument(..., help="VM name"),
         ep_port:str = typer.Option("22", help="Endpoint server SSH port"),
         direction:str = typer.Option("push", help="Direction of the replication: push or pull")
     ):
-    
+    """
+    Replicate all production VMs to another host
+    """
     vm_list = VmList().plainList
     for _vm in vm_list:
         _vm_live_status = CoreChecks(vm_name=_vm).vm_cpus()["live_status"]
