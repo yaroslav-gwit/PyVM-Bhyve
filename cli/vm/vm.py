@@ -975,7 +975,7 @@ class ZFSReplication:
         Operation.snapshot(vm_name=vm_name, stype="replication")
 
         vm_dataset = CoreChecks(vm_name).vm_dataset() + "/" + vm_name
-        print(" 🔷 DEBUG: Dataset we are working with: " + vm_dataset)
+        print(" 🟢 INFO: Dataset we are working with: " + vm_dataset)
 
         command = "zfs list -r -t snapshot " + vm_dataset + " | tail +2 | awk '{ print $1 }'"
         shell_command = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
@@ -1057,7 +1057,7 @@ class ZFSReplication:
             print(" 🔷 DEBUG: Starting the INITIAL replication operation for: '" + vm_dataset + "'")
             command = "zfs send -v " + vm_zfs_snapshot_list[0] + " | ssh " + ep_address + " zfs receive " + vm_dataset
             subprocess.run(command, shell=True)
-            print(" 🔷 DEBUG: Initial snapshot replication operation: done sending '" + vm_dataset + "'")
+            print(" 🟢 INFO: Initial snapshot replication operation: done sending '" + vm_dataset + "'")
 
 
 class CloudInit:
@@ -1637,6 +1637,25 @@ def replicate(vm_name:str = typer.Argument(..., help="VM name"),
         print("This function has not been implemented yet!")
     else:
         print("Only available options are \"pull\" and \"push\"!")
+
+
+@app.command()
+def replicate_all(vm_name:str = typer.Argument(..., help="VM name"),
+        ep_address:str = typer.Option("192.168.120.18", help="Endpoint server address, i.e. 192.168.1.1"),
+        ep_port:str = typer.Option("22", help="Endpoint server SSH port"),
+        direction:str = typer.Option("push", help="Direction of the replication: push or pull")
+    ):
+    
+    vm_list = VmList().plainList
+    for _vm in vm_list:
+        _vm_live_status = CoreChecks(vm_name=_vm).vm_cpus()["live_status"]
+        if _vm_live_status == "production":
+            if direction == "push":
+                ZFSReplication.push(vm_name=vm_name, ep_address=ep_address, ep_port=ep_port)
+            elif direction == "pull":
+                print("This function has not been implemented yet!")
+            else:
+                print("Only available options are \"pull\" and \"push\"!")
 
 
 """ If this file is executed from the command line, activate Typer """
