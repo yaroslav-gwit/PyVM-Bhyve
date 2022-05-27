@@ -1,8 +1,6 @@
 #!bin/python
 
 # Native Python functions
-# from ipaddress import ip_address
-from ipaddress import ip_address
 import typer
 import sys
 import os
@@ -14,6 +12,7 @@ import time
 import random
 
 # Installed packages/modules
+# from ipaddress import ip_address
 import yaml
 from tabulate import tabulate
 from natsort import natsorted
@@ -450,7 +449,7 @@ class VmDeploy:
         self.existing_vms = VmList().plainList
 
         # OS Type Settings
-        os_type_list = ["debian11", "ubuntu2004"]
+        os_type_list = ["debian11", "ubuntu2004", "freebsd13ufs"]
         if os_type in os_type_list:
             self.os_type = os_type
         else:

@@ -4,7 +4,7 @@ ethernets:
      match:
          macaddress: "{{ output_dict['mac_address'] }}"
      
-     {% if output_dict["os_type"] != "freebsd13zfs" %}{% if output_dict["os_type"] != "freebsd13ufs" %}set-name: eth0{% endif %}{% endif %}
+     {% if output_dict["os_type"] != ("freebsd13zfs" or "freebsd13ufs") %}set-name: eth0{% endif %}{% endif %}
      
      addresses:
      - {{ output_dict['ip_address'] }}/24
