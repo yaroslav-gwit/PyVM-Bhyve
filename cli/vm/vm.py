@@ -1471,7 +1471,7 @@ def deploy(vm_name:str = typer.Argument("test-vm", help="New VM name"),
         os_type:str = typer.Option("ubuntu2004", help="OS Type, for example: debian11 or ubuntu2004"),
         # ip_address:str = typer.Option("10.0.0.0", help="Specify the IP address or leave at default to generate a random address"),
         ds_id:int = typer.Option(0, help="Dataset ID to which this VM will be deployed"),
-        ):
+    ):
     """
     New VM deployment
     """
@@ -1485,9 +1485,7 @@ def deploy(vm_name:str = typer.Argument("test-vm", help="New VM name"),
 
 @app.command()
 def cireset(vm_name:str = typer.Argument(..., help="VM name"),
-        # os_type:str = typer.Option(..., help="OS type"),
-        # os_comment:str = typer.Option(..., help="OS Comment")
-        ):
+    ):
     """
     Reset the VM settings, including passwords, network settings, user keys, etc.
     """
