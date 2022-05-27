@@ -623,8 +623,10 @@ class VmDeploy:
             output_dict["os_comment"] = "Ubuntu 20.04"
         elif self.os_type == "debian11":
             output_dict["os_comment"] = "Debian 11"
+        elif self.os_type == "freebsd13ufs":
+            output_dict["os_comment"] = "FreeBSD 13 UFS"
         else:
-            output_dict["os_comment"] = "Unknown OS"
+            output_dict["os_comment"] = self.os_type
 
         # Cloud Init Section
         host_dict = self.host_dict
