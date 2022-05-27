@@ -14,6 +14,7 @@ import time
 import random
 
 # Installed packages/modules
+import yaml
 from tabulate import tabulate
 from natsort import natsorted
 from generate_mac import generate_mac
@@ -23,6 +24,76 @@ from jinja2 import Template
 from cli.host import dataset
 from cli.host import host
 from cli.vm import internal_classes as IC
+
+
+# STANDALONE FUNCTIONS
+def random_password_generator(capitals:bool = False, numbers:bool = False, lenght:int = 8, specials:bool = False):
+    letters_var = "asdfghjklqwertyuiopzxcvbnm"
+    capitals_var = "ASDFGHJKLZXCVBNMQWERTYUIOP"
+    numbers_var = "0987654321"
+    specials_var = ".,-_!^*?><)(%[]=+$#"
+    
+    valid_chars_list = []
+    for item in letters_var:
+        valid_chars_list.append(item)
+    if capitals:
+        for c_item in capitals_var:
+            valid_chars_list.append(c_item)
+    if numbers:
+        for n_item in numbers_var:
+            valid_chars_list.append(n_item)
+    if specials:
+        for s_item in specials_var:
+            valid_chars_list.append(s_item)
+    
+    password = ""
+    for _i in range(0, lenght):
+        password = password + random.choice(valid_chars_list)
+    
+    return password
+
+def mac_address_generator(prefix:str = "58:9C:FC"):
+    mac_addess = generate_mac.vid_provided(prefix)
+    mac_addess = mac_addess.lower()
+    return mac_addess
+
+def ip_address_generator(ip_address:str = "10.0.0.0", existing_ip_addresses:list = []):
+    if not existing_ip_addresses:
+        existing_ip_addresses = CoreChecks.existing_ip_addresses()
+
+    with open("./configs/networks.json", "r") as file:
+        networks_file = file.read()
+    networks_dict = json.loads(networks_file)
+    networks = networks_dict["networks"][0]
+
+    if ip_address in existing_ip_addresses:
+        print("VM with such IP exists: " + ip_address)
+
+    elif ip_address == "10.0.0.0":
+        bridge_address = networks["bridge_address"]
+        range_start = networks["range_start"]
+        range_end = networks["range_end"]
+
+        # Generate full list of IPs for the specified range
+        bridge_split = bridge_address.split(".")
+        del bridge_split[-1]
+        bridge_join = ".".join(bridge_split) + "."
+
+        ip_address_list = []
+        for number in range(range_start, range_end+1):
+            _ip_address = bridge_join + str(number)
+            ip_address_list.append(_ip_address)
+
+        ip_address = ip_address_list[0]
+        number = range_start
+        while ip_address in existing_ip_addresses:
+            number = number + 1
+            if number > range_end:
+                sys.exit("There are no free IPs left!")
+            else:
+                ip_address = bridge_join + str(number)
+
+    return ip_address
 
 
 class CoreChecks:
@@ -596,7 +667,7 @@ class VmDeploy:
             with open(new_vm_folder + "vm_config.json", "w") as file:
                 file.write(template)
 
-            IC.CloudInit(vm_name=output_dict["vm_name"], vm_folder=new_vm_folder, vm_ssh_keys=vm_ssh_keys,
+            CloudInit(vm_name=output_dict["vm_name"], vm_folder=new_vm_folder, vm_ssh_keys=vm_ssh_keys,
                         os_type=output_dict["os_type"], ip_address=output_dict["ip_address"],
                         network_bridge_address=output_dict["network_bridge_address"], root_password=output_dict["root_password"],
                         user_password=output_dict["user_password"], mac_address=output_dict["mac_address"]).deploy()
@@ -883,6 +954,184 @@ class Operation:
             print(" 🔶 INFO: VM is already stopped: " + vm_name)
 
 
+class ZFSReplication:
+    def __init__(self):
+        pass
+
+    def pull(self):
+        pass
+
+    def push(self):
+        pass
+
+
+
+
+
+class CloudInit:
+    def __init__(self, vm_name, vm_folder, vm_ssh_keys, os_type, ip_address, network_bridge_address,
+                    root_password, user_password, mac_address, new_vm_name=False, old_zfs_ds=False, new_zfs_ds=False, os_comment=False):
+        
+        self.vm_name = vm_name
+        self.vm_folder = vm_folder
+        self.new_vm_name = new_vm_name
+
+        self.old_zfs_ds = old_zfs_ds
+        self.new_zfs_ds = new_zfs_ds
+
+        self.output_dict = {}
+        self.output_dict["random_instanse_id"] = random_password_generator(lenght=5)
+        self.output_dict["vm_name"] = vm_name
+        self.output_dict["mac_address"] = mac_address
+        self.output_dict["os_type"] = os_type
+        self.output_dict["ip_address"] = ip_address
+        self.output_dict["network_bridge_address"] = network_bridge_address
+        self.output_dict["vm_ssh_keys"] = vm_ssh_keys
+        self.output_dict["root_password"] = root_password
+        self.output_dict["user_password"] = user_password
+        self.output_dict["os_comment"] = os_comment
+
+
+    def rename(self):
+        # Check if VM exists
+        # vm_name = self.vm_name
+        new_vm_name = self.new_vm_name
+
+        old_zfs_ds = self.old_zfs_ds
+        new_zfs_ds = self.new_zfs_ds
+
+        new_vm_folder = self.vm_folder
+        output_dict = self.output_dict
+        output_dict["vm_name"] = new_vm_name
+
+        cloud_init_files_folder = new_vm_folder + "/cloud-init-files"
+        if not os.path.exists(cloud_init_files_folder):
+            sys.exit(" ⛔ CRITICAL: CloudInit folder doesn't exist here: /" + old_zfs_ds)
+
+        # Read Cloud Init Metadata
+        with open("./templates/cloudinit/meta-data", "r") as file:
+            md_template = file.read()
+        # Render Cloud Init Metadata Template
+        md_template = Template(md_template)
+        md_template = md_template.render(output_dict=output_dict)
+        # Write Cloud Init Metadata Template
+        with open(cloud_init_files_folder + "/meta-data", "w") as file:
+            file.write(md_template)
+
+        # Create ISO file
+        command = "genisoimage -output " + new_vm_folder + "/seed.iso -volid cidata -joliet -rock " + cloud_init_files_folder + "/user-data " + cloud_init_files_folder + "/meta-data " + cloud_init_files_folder + "/network-config"
+        # print(command)
+        subprocess.run(command, shell=True, stderr = subprocess.DEVNULL, stdout=subprocess.DEVNULL)
+
+        # Rename ZFS dataset
+        # Check if VM is Live
+        command = "zfs rename " + old_zfs_ds + " " + new_zfs_ds
+        # print(command)
+        subprocess.run(command, shell=True, stderr = subprocess.DEVNULL, stdout=subprocess.DEVNULL)
+
+    @staticmethod
+    def reset(vm_name, ip_address, vm_folder, network_bridge_address, vm_ssh_keys, root_password, user_password):
+        output_dict = {}
+        output_dict["vm_name"] = vm_name
+        output_dict["random_instanse_id"] = random_password_generator(lenght=5)
+        output_dict["ip_address"] = ip_address
+        output_dict["network_bridge_address"] = network_bridge_address
+        output_dict["vm_ssh_keys"] = vm_ssh_keys
+        output_dict["root_password"] = root_password
+        output_dict["user_password"] = user_password
+
+        cloud_init_files_folder = vm_folder + "/cloud-init-files"
+        if not os.path.exists(cloud_init_files_folder):
+            sys.exit(" ⛔ CRITICAL: CloudInit folder doesn't exist here: " + vm_folder)
+
+        with open("./templates/vm_config_template.json", "r") as file:
+            template = file.read()
+
+        # Render VM template
+        template = Template(template)
+        template = template.render(output_dict)
+        # Write VM template
+        with open(vm_folder + "vm_config.json", "w") as file:
+            file.write(template)
+
+        # Read Cloud Init Metadata
+        with open("./templates/cloudinit/meta-data", "r") as file:
+            md_template = file.read()
+        # Render Cloud Init Metadata Template
+        md_template = Template(md_template)
+        md_template = md_template.render(output_dict)
+        # Write Cloud Init Metadata Template
+        with open(cloud_init_files_folder + "/meta-data", "w") as file:
+            file.write(md_template)
+
+        # Read Cloud Init Network Template
+        with open("./templates/cloudinit/network-config", "r") as file:
+            nw_template = file.read()
+        # Render Cloud Init Network Template
+        nw_template = Template(nw_template)
+        nw_template = nw_template.render(output_dict)
+        # Write Cloud Init Network
+        with open(cloud_init_files_folder + "/network-config", "w") as file:
+            file.write(nw_template)
+
+        # Read Cloud Init User Template
+        with open("./templates/cloudinit/user-data", "r") as file:
+            usr_template = file.read()
+        # Render loud Init User Template
+        usr_template = Template(usr_template)
+        usr_template = usr_template.render(output_dict)
+        # Write Cloud Init User Template
+        with open(cloud_init_files_folder + "/user-data", "w") as file:
+            file.write(usr_template)
+
+        # Create ISO file
+        command = "genisoimage -output " + vm_folder + "/seed.iso -volid cidata -joliet -rock " + cloud_init_files_folder + "/user-data " + cloud_init_files_folder + "/meta-data " + cloud_init_files_folder + "/network-config"
+        subprocess.run(command, shell=True, stderr = subprocess.DEVNULL, stdout=subprocess.DEVNULL)
+
+
+    def deploy(self):
+        new_vm_folder = self.vm_folder
+        output_dict = self.output_dict
+
+        cloud_init_files_folder = new_vm_folder + "/cloud-init-files"
+        if not os.path.exists(cloud_init_files_folder):
+            os.mkdir(cloud_init_files_folder)
+
+        # Read Cloud Init Metadata
+        with open("./templates/cloudinit/meta-data", "r") as file:
+            md_template = file.read()
+        # Render Cloud Init Metadata Template
+        md_template = Template(md_template)
+        md_template = md_template.render(output_dict=output_dict)
+        # Write Cloud Init Metadata Template
+        with open(cloud_init_files_folder + "/meta-data", "w") as file:
+            file.write(md_template)
+
+        # Read Cloud Init Network Template
+        with open("./templates/cloudinit/network-config", "r") as file:
+            nw_template = file.read()
+        # Render Cloud Init Network Template
+        nw_template = Template(nw_template)
+        nw_template = nw_template.render(output_dict=output_dict)
+        # Write Cloud Init Network
+        with open(cloud_init_files_folder + "/network-config", "w") as file:
+            file.write(nw_template)
+
+        # Read Cloud Init User Template
+        with open("./templates/cloudinit/user-data", "r") as file:
+            usr_template = file.read()
+        # Render loud Init User Template
+        usr_template = Template(usr_template)
+        usr_template = usr_template.render(output_dict=output_dict)
+        # Write Cloud Init User Template
+        with open(cloud_init_files_folder + "/user-data", "w") as file:
+            file.write(usr_template)
+
+        # Create ISO file
+        command = "genisoimage -output " + new_vm_folder + "/seed.iso -volid cidata -joliet -rock " + cloud_init_files_folder + "/user-data " + cloud_init_files_folder + "/meta-data " + cloud_init_files_folder + "/network-config"
+        subprocess.run(command, shell=True, stderr = subprocess.DEVNULL, stdout=subprocess.DEVNULL)
+
+
 """ Section below is responsible for the CLI input/output """
 app = typer.Typer(context_settings=dict(max_content_width=800))
 # app.add_typer(vmdeploy.app, name="deploy", help="Manage users in the app.")
@@ -967,7 +1216,7 @@ def rename(vm_name:str = typer.Argument(..., help="VM Name"),
     user_password = ""
     mac_address = ""
 
-    cloud_init = IC.CloudInit(vm_name=vm_name, vm_folder=vm_folder, vm_ssh_keys=vm_ssh_keys, os_type=os_type, ip_address=ip_address,
+    cloud_init = CloudInit(vm_name=vm_name, vm_folder=vm_folder, vm_ssh_keys=vm_ssh_keys, os_type=os_type, ip_address=ip_address,
     network_bridge_address=network_bridge_address, root_password=root_password, user_password=user_password, mac_address=mac_address,
     new_vm_name=new_name, old_zfs_ds=old_zfs_ds, new_zfs_ds=new_zfs_ds)
 
@@ -1177,8 +1426,7 @@ def cireset(vm_name:str = typer.Argument(..., help="VM name"),
     network_bridge_name = networks_dict["networks"][0]["bridge_name"]
     # print(network_bridge_name)
 
-    existing_ip_addresses = CoreChecks.existing_ip_addresses()
-    network_ip_address = IC.ip_address_generator(existing_ip_addresses=existing_ip_addresses)
+    network_ip_address = ip_address_generator()
     # print(network_ip_address)
 
     vm_ssh_keys = []
@@ -1227,7 +1475,7 @@ def cireset(vm_name:str = typer.Argument(..., help="VM name"),
         sys.exit(" ⛔ CRITICAL: CloudInit folder doesn't exist at this location: " + vm_folder)
 
     output_dict = {}
-    output_dict["random_instanse_id"] = IC.random_password_generator(lenght=5)
+    output_dict["random_instanse_id"] = random_password_generator(lenght=5)
     output_dict["vm_name"] = vm_name
 
     output_dict["mac_address"] = vm_config_dict["networks"][0]["network_mac"]
@@ -1240,8 +1488,8 @@ def cireset(vm_name:str = typer.Argument(..., help="VM name"),
         ci_vm_ssh_keys.append(_ssh_key["key_value"])
     output_dict["vm_ssh_keys"] = ci_vm_ssh_keys
 
-    output_dict["root_password"] = IC.random_password_generator(capitals=True, numbers=True, lenght=53)
-    output_dict["user_password"] = IC.random_password_generator(capitals=True, numbers=True, lenght=53)
+    output_dict["root_password"] = random_password_generator(capitals=True, numbers=True, lenght=53)
+    output_dict["user_password"] = random_password_generator(capitals=True, numbers=True, lenght=53)
 
     # Read Cloud Init Metadata
     with open("./templates/cloudinit/meta-data", "r") as file:
