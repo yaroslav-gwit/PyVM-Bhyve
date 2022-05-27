@@ -952,7 +952,7 @@ class Operation:
 
             print(" 🔶 INFO: The VM is fully stopped now: " + vm_name)
         else:
-            print(" 🔶 INFO: VM is already stopped: " + vm_name)
+            print(" 🟢 INFO: VM is already stopped: " + vm_name)
 
 
 class ZFSReplication:
