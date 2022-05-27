@@ -27,8 +27,8 @@ chpasswd:
     gwitsuper:{{ output_dict["user_password"] }}
   expire: False
 
-package_update: true
-package_upgrade: true
+package_update: false
+package_upgrade: false
 
 packages:
   - curl
