@@ -1265,7 +1265,7 @@ def diskexpand(vm_name:str = typer.Argument(..., help="VM name"),
         disk:str = typer.Option("disk0.img", help="Disk image file name"),
     ):
     """
-    Make VM disks larger. Example: hoster vm diskexpand test_vm_1 --disk disk1.img --size 100
+    Expand VM drive. Example: hoster vm diskexpand test-vm-1 --disk disk1.img --size 100
     """
     if vm_name in VmList().plainList:
         # DEBUG
