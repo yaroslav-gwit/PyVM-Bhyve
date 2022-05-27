@@ -955,17 +955,109 @@ class Operation:
 
 
 class ZFSReplication:
-    def __init__(self):
-        pass
-
+    # typer replicate command
+    
     def pull(self):
         pass
 
-    def push(self):
-        pass
+    @staticmethod
+    def push(vm_name:str, ep_address:str, ep_port:str = "22"):
+        if vm_name not in VmList().plainList:
+            sys.exit(" 🚦 ERROR: This VM doesn't exist: " + vm_name)
 
+        # Check if VM is from this host:
+        vm_config_dict = VmConfigs(vm_name).vm_config_read()
+        host_name = host.HostInfo().hostName
+        if vm_config_dict["parent_host"] != host_name:
+            sys.exit(" 🚦 ERROR: VM is already a backup from another host, can't replicate: " + vm_name)
 
+        # Make a replication snapshot
+        Operation.snapshot(vm_name=vm_name, stype="replication")
 
+        vm_dataset = CoreChecks(vm_name).vm_dataset() + "/" + vm_name
+        print(" 🔷 DEBUG: Dataset we are working with: " + vm_dataset)
+
+        command = "zfs list -r -t snapshot " + vm_dataset + " | tail +2 | awk '{ print $1 }'"
+        shell_command = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
+        vm_zfs_snapshot_list = shell_command.decode("utf-8").split("\n")
+        for item in vm_zfs_snapshot_list:
+            if not item:
+                vm_zfs_snapshot_list.remove(item)
+            elif item == "no datasets available":
+                vm_zfs_snapshot_list.remove(item)
+        
+        """ In case of future debugging """   
+        # print("List of local snapshots:")
+        # for item in vm_zfs_snapshot_list:
+        #     print(item)
+        
+        # Remote snapshot list
+        command = 'echo "if [[ -d /' + vm_dataset + ' ]]; then zfs list -r -t snapshot ' + vm_dataset + '; fi" | ssh ' + ep_address + ' /usr/local/bin/bash | tail +2 | ' + "awk '{ print $1 }'"
+        shell_command = subprocess.check_output(command, shell=True)
+        remote_zfs_snapshot_list = shell_command.decode("utf-8").split()
+
+        for item in remote_zfs_snapshot_list:
+            if not item:
+                remote_zfs_snapshot_list.remove(item)
+            elif item == "no datasets available":
+                remote_zfs_snapshot_list.remove(item)
+        
+        """ In case of future debugging """    
+        # print("List of remote snapshots:")
+        # for item in remote_zfs_snapshot_list:
+            # print(item)
+
+        if vm_zfs_snapshot_list == remote_zfs_snapshot_list:
+            print(" 🔷 DEBUG: The backup system is already up to date.")
+            sys.exit(0)
+
+        # Revert to a last snapshot to avoid dealing with differences
+        if len(remote_zfs_snapshot_list) >= 1:
+            command = "ssh " + ep_address + " zfs rollback -r " + remote_zfs_snapshot_list[-1]
+            print(" 🔷 DEBUG: Reverting back to a latest snapshot: " + command)
+            subprocess.run(command, shell=True)
+
+        # Difference list
+        to_delete_snapshot_list = []
+        to_delete_snapshot_list.extend(remote_zfs_snapshot_list)
+        for zfs_snapshot in vm_zfs_snapshot_list:
+            if zfs_snapshot in to_delete_snapshot_list:
+                to_delete_snapshot_list.remove(zfs_snapshot)
+        """ In case of future debugging """
+        # print("To delete list: ")
+        # for item in to_delete_snapshot_list:
+            # print(item)
+        
+        if len(to_delete_snapshot_list) != 0:
+            # print("Removing old snapshots from the remote system:")
+            for item in to_delete_snapshot_list:
+                command = "ssh " + ep_address + " zfs destroy " + item
+                subprocess.run(command, shell=True)
+
+        # Generate a lists of snapshots to transfer
+        for rsnapshot_index, rsnapshot_value in enumerate(remote_zfs_snapshot_list):
+            if rsnapshot_index != len(remote_zfs_snapshot_list)-1:
+                if rsnapshot_value in vm_zfs_snapshot_list:
+                    vm_zfs_snapshot_list.remove(rsnapshot_value)
+        """ In case of future debugging """
+        # print("Snapshots to transfer:")
+        # for item in vm_zfs_snapshot_list:
+            # print(item)
+
+        # Start the replication
+        if len(remote_zfs_snapshot_list) > 0:
+            print(" 🔷 DEBUG: Starting the replication operation for: '" + vm_dataset + "'")
+            for snapshot_index, snapshot_value in enumerate(vm_zfs_snapshot_list):
+                if snapshot_index != len(vm_zfs_snapshot_list)-1:
+                    command = "zfs send -vi " + snapshot_value + " " + vm_zfs_snapshot_list[snapshot_index + 1] + " | ssh " + ep_address + " zfs receive " + vm_dataset
+                    print(" 🔷 DEBUG: Sending snapshot " + str(snapshot_index + 1) + " out of " + str(len(vm_zfs_snapshot_list)-1))
+                    subprocess.run(command, shell=True)
+            print(" 🔷 DEBUG: Replication operation: done sending '" + vm_dataset + "'")
+        else:
+            print(" 🔷 DEBUG: Starting the INITIAL replication operation for: '" + vm_dataset + "'")
+            command = "zfs send -v " + vm_zfs_snapshot_list[0] + " | ssh " + ep_address + " zfs receive " + vm_dataset
+            subprocess.run(command, shell=True)
+            print(" 🔷 DEBUG: Initial snapshot replication operation: done sending '" + vm_dataset + "'")
 
 
 class CloudInit:
@@ -1535,108 +1627,18 @@ def cireset(vm_name:str = typer.Argument(..., help="VM name"),
 @app.command()
 def replicate(vm_name:str = typer.Argument(..., help="VM name"),
         ep_address:str = typer.Option("192.168.120.18", help="Endpoint server address, i.e. 192.168.1.1"),
-        # ep_port:str = typer.Option("22", help="Endpoint server SSH port"),
-        ):
+        ep_port:str = typer.Option("22", help="Endpoint server SSH port"),
+        direction:str = typer.Option("push", help="Direction of the replication: push or pull")
+    ):
     """
     Replicate the VM to another host
     """
-
-    if vm_name not in VmList().plainList:
-        sys.exit(" 🚦 ERROR: This VM doesn't exist: " + vm_name)
-
-    # Check if VM is from this host:
-    vm_config_dict = VmConfigs(vm_name).vm_config_read()
-    host_name = host.HostInfo().hostName
-    if vm_config_dict["parent_host"] != host_name:
-        sys.exit(" 🚦 ERROR: VM is already a backup from another host, can't replicate: " + vm_name)
-
-    # Make a replication snapshot
-    Operation.snapshot(vm_name=vm_name, stype="replication")
-
-    vm_dataset = CoreChecks(vm_name).vm_dataset() + "/" + vm_name
-    print(" 🔷 DEBUG: Dataset we are working with: " + vm_dataset)
-
-    command = "zfs list -r -t snapshot " + vm_dataset + " | tail +2 | awk '{ print $1 }'"
-    shell_command = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
-    vm_zfs_snapshot_list = shell_command.decode("utf-8").split("\n")
-    for item in vm_zfs_snapshot_list:
-        if not item:
-            vm_zfs_snapshot_list.remove(item)
-        elif item == "no datasets available":
-            vm_zfs_snapshot_list.remove(item)
-    
-    """ In case of future debugging """   
-    # print("List of local snapshots:")
-    # for item in vm_zfs_snapshot_list:
-    #     print(item)
-    
-    # Remote snapshot list
-    command = 'echo "if [[ -d /' + vm_dataset + ' ]]; then zfs list -r -t snapshot ' + vm_dataset + '; fi" | ssh ' + ep_address + ' /usr/local/bin/bash | tail +2 | ' + "awk '{ print $1 }'"
-    shell_command = subprocess.check_output(command, shell=True)
-    remote_zfs_snapshot_list = shell_command.decode("utf-8").split()
-
-    for item in remote_zfs_snapshot_list:
-        if not item:
-            remote_zfs_snapshot_list.remove(item)
-        elif item == "no datasets available":
-            remote_zfs_snapshot_list.remove(item)
-    
-    """ In case of future debugging """    
-    # print("List of remote snapshots:")
-    # for item in remote_zfs_snapshot_list:
-        # print(item)
-
-    if vm_zfs_snapshot_list == remote_zfs_snapshot_list:
-        print(" 🔷 DEBUG: The backup system is already up to date.")
-        sys.exit(0)
-
-    # Revert to a last snapshot to avoid dealing with differences
-    if len(remote_zfs_snapshot_list) >= 1:
-        command = "ssh " + ep_address + " zfs rollback -r " + remote_zfs_snapshot_list[-1]
-        print(" 🔷 DEBUG: Reverting back to a latest snapshot: " + command)
-        subprocess.run(command, shell=True)
-
-    # Difference list
-    to_delete_snapshot_list = []
-    to_delete_snapshot_list.extend(remote_zfs_snapshot_list)
-    for zfs_snapshot in vm_zfs_snapshot_list:
-        if zfs_snapshot in to_delete_snapshot_list:
-            to_delete_snapshot_list.remove(zfs_snapshot)
-    """ In case of future debugging """
-    # print("To delete list: ")
-    # for item in to_delete_snapshot_list:
-        # print(item)
-    
-    if len(to_delete_snapshot_list) != 0:
-        # print("Removing old snapshots from the remote system:")
-        for item in to_delete_snapshot_list:
-            command = "ssh " + ep_address + " zfs destroy " + item
-            subprocess.run(command, shell=True)
-
-    # Generate a lists of snapshots to transfer
-    for rsnapshot_index, rsnapshot_value in enumerate(remote_zfs_snapshot_list):
-        if rsnapshot_index != len(remote_zfs_snapshot_list)-1:
-            if rsnapshot_value in vm_zfs_snapshot_list:
-                vm_zfs_snapshot_list.remove(rsnapshot_value)
-    """ In case of future debugging """
-    # print("Snapshots to transfer:")
-    # for item in vm_zfs_snapshot_list:
-        # print(item)
-
-    # Start the replication
-    if len(remote_zfs_snapshot_list) > 0:
-        print(" 🔷 DEBUG: Starting the replication operation for: '" + vm_dataset + "'")
-        for snapshot_index, snapshot_value in enumerate(vm_zfs_snapshot_list):
-            if snapshot_index != len(vm_zfs_snapshot_list)-1:
-                command = "zfs send -vi " + snapshot_value + " " + vm_zfs_snapshot_list[snapshot_index + 1] + " | ssh " + ep_address + " zfs receive " + vm_dataset
-                print(" 🔷 DEBUG: Sending snapshot " + str(snapshot_index + 1) + " out of " + str(len(vm_zfs_snapshot_list)-1))
-                subprocess.run(command, shell=True)
-        print(" 🔷 DEBUG: Replication operation: done sending '" + vm_dataset + "'")
+    if direction == "push":
+        ZFSReplication.push(vm_name=vm_name, ep_address=ep_address, ep_port=ep_port)
+    elif direction == "pull":
+        print("This function has not been implemented yet!")
     else:
-        print(" 🔷 DEBUG: Starting the INITIAL replication operation for: '" + vm_dataset + "'")
-        command = "zfs send -v " + vm_zfs_snapshot_list[0] + " | ssh " + ep_address + " zfs receive " + vm_dataset
-        subprocess.run(command, shell=True)
-        print(" 🔷 DEBUG: Initial snapshot replication operation: done sending '" + vm_dataset + "'")
+        print("Only available options are \"pull\" and \"push\"!")
 
 
 """ If this file is executed from the command line, activate Typer """
