@@ -2,7 +2,7 @@ version: 2
 ethernets:
   interface0:
      match:
-         macaddress: "{{ output_dict['mac_address'] }}"
+       macaddress: "{{ output_dict['mac_address'] }}"
      
      {% if output_dict["os_type"] != "freebsd13zfs" -%}
      {% if output_dict["os_type"] != "freebsd13ufs" -%}
