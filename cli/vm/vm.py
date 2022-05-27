@@ -397,7 +397,7 @@ class VmList:
             vm_config = VmConfigs(vm_name).vm_config_read()
             if vm_config.get("parent_host") != host.HostInfo().hostName:
                 vm_config = vm_config.get("parent_host", "-")
-                vmColumnDescription.append("Backup from " + vm_config)
+                vmColumnDescription.append("💾⏩ " + vm_config)
             else:
                 vm_config = VmConfigs(vm_name).vm_config_read()
                 vm_config = vm_config.get("description", "-")
