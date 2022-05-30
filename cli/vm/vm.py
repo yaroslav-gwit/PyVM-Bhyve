@@ -449,7 +449,7 @@ class VmDeploy:
         self.existing_vms = VmList().plainList
 
         # OS Type Settings
-        os_type_list = ["debian11", "ubuntu2004", "freebsd13ufs"]
+        os_type_list = ["debian11", "ubuntu2004", "freebsd13ufs", "freebsd13zfs"]
         if os_type in os_type_list:
             self.os_type = os_type
         else:
@@ -625,6 +625,8 @@ class VmDeploy:
             output_dict["os_comment"] = "Debian 11"
         elif self.os_type == "freebsd13ufs":
             output_dict["os_comment"] = "FreeBSD 13 UFS"
+        elif self.os_type == "freebsd13zfs":
+            output_dict["os_comment"] = "FreeBSD 13 ZFS"
         else:
             output_dict["os_comment"] = self.os_type
 
