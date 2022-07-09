@@ -900,7 +900,7 @@ class Operation:
                 print(" 🚦 ERROR: Loader is not supported!")
 
             vm_folder = CoreChecks(vm_name).vm_folder()
-            command = "nohup ./cli/shell_helpers/vm_start.sh " + '"' + command + '"' + " " + vm_name + " > " + vm_folder + "/vm.log 2>&1 &"
+            # command = "nohup ./cli/shell_helpers/vm_start.sh " + '"' + command + '"' + " " + vm_name + " > " + vm_folder + "/vm.log 2>&1 &"
             
             if CoreChecks(vm_name).vm_in_production:
                 vm_autostart = "true"
