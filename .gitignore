@@ -7,3 +7,4 @@ core/__pycache__/
 configs/datasets.json
 configs/host.json
 configs/networks.json
+configs/supervisord.conf
