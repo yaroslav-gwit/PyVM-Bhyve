@@ -47,7 +47,7 @@ serverurl=unix:///var/run/supervisor.sock
 ; supervisor.
 
 [program:my-new-vm]
-command=/bin/cat
+command=bhyve -HAw -s 0:0,hostbridge -s 31,lpc -s 2:0,virtio-net,tap2,mac=58:9c:fc:c8:f5:9e -s 3:0,virtio-blk,/zroot/vm-encrypted/my-new-vm/disk0.img -s 4:0,ahci-cd,/zroot/vm-encrypted/my-new-vm/seed.iso -c sockets=1,cores=1 -m 1G -s 5:0,fbuf,tcp=0.0.0.0:5914,w=1280,h=1024,password=wbF8fh2mx6HhY5gEBIrw -s 6,xhci,tablet -l com1,/dev/nmdm-my-new-vm-1A -l bootrom,/usr/local/share/uefi-firmware/BHYVE_UEFI.fd -u my-new-vm
 process_name=my-new-vm
 autostart=true
 startsecs=5
