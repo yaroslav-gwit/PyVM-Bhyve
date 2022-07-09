@@ -902,19 +902,19 @@ class Operation:
             vm_folder = CoreChecks(vm_name).vm_folder()
             # command = "nohup ./cli/shell_helpers/vm_start.sh " + '"' + command + '"' + " " + vm_name + " > " + vm_folder + "/vm.log 2>&1 &"
             
-            if CoreChecks(vm_name).vm_in_production:
-                vm_autostart = "true"
-            else:
-                vm_autostart = "false"
             
             # GENERATE VM SERVICE FILE FOR SUPERVISORD
+            # if CoreChecks(vm_name).vm_in_production:
+                # vm_autostart = "true"
+            # else:
+                # vm_autostart = "false"
             with open("./configs/service.vm.conf.jinja", "r") as file:
                 vm_service_template = file.read()
             vm_service_template = Template(vm_service_template)
             vm_service_template = vm_service_template.render(
                 vm_name=vm_name,
                 command=command,
-                autostart=vm_autostart,
+                # autostart=vm_autostart,
                 vm_folder=vm_folder,
             )
             with open("/var/run/" + vm_name + ".vm.conf", "w") as file:

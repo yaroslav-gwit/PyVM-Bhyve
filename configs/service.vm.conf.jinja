@@ -1,7 +1,7 @@
 [program:{{ vm_name }}]
 command={{ command }}
 process_name={{ vm_name }}
-autostart={{ autostart }}
+autostart=false
 startsecs=5
 startretries=9999
 autorestart=unexpected
