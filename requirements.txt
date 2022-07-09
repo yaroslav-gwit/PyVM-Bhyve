@@ -9,4 +9,3 @@ natsort
 typer
 tabulate[widechars]
 pyyaml
-supervisor
