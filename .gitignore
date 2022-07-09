@@ -4,3 +4,6 @@ cli/vm/__pycache__/
 core/vm/__pycache__/
 core/__pycache__/
 .vscode/
+configs/datasets.json
+configs/host.json
+configs/networks.json
