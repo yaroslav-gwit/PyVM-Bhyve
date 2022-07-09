@@ -2,6 +2,9 @@
 COMMAND=$1
 VM_NAME=$2
 
+echo ""
+echo "__NEW_START__"
+echo "Time and date: $(date)"
 echo "This bhyve command was executed:"
 echo $COMMAND
 
@@ -26,3 +29,6 @@ then
     hoster vm kill $VM_NAME
     echo ""
 fi
+
+echo "The VM exited at $(date)"
+echo ""
