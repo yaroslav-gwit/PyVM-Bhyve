@@ -919,10 +919,14 @@ class Operation:
             )
             with open("/var/run/" + vm_name + ".vm.conf", "w") as file:
                 file.write(vm_service_template)
+            # print(vm_service_template)
             
-            print(vm_service_template)
-            # print(command)
-            # subprocess.run(command, shell=True)
+            command = "supervisorctl -u user -p 123 update " + vm_name
+            print(command)
+            subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
+            command = "supervisorctl -u user -p 123 start " + vm_name
+            print(command)
+            subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
             # _EOF_ GENERATE VM SERVICE FILE FOR SUPERVISORD
 
         else:
