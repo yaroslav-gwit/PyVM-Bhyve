@@ -1,7 +1,12 @@
 #!/usr/local/bin/bash
 
+func_stop() {
+    echo "Stopping CHILD_PROCESS: $!"
+    kill -SIGTERM $!
+}
+
 # LISTEN FOR KILL -1 AND IF IT HAPPENS SHUTDOWN THE VM
-trap 'echo "Stopping CHILD_PROCESS: $!" && kill -SIGTERM $!' SIGHUP
+trap func_stop SIGHUP
 
 # LISTEN FOR KILL -2 AND IF IT HAPPENS KILL THE VM
 # trap 'echo "Stopping CHILD_PROCESS: $!" && kill -SIGKILL $!' SIGINT
