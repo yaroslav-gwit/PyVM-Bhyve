@@ -969,7 +969,10 @@ class Operation:
             for _console in console_list:
                 if _console:
                     command = "kill -SIGKILL " + _console
-                    shell_command = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
+                    try:
+                        shell_command = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
+                    except Exception as e:
+                        print("The error is: " + str(e))
 
             # command = "ps axf | grep -v grep | grep " + vm_name + " | grep bhyve: | awk '{ print $1 }'"
             command = "cat /var/run/" + vm_name + ".pid"
