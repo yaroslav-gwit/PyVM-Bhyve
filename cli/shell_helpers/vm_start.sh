@@ -14,10 +14,7 @@ echo "${BASHPID}" > /var/run/${VM_NAME}.pid
 
 echo ""
 echo "🟢 __NEW_START__ 🟢"
-echo "🔶 INFO: Time and date: $(date)"
-
-echo ""
-echo "🔶 INFO: This bhyve command was executed to start the VM:"
+echo "🔶 INFO: This bhyve command was executed to start the VM at $(date):"
 echo $COMMAND
 
 echo ""
