@@ -1,4 +1,6 @@
 #!/usr/local/bin/bash
+trap "kill -1 $!" 1
+
 COMMAND=$1
 VM_NAME=$2
 
@@ -20,7 +22,7 @@ echo "This bhyve command was executed to start the VM:"
 echo $COMMAND
 
 echo ""
-$COMMAND & sleep 2 && PARENT_PID=$$ && sleep 1 && CHILD_PID=$! && echo "PARENT_PID=${PARENT_PID}" && echo "CHILD_PID=${CHILD_PID}"
+$COMMAND
 
 # echo ""
 # PARENT_PID=$$
@@ -35,7 +37,7 @@ do
     echo ""
     echo "VM has been restarted at: $(date)"
     $COMMAND
-    sleep 5
+    sleep 2
     echo ""
 done
 
