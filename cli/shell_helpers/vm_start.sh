@@ -1,10 +1,10 @@
 #!/usr/local/bin/bash
 
 # LISTEN FOR KILL -1 AND IF IT HAPPENS SHUTDOWN THE VM
-trap "kill -SIGTERM $!" 1
+trap "kill -SIGTERM $!" SIGINT
 
 # LISTEN FOR KILL -2 AND IF IT HAPPENS KILL THE VM
-trap "kill -SIGKILL $!" 2
+trap "kill -SIGKILL $!" SIGINT
 
 COMMAND=$1
 VM_NAME=$2
