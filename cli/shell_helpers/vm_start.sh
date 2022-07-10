@@ -12,7 +12,7 @@ func_kill() {
 
 # LISTEN FOR KILL -1 AND IF IT HAPPENS SHUTDOWN THE VM
 PRID=
-trap '[[ $PRID ]] && kill -s SIGTERM $PRID' 34
+trap '[[ $PRID ]] && Stopping CHILD_PROCESS $PRID && kill -s SIGTERM $PRID' 34
 # trap func_stop SIGHUP
 
 # LISTEN FOR KILL -2 AND IF IT HAPPENS KILL THE VM
