@@ -20,14 +20,14 @@ echo "This bhyve command was executed to start the VM:"
 echo $COMMAND
 
 echo ""
-$COMMAND
+$COMMAND & sleep 2 && PARENT_PID=$$ && sleep 1 && CHILD_PID=$! && echo "PARENT_PID=${PARENT_PID}" && echo "CHILD_PID=${CHILD_PID}"
 
-echo ""
-PARENT_PID=$$
-CHILD_PID=$!
-echo "PARENT_PID=${PARENT_PID}"
-echo "CHILD_PID=${CHILD_PID}"
-echo ""
+# echo ""
+# PARENT_PID=$$
+# CHILD_PID=$!
+# echo "PARENT_PID=${PARENT_PID}"
+# echo "CHILD_PID=${CHILD_PID}"
+# echo ""
 
 
 while [[ $? == 0 ]]
