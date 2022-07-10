@@ -11,6 +11,7 @@ func_kill() {
 }
 
 # LISTEN FOR KILL -1 AND IF IT HAPPENS SHUTDOWN THE VM
+PRID=
 trap '[[ $PRID ]] && kill -s SIGTERM $PRID' 34
 # trap func_stop SIGHUP
 
@@ -40,6 +41,7 @@ echo $COMMAND
 echo ""
 $COMMAND & PRID=$!
 wait
+PRID=
 
 # echo ""
 # PARENT_PID=$$
@@ -55,6 +57,7 @@ do
     echo "VM has been restarted at: $(date)"
     $COMMAND & PRID=$!
     wait
+    PRID=
     sleep 1
     echo ""
 done
