@@ -13,11 +13,11 @@ fi
 echo "${BASHPID}" > /var/run/${VM_NAME}.pid
 
 echo ""
-echo "__NEW_START__"
-echo "Time and date: $(date)"
+echo "🟢 __NEW_START__ 🟢"
+echo "🔶 INFO: Time and date: $(date)"
 
 echo ""
-echo "This bhyve command was executed to start the VM:"
+echo "🔶 INFO: This bhyve command was executed to start the VM:"
 echo $COMMAND
 
 echo ""
@@ -26,7 +26,7 @@ $COMMAND
 while [[ $? == 0 ]]
 do
     echo ""
-    echo "VM has been restarted at: $(date)"
+    echo "🔶 INFO: The VM has been restarted on: $(date)"
     $COMMAND
     sleep 1
     echo ""
