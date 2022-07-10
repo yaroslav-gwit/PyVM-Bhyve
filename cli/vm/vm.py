@@ -1,6 +1,7 @@
 #!bin/python
 
 # Native Python functions
+from msilib.schema import Error
 import psutil
 import typer
 import sys
@@ -962,8 +963,12 @@ class Operation:
             parent_pid = shell_command.decode("utf-8").split()[0]
             child_pid = psutil.Process(parent_pid).children()[-1].pid
             running_vm_pid = child_pid
-            command = "kill -SIGTERM " + running_vm_pid
-            shell_command = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
+            command = "kill -s SIGTERM " + running_vm_pid
+            print(command)
+            try:
+                shell_command = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
+            except Error as e:
+                print(e)
 
             command = "ifconfig | grep " + vm_name + " | awk '{ print $2 }'"
             shell_command = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
