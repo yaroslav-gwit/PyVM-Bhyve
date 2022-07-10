@@ -769,7 +769,7 @@ class Operation:
                 # print(command)
                 shell_command = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
             except Exception as e:
-                print("🔶 INFO: Could not find the process for the VM: " + vm_name)
+                print(" 🔶 INFO: Could not find the process for the VM: " + vm_name)
                 # pass
                 # print(e)
             

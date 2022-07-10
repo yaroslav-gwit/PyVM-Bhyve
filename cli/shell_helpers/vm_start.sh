@@ -36,14 +36,12 @@ sleep 1
 
 if [[ $(ifconfig | grep -c $VM_NAME) > 0 ]]
 then
-    echo ""
-    hoster vm kill $VM_NAME
-    echo ""
-    
     if [[ -f /var/run/${VM_NAME}.pid ]]; then
         rm /var/run/${VM_NAME}.pid
     fi
+    
+    # PRINT OUT THE EXIT TIME/DATE AND CLEANUP EVERYTHING
+    echo ""
+    echo "The VM exited at $(date)" && hoster vm kill $VM_NAME
+    echo ""
 fi
-
-echo "The VM exited at $(date)"
-echo ""
