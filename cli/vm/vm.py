@@ -1,7 +1,6 @@
 #!bin/python
 
 # Native Python functions
-from msilib.schema import Error
 import psutil
 import typer
 import sys
@@ -967,7 +966,7 @@ class Operation:
             print(command)
             try:
                 shell_command = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
-            except Error as e:
+            except Exception as e:
                 print(e)
 
             command = "ifconfig | grep " + vm_name + " | awk '{ print $2 }'"
