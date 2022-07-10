@@ -42,6 +42,6 @@ then
     
     # PRINT OUT THE EXIT TIME/DATE AND CLEANUP EVERYTHING
     echo ""
-    echo "The VM exited at $(date)" && hoster vm kill $VM_NAME
+    echo "🔶 INFO: The VM exited on $(date)" && hoster vm kill $VM_NAME > /dev/null
     echo ""
 fi

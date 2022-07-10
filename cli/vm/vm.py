@@ -760,14 +760,18 @@ class Operation:
 
             # Find and kill the VM process
             try:
-                command = "cat /var/run/" + vm_name + ".pid"
-                shell_command = subprocess.check_output(command, shell=True)
-                parent_pid = int(shell_command.decode("utf-8").split()[0])
-                child_pid = psutil.Process(parent_pid).children()[-1].pid
-                running_vm_pid = str(child_pid)
-                command = "kill -s SIGKILL " + running_vm_pid
-                # print(command)
-                shell_command = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
+                pid_file = "/var/run/" + vm_name + ".pid"
+                if exists(pid_file):
+                    command = "cat /var/run/" + vm_name + ".pid"
+                    shell_command = subprocess.check_output(command, shell=True)
+                    parent_pid = int(shell_command.decode("utf-8").split()[0])
+                    child_pid = psutil.Process(parent_pid).children()[-1].pid
+                    running_vm_pid = str(child_pid)
+                    command = "kill -s SIGKILL " + running_vm_pid
+                    # print(command)
+                    shell_command = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
+                else:
+                    print(" 🔶 INFO: Could not find the PID file for: " + vm_name)
             except Exception as e:
                 print(" 🔶 INFO: Could not find the process for the VM: " + vm_name)
                 # pass
