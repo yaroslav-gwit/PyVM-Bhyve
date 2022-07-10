@@ -11,8 +11,8 @@ func_kill() {
 }
 
 # LISTEN FOR KILL -1 AND IF IT HAPPENS SHUTDOWN THE VM
-PRID=
-trap '[[ $PRID ]] && echo "Stopping CHILD_PROCESS $PRID" && kill -s SIGTERM $PRID' 34
+# PRID=
+# trap '[[ $PRID ]] && echo "Stopping CHILD_PROCESS $PRID" && kill -s SIGTERM $PRID' 34
 # trap func_stop SIGHUP
 
 # LISTEN FOR KILL -2 AND IF IT HAPPENS KILL THE VM
@@ -22,13 +22,13 @@ COMMAND=$1
 VM_NAME=$2
 
 # CHECK IF OLD PID EXISTS AND REMOVE IT IF IT DOES
-if [[ -f /var/run/${VM_NAME}.pid ]]; then
-    rm /var/run/${VM_NAME}.pid
-fi
+# if [[ -f /var/run/${VM_NAME}.pid ]]; then
+    # rm /var/run/${VM_NAME}.pid
+# fi
 
 # GET OWN PID AND WRITE IT INTO VM PID FILE
 # echo "$$" > /var/run/${VM_NAME}.pid
-echo "${BASHPID}" > /var/run/${VM_NAME}.pid
+# echo "${BASHPID}" > /var/run/${VM_NAME}.pid
 
 echo ""
 echo "__NEW_START__"
@@ -39,9 +39,7 @@ echo "This bhyve command was executed to start the VM:"
 echo $COMMAND
 
 echo ""
-$COMMAND & PRID=$!
-wait
-PRID=
+$COMMAND & echo "$!" > /var/run/${VM_NAME}.pid
 
 # echo ""
 # PARENT_PID=$$
@@ -55,9 +53,7 @@ while [[ $? == 0 ]]
 do
     echo ""
     echo "VM has been restarted at: $(date)"
-    $COMMAND & PRID=$!
-    wait
-    PRID=
+    $COMMAND & echo "$! > /var/run/${VM_NAME}.pid"
     sleep 1
     echo ""
 done
