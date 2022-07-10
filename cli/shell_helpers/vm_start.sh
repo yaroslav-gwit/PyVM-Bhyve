@@ -1,23 +1,5 @@
 #!/usr/local/bin/bash
 
-func_stop() {
-    echo "$!" | tee /var/run/${VM_NAME}.pid
-    # kill -s SIGTERM $!
-}
-
-func_kill() {
-    echo "Stopping CHILD_PROCESS: $!"
-    kill -SIGTERM $!
-}
-
-# LISTEN FOR KILL -1 AND IF IT HAPPENS SHUTDOWN THE VM
-# PRID=
-# trap '[[ $PRID ]] && echo "Stopping CHILD_PROCESS $PRID" && kill -s SIGTERM $PRID' 34
-# trap func_stop SIGHUP
-
-# LISTEN FOR KILL -2 AND IF IT HAPPENS KILL THE VM
-# trap func_kill SIGINT
-
 COMMAND=$1
 VM_NAME=$2
 
@@ -40,14 +22,6 @@ echo $COMMAND
 
 echo ""
 $COMMAND
-
-# echo ""
-# PARENT_PID=$$
-# CHILD_PID=$!
-# echo "PARENT_PID=${PARENT_PID}"
-# echo "CHILD_PID=${CHILD_PID}"
-# echo ""
-
 
 while [[ $? == 0 ]]
 do

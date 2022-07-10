@@ -1,6 +1,7 @@
 #!bin/python
 
 # Native Python functions
+import psutil
 import typer
 import sys
 import os
@@ -935,6 +936,7 @@ class Operation:
         else:
             print(" 🚦 ERROR: Such VM '" + vm_name + "' doesn't exist!")
 
+
     @staticmethod
     def stop(vm_name:str):
         """
@@ -947,29 +949,31 @@ class Operation:
 
             # This code block is a duplicate. Another one exists in kill section.
             command = "ps axf | grep -v grep | grep 'nmdm-" + vm_name + "' | awk '{ print $1 }'"
-            shell_command = subprocess.check_output(command, shell=True)
+            shell_command = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
             console_list = shell_command.decode("utf-8").split()
             for _console in console_list:
                 if _console:
                     command = "kill -SIGKILL " + _console
-                    subprocess.run(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                    shell_command = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
 
-
-            command = "ps axf | grep -v grep | grep " + vm_name + " | grep bhyve: | awk '{ print $1 }'"
+            # command = "ps axf | grep -v grep | grep " + vm_name + " | grep bhyve: | awk '{ print $1 }'"
+            command = "cat /var/run/" + vm_name + ".pid"
             shell_command = subprocess.check_output(command, shell=True)
-            running_vm_pid = shell_command.decode("utf-8").split()[0]
+            parent_pid = shell_command.decode("utf-8").split()[0]
+            child_pid = psutil.Process(parent_pid).children()[-1].pid
+            running_vm_pid = child_pid
             command = "kill -SIGTERM " + running_vm_pid
-            subprocess.run(command, shell=True)
+            shell_command = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
 
             command = "ifconfig | grep " + vm_name + " | awk '{ print $2 }'"
-            shell_command = subprocess.check_output(command, shell=True)
+            shell_command = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
             running_tap_adaptor = shell_command.decode("utf-8").split()[0]
             tap_interface_list = shell_command.decode("utf-8").split()
 
             running_tap_adaptor_status = "active"
             while running_tap_adaptor_status == "active":
                 command = "ifconfig " + running_tap_adaptor + " | grep status | sed s/.status:.//"
-                shell_command = subprocess.check_output(command, shell=True)
+                shell_command = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
                 running_tap_adaptor_status = shell_command.decode("utf-8").split("\n")[0]
                 time.sleep(2)
 
