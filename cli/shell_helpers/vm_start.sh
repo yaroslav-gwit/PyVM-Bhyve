@@ -2,6 +2,15 @@
 COMMAND=$1
 VM_NAME=$2
 
+# CHECK IF OLD PID EXISTS AND REMOVE IT IF IT DOES
+if [[ -f /var/run/${VM_NAME}.pid ]]; then
+    rm /var/run/${VM_NAME}.pid
+fi
+
+# GET OWN PID AND WRITE IT INTO VM PID FILE
+# echo "$$" > /var/run/${VM_NAME}.pid
+echo "${BASHPID}" > /var/run/${VM_NAME}.pid
+
 echo ""
 echo "__NEW_START__"
 echo "Time and date: $(date)"
@@ -12,6 +21,14 @@ echo $COMMAND
 
 echo ""
 $COMMAND
+
+echo ""
+PARENT_PID=$$
+CHILD_PID=$!
+echo "PARENT_PID=${PARENT_PID}"
+echo "CHILD_PID=${CHILD_PID}"
+echo ""
+
 
 while [[ $? == 0 ]]
 do
@@ -29,6 +46,10 @@ then
     echo ""
     hoster vm kill $VM_NAME
     echo ""
+    
+    if [[ -f /var/run/${VM_NAME}.pid ]]; then
+        rm /var/run/${VM_NAME}.pid
+    fi
 fi
 
 echo "The VM exited at $(date)"
