@@ -4,7 +4,7 @@
 trap 'echo "Stopping CHILD_PROCESS: $!" && kill -SIGTERM $!' SIGHUP
 
 # LISTEN FOR KILL -2 AND IF IT HAPPENS KILL THE VM
-trap 'echo "Stopping CHILD_PROCESS: $!" && kill -SIGKILL $!' SIGINT
+# trap 'echo "Stopping CHILD_PROCESS: $!" && kill -SIGKILL $!' SIGINT
 
 COMMAND=$1
 VM_NAME=$2
