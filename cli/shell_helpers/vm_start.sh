@@ -1,10 +1,10 @@
 #!/usr/local/bin/bash
 
 # LISTEN FOR KILL -1 AND IF IT HAPPENS SHUTDOWN THE VM
-trap "kill -SIGTERM $!" SIGHUP
+trap 'echo "Stopping CHILD_PROCESS: $!" && kill -SIGTERM $!' SIGHUP
 
 # LISTEN FOR KILL -2 AND IF IT HAPPENS KILL THE VM
-trap "kill -SIGKILL $!" SIGINT
+trap 'echo "Stopping CHILD_PROCESS: $!" && kill -SIGKILL $!' SIGINT
 
 COMMAND=$1
 VM_NAME=$2
