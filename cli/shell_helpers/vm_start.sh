@@ -2,14 +2,20 @@
 
 func_stop() {
     echo "Stopping CHILD_PROCESS: $!"
+    kill -s SIGTERM $!
+}
+
+func_kill() {
+    echo "Stopping CHILD_PROCESS: $!"
     kill -SIGTERM $!
 }
 
 # LISTEN FOR KILL -1 AND IF IT HAPPENS SHUTDOWN THE VM
-trap func_stop SIGHUP
+trap '[[ $PRID ]] && kill -s SIGTERM $PRID' 34
+# trap func_stop SIGHUP
 
 # LISTEN FOR KILL -2 AND IF IT HAPPENS KILL THE VM
-# trap 'echo "Stopping CHILD_PROCESS: $!" && kill -SIGKILL $!' SIGINT
+# trap func_kill SIGINT
 
 COMMAND=$1
 VM_NAME=$2
@@ -32,7 +38,8 @@ echo "This bhyve command was executed to start the VM:"
 echo $COMMAND
 
 echo ""
-$COMMAND
+$COMMAND & PRID=$!
+wait
 
 # echo ""
 # PARENT_PID=$$
@@ -46,7 +53,8 @@ while [[ $? == 0 ]]
 do
     echo ""
     echo "VM has been restarted at: $(date)"
-    $COMMAND
+    $COMMAND & PRID=$!
+    wait
     sleep 2
     echo ""
 done
