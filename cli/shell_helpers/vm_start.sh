@@ -39,7 +39,7 @@ do
     echo ""
 done
 
-sleep 3
+sleep 1
 
 if [[ $(ifconfig | grep -c $VM_NAME) > 0 ]]
 then
