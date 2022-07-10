@@ -55,7 +55,7 @@ do
     echo "VM has been restarted at: $(date)"
     $COMMAND & PRID=$!
     wait
-    sleep 2
+    sleep 1
     echo ""
 done
 
