@@ -1085,7 +1085,9 @@ class ZFSReplication:
                     replication_snapshot_list.remove(loop_item)
             command = "ssh " + ep_address + " zfs rollback -r " + replication_snapshot_list[-1]
             print(" 🔷 DEBUG: Reverting back to the latest replication snapshot: " + command)
-            subprocess.run(command, shell=True)
+            # subprocess.run(command, shell=True)
+            for line in subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT):
+                print(line.split("Line from Python: \n"))
 
         # Difference list
         to_delete_snapshot_list = []
