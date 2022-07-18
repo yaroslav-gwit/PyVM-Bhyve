@@ -1125,10 +1125,11 @@ class ZFSReplication:
                     command = "zfs send -vi " + snapshot_value + " " + vm_zfs_snapshot_list[snapshot_index + 1] + " | ssh " + ep_address + " zfs receive " + vm_dataset
                     print(" 🔷 DEBUG: Sending snapshot " + str(snapshot_index + 1) + " out of " + str(len(vm_zfs_snapshot_list)-1))
                     
-                    process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
-                    for c in iter(lambda: process.stdout.read(1), b""):
-                        print("Output from Python3: " + c)
-                        # sys.stdout.buffer.write(c)
+                    p = subprocess.Popen(command, stdout=subprocess.PIPE, bufsize=1)
+                    for line in iter(p.stdout.readline, b''):
+                        print("Output from Python3! " + line)
+                    p.stdout.close()
+                    p.wait()
                 # subprocess.run(command, shell=True)
             print(" 🟢 INFO: Replication operation: done sending '" + vm_dataset + "'")
         else:
