@@ -1085,9 +1085,9 @@ class ZFSReplication:
                     replication_snapshot_list.remove(loop_item)
             command = "ssh " + ep_address + " zfs rollback -r " + replication_snapshot_list[-1]
             print(" 🔷 DEBUG: Reverting back to the latest replication snapshot: " + command)
-            # subprocess.run(command, shell=True)
-            for line in subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT):
-                print(line.split("Line from Python: \n"))
+            subprocess.run(command, shell=True)
+            # for line in subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT):
+                # print(line.split("Line from Python: \n"))
 
         # Difference list
         to_delete_snapshot_list = []
@@ -1123,7 +1123,8 @@ class ZFSReplication:
                 if snapshot_index != len(vm_zfs_snapshot_list)-1:
                     command = "zfs send -vi " + snapshot_value + " " + vm_zfs_snapshot_list[snapshot_index + 1] + " | ssh " + ep_address + " zfs receive " + vm_dataset
                     print(" 🔷 DEBUG: Sending snapshot " + str(snapshot_index + 1) + " out of " + str(len(vm_zfs_snapshot_list)-1))
-                    for line in subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT):
+                    for _line in subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT):
+                        line = _line.decode("utf-8").split()
                         print(line.split("Line from Python: \n"))
                     # subprocess.run(command, shell=True)
             print(" 🟢 INFO: Replication operation: done sending '" + vm_dataset + "'")
