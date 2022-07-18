@@ -11,6 +11,7 @@ from os import listdir
 import json
 import time
 import random
+import re
 
 # Installed packages/modules
 # from ipaddress import ip_address
@@ -1077,8 +1078,11 @@ class ZFSReplication:
 
         # Revert to a last snapshot to avoid dealing with differences
         if len(remote_zfs_snapshot_list) >= 1:
+            for loop_item in remote_zfs_snapshot_list:
+                if not re.match(".*@replication.*", loop_item):
+                    remote_zfs_snapshot_list.remove(loop_item)
             command = "ssh " + ep_address + " zfs rollback -r " + remote_zfs_snapshot_list[-1]
-            print(" 🔷 DEBUG: Reverting back to a latest snapshot: " + command)
+            print(" 🔷 DEBUG: Reverting back to the latest replication snapshot: " + command)
             subprocess.run(command, shell=True)
 
         # Difference list
