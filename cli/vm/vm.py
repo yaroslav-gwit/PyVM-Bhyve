@@ -1134,7 +1134,7 @@ class ZFSReplication:
                             break
                         if output:
                             print(output.strip())
-                    rc = process.poll()
+                    # rc = process.poll()
 
                     # subprocess.run(command, shell=True)
             print(" 🟢 INFO: Replication operation: done sending '" + vm_dataset + "'")
