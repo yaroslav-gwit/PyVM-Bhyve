@@ -1123,7 +1123,9 @@ class ZFSReplication:
                 if snapshot_index != len(vm_zfs_snapshot_list)-1:
                     command = "zfs send -vi " + snapshot_value + " " + vm_zfs_snapshot_list[snapshot_index + 1] + " | ssh " + ep_address + " zfs receive " + vm_dataset
                     print(" 🔷 DEBUG: Sending snapshot " + str(snapshot_index + 1) + " out of " + str(len(vm_zfs_snapshot_list)-1))
-                    subprocess.run(command, shell=True)
+                    for line in subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT):
+                        print(line.split("Line from Python: \n"))
+                    # subprocess.run(command, shell=True)
             print(" 🟢 INFO: Replication operation: done sending '" + vm_dataset + "'")
         else:
             print(" 🔷 DEBUG: Starting the INITIAL replication operation for: '" + vm_dataset + "'")
