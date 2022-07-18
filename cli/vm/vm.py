@@ -1128,7 +1128,7 @@ class ZFSReplication:
                     # with subprocess.Popen(shlex(command), stdout=subprocess.PIPE, bufsize=1, universal_newlines=True) as p:
                     #     for line in p.stdout:
                     #         print("Line from Python3! : " + line, end='')
-                    with subprocess.Popen(shlex(command), shell=True, stdout=subprocess.PIPE, bufsize=1) as sp:
+                    with subprocess.Popen(shlex.split(command), shell=True, stdout=subprocess.PIPE, bufsize=1) as sp:
                         for line in sp.stdout:
                             print("Python Line! : " + line)
                 # subprocess.run(command, shell=True)
