@@ -1127,7 +1127,7 @@ class ZFSReplication:
                     
                     process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
                     for c in iter(lambda: process.stdout.read(1), b""):
-                        print(c)
+                        print("Output from Python3: " + c)
                         # sys.stdout.buffer.write(c)
                 # subprocess.run(command, shell=True)
             print(" 🟢 INFO: Replication operation: done sending '" + vm_dataset + "'")
