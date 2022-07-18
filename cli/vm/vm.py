@@ -12,6 +12,7 @@ import json
 import time
 import random
 import re
+import shlex
 
 # Installed packages/modules
 # from ipaddress import ip_address
@@ -1123,9 +1124,18 @@ class ZFSReplication:
                 if snapshot_index != len(vm_zfs_snapshot_list)-1:
                     command = "zfs send -vi " + snapshot_value + " " + vm_zfs_snapshot_list[snapshot_index + 1] + " | ssh " + ep_address + " zfs receive " + vm_dataset
                     print(" 🔷 DEBUG: Sending snapshot " + str(snapshot_index + 1) + " out of " + str(len(vm_zfs_snapshot_list)-1))
-                    for _line in subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT):
-                        line = _line.decode("utf-8").split()
-                        print(line.split("Line from Python: \n"))
+                    
+                    # invoke process
+                    process = subprocess.Popen(shlex.split(command), shell=False, stdout=process.PIPE)
+                    # Poll process.stdout to show stdout live
+                    while True:
+                        output = process.stdout.readline()
+                        if process.poll() is not None:
+                            break
+                        if output:
+                            print(output.strip())
+                    rc = process.poll()
+
                     # subprocess.run(command, shell=True)
             print(" 🟢 INFO: Replication operation: done sending '" + vm_dataset + "'")
         else:
