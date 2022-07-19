@@ -1123,13 +1123,13 @@ class ZFSReplication:
             print(" 🔷 DEBUG: Starting the replication operation for: '" + vm_dataset + "'")
             for snapshot_index, snapshot_value in enumerate(vm_zfs_snapshot_list):
                 if snapshot_index != len(vm_zfs_snapshot_list)-1:
-                    command = "zfs send -nv " + vm_zfs_snapshot_list[snapshot_index + 1]
+                    command = "zfs send -nv " + vm_zfs_snapshot_list[snapshot_index]
                     shell_output = subprocess.check_output(command, shell=True)
                     shell_output = shell_output.decode("UTF-8").strip("\n").split()[-1]
                     print(" 🔷 DEBUG: Sending snapshot " + str(snapshot_index + 1) + " out of " + str(len(vm_zfs_snapshot_list)-1) + " (size: " + shell_output + ")")
                     shell_output = float(shell_output.strip("G")) * 1024 * 1024 * 1024
                     if snapshot_index == 0:
-                        print("DEBUG FISRT SNAP TO SEND!")
+                        # print("DEBUG FISRT SNAP TO SEND!")
                         zfs_receive_command = " zfs receive -F "
                     else:
                         zfs_receive_command = " zfs receive "
