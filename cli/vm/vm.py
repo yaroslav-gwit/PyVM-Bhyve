@@ -1128,7 +1128,7 @@ class ZFSReplication:
                     shell_output = subprocess.check_output(command, shell=True)
                     shell_output = shell_output.decode("UTF-8").strip("\n").split()[-1]
                     shell_output = float(shell_output.strip("G")) * 1024 * 1024 * 1024
-                    command = "zfs send " + snapshot_value + " " + vm_zfs_snapshot_list[snapshot_index + 1] + " | pv -S " + str(shell_output) + " | ssh " + ep_address + " zfs receive " + vm_dataset
+                    command = "zfs send " + snapshot_value + " " + vm_zfs_snapshot_list[snapshot_index + 1] + " | pv -S " + str(round(shell_output)) + " | ssh " + ep_address + " zfs receive " + vm_dataset
                     print(command)
                     # subprocess.run(command, shell=True)
                     # with subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, bufsize=2) as sp:
