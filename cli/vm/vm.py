@@ -1154,7 +1154,7 @@ class ZFSReplication:
                     else:
                         str_shell_output = shell_output + "B"
                     
-                    print(" 🔷 DEBUG: Sending INCREMENTAL snapshot (" + vm_zfs_snapshot_list[snapshot_index + 1] + ") " + str(snapshot_index + 1) + " out of " + str(len(vm_zfs_snapshot_list)-1) + " (size: " + str_shell_output + ")")
+                    print(" 🔷 DEBUG: Sending INCREMENTAL snapshot " + str(snapshot_index + 1) + " out of " + str(len(vm_zfs_snapshot_list)-1) + "   (" + vm_zfs_snapshot_list[snapshot_index + 1] + ", size: " + str_shell_output + ")")
                     
                     # SIZE CONVERSION TO BYTES
                     if re.match(".*G", shell_output):
