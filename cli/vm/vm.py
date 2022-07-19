@@ -1123,11 +1123,12 @@ class ZFSReplication:
             print(" 🔷 DEBUG: Starting the replication operation for: '" + vm_dataset + "'")
             for snapshot_index, snapshot_value in enumerate(vm_zfs_snapshot_list):
                 if snapshot_index != len(vm_zfs_snapshot_list)-1:
-                    # command = "zfs send -vi " + snapshot_value + " " + vm_zfs_snapshot_list[snapshot_index + 1] + " | ssh " + ep_address + " zfs receive " + vm_dataset
                     command = "zfs send -nv " + vm_zfs_snapshot_list[snapshot_index + 1]
                     print(" 🔷 DEBUG: Sending snapshot " + str(snapshot_index + 1) + " out of " + str(len(vm_zfs_snapshot_list)-1))
                     shell_output = subprocess.check_output(command, shell=True)
-                    print(shell_output.decode("UTF-8").strip("\n").split()[-1])
+                    shell_output = shell_output.decode("UTF-8").strip("\n").split()[-1]
+                    command = "zfs send -vi " + snapshot_value + " " + vm_zfs_snapshot_list[snapshot_index + 1] + " | pv -S " + shell_output + " | ssh " + ep_address + " zfs receive " + vm_dataset
+                    subprocess.run(command, shell=True)
                     # with subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, bufsize=2) as sp:
                     #     for line in sp.stdout:
                     #         print("Python Line! ")
