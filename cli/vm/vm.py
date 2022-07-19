@@ -1084,6 +1084,7 @@ class ZFSReplication:
             for loop_item in replication_snapshot_list:
                 if not re.match(".*@replication.*", loop_item):
                     replication_snapshot_list.remove(loop_item)
+        if len(replication_snapshot_list) >= 1:
             command = "ssh " + ep_address + " zfs rollback -r " + replication_snapshot_list[-1]
             print(" 🔷 DEBUG: Reverting back to the latest replication snapshot: " + command)
             subprocess.run(command, shell=True)
