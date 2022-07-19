@@ -1138,7 +1138,11 @@ class ZFSReplication:
             print(" 🟢 INFO: Replication operation: done sending '" + vm_dataset + "'")
         else:
             print(" 🔷 DEBUG: Starting the INITIAL replication operation for: '" + vm_dataset + "'")
-            command = "zfs send -v " + vm_zfs_snapshot_list[0] + " | ssh " + ep_address + " zfs receive " + vm_dataset
+            command = "zfs send -nv " + vm_zfs_snapshot_list[0]
+            shell_output = subprocess.check_output(command, shell=True)
+            shell_output = shell_output.decode("UTF-8").strip("\n").split()[-1]
+            shell_output = float(shell_output.strip("G")) * 1024 * 1024 * 1024
+            command = "zfs send " + vm_zfs_snapshot_list[0] + " | pv -p -e -r -W -s " + str(round(shell_output)) + " | ssh " + ep_address + " zfs receive " + vm_dataset
             subprocess.run(command, shell=True)
             print(" 🟢 INFO: Initial snapshot replication operation: done sending '" + vm_dataset + "'")
 
