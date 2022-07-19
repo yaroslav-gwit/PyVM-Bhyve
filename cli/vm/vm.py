@@ -1169,8 +1169,29 @@ class ZFSReplication:
             command = "zfs send -nv " + vm_zfs_snapshot_list[0]
             shell_output = subprocess.check_output(command, shell=True)
             shell_output = shell_output.decode("UTF-8").strip("\n").split()[-1]
-            print(" 🔷 DEBUG: Starting the INITIAL replication operation for: '" + vm_dataset + "'" + " (size: " + shell_output + ")")
-            shell_output = float(shell_output.strip("G")) * 1024 * 1024 * 1024
+            
+            # SIZE CONVERSION TO PRINT
+            if re.match(".*G", shell_output):
+                str_shell_output = shell_output
+            elif re.match(".*M", shell_output):
+                str_shell_output = shell_output
+            elif re.match(".*K", shell_output):
+                str_shell_output = shell_output
+            else:
+                str_shell_output = shell_output + "B"
+            
+            print(" 🔷 DEBUG: Starting the INITIAL replication operation for: '" + vm_dataset + "'" + " (size: " + str_shell_output + ")")
+            
+            # SIZE CONVERSION TO BYTES
+            if re.match(".*G", shell_output):
+                shell_output = float(shell_output.strip("G")) * 1024 * 1024 * 1024
+            elif re.match(".*M", shell_output):
+                shell_output = float(shell_output.strip("M")) * 1024 * 1024
+            elif re.match(".*K", shell_output):
+                shell_output = float(shell_output.strip("K")) * 1024
+            else:
+                shell_output = float(shell_output)
+            
             command = "zfs send " + vm_zfs_snapshot_list[0] + " | pv -p -e -r -W -t -s " + str(round(shell_output)) + " | ssh " + ep_address + " zfs receive " + vm_dataset
             subprocess.run(command, shell=True)
             print(" 🟢 INFO: Initial snapshot replication operation: done sending '" + vm_dataset + "'")
