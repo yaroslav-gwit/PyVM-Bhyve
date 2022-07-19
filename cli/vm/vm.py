@@ -1040,6 +1040,13 @@ class ZFSReplication:
             print(" 🚫 FATAL: Sorry can't reach the endpoint specified!")
             sys.exit(1)
 
+        # CHECK IF THE ENDPOINT SYSTEM IS A FREEBSD SYSTEM
+        command = "timeout 2 ssh root@" + ep_address + " -p" + ep_port + " uname || echo 2"
+        shell_output = subprocess.check_output(command, shell=True).decode("UTF-8").split()[0]
+        if shell_output == "2" or (shell_output != "FreeBSD"):
+            print(" 🚫 FATAL: Sorry the endpoint is not a FreeBSD system!")
+            sys.exit(1)
+
         # Check if VM is from this host:
         vm_config_dict = VmConfigs(vm_name).vm_config_read()
         host_name = host.HostInfo().hostName
