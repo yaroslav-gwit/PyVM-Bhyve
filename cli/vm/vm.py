@@ -1034,7 +1034,7 @@ class ZFSReplication:
             sys.exit(" 🚦 ERROR: This VM doesn't exist: " + vm_name)
 
         # CHECK IF THE SSH CONNECTION IS AVAILABLE
-        command = "timeout 2 ssh root@" + ep_address + "-p" + ep_port + " echo 1 || echo 2"
+        command = "timeout 2 ssh root@" + ep_address + " -p" + ep_port + " echo 1 || echo 2"
         shell_output = subprocess.check_output(command, shell=True).decode("UTF-8").split()[0]
         if shell_output == "2":
             print(" 🚫 FATAL: Sorry can't reach the endpoint specified!")
