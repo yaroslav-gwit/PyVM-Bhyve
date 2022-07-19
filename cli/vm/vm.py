@@ -1124,13 +1124,13 @@ class ZFSReplication:
             for snapshot_index, snapshot_value in enumerate(vm_zfs_snapshot_list):
                 if snapshot_index != len(vm_zfs_snapshot_list)-1:
                     command = "zfs send -nv " + vm_zfs_snapshot_list[snapshot_index + 1]
-                    print(" 🔷 DEBUG: Sending snapshot " + str(snapshot_index + 1) + " out of " + str(len(vm_zfs_snapshot_list)-1))
                     shell_output = subprocess.check_output(command, shell=True)
                     shell_output = shell_output.decode("UTF-8").strip("\n").split()[-1]
+                    print(" 🔷 DEBUG: Sending snapshot " + str(snapshot_index + 1) + " out of " + str(len(vm_zfs_snapshot_list)-1)) + " (size: )" + shell_output
                     shell_output = float(shell_output.strip("G")) * 1024 * 1024 * 1024
                     if snapshot_index == 0:
-                        zfs_receive_command = " zfs receive -F "
                         print("DEBUG FISRT SNAP TO SEND!")
+                        zfs_receive_command = " zfs receive -F "
                     else:
                         zfs_receive_command = " zfs receive "
                     command = "zfs send -i " + snapshot_value + " " + vm_zfs_snapshot_list[snapshot_index + 1] + " | pv -p -e -r -W -s " + str(round(shell_output)) + " | ssh " + ep_address + zfs_receive_command + vm_dataset
@@ -1142,10 +1142,10 @@ class ZFSReplication:
                     #         print(line.decode("UTF-8").strip("\n"))
             print(" 🟢 INFO: Replication operation: done sending '" + vm_dataset + "'")
         else:
-            print(" 🔷 DEBUG: Starting the INITIAL replication operation for: '" + vm_dataset + "'")
             command = "zfs send -nv " + vm_zfs_snapshot_list[0]
             shell_output = subprocess.check_output(command, shell=True)
             shell_output = shell_output.decode("UTF-8").strip("\n").split()[-1]
+            print(" 🔷 DEBUG: Starting the INITIAL replication operation for: '" + vm_dataset + "'") + " (size: )" + shell_output
             shell_output = float(shell_output.strip("G")) * 1024 * 1024 * 1024
             command = "zfs send " + vm_zfs_snapshot_list[0] + " | pv -p -e -r -W -s " + str(round(shell_output)) + " | ssh " + ep_address + " zfs receive " + vm_dataset
             subprocess.run(command, shell=True)
