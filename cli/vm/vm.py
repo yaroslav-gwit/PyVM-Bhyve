@@ -686,7 +686,7 @@ class VmDeploy:
 
 class Operation:
     @staticmethod
-    def snapshot(vm_name:str, stype:str="custom", keep:int=3):
+    def snapshot(vm_name:str, stype:str="custom", keep:int=3) -> None:
         """
         Function responsible for taking VM Snapshots
         """
@@ -960,7 +960,7 @@ class Operation:
 
 
     @staticmethod
-    def stop(vm_name:str):
+    def stop(vm_name:str) -> None:
         """
         Gracefully stop the VM
         """
@@ -1022,14 +1022,22 @@ class Operation:
 
 class ZFSReplication:
     # typer replicate command
-    
-    def pull(self):
-        pass
 
     @staticmethod
-    def push(vm_name:str, ep_address:str, ep_port:str = "22"):
+    def pull(self) -> None:
+        print(" 🚫 FATAL: Sorry this function has not been implemented yet!")
+        sys.exit(0)
+
+    @staticmethod
+    def push(vm_name:str, ep_address:str, ep_port:str = "22") -> None:
         if vm_name not in VmList().plainList:
             sys.exit(" 🚦 ERROR: This VM doesn't exist: " + vm_name)
+
+        # CHECK IF THE SSH CONNECTION IS AVAILABLE
+        command = "timeout 2 ssh root@" + ep_address + "-p" + ep_port + " echo 1 || echo 2"
+        shell_output = subprocess.check_output(command, shell=True).decode("UTF-8").split()[0]
+        if shell_output == "2":
+            print(" 🚫 FATAL: Sorry can't reach the endpoint specified!")
 
         # Check if VM is from this host:
         vm_config_dict = VmConfigs(vm_name).vm_config_read()
