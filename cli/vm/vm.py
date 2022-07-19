@@ -1534,9 +1534,9 @@ def snapshot_all(stype:str = typer.Option("custom", help="Snapshot type: daily, 
     """
     vm_list = VmList().plainList
     for _vm in vm_list:
-        vm_prod_status_local = CoreChecks(vm_name=_vm).vm_cpus()["live_status"]
-        vm_live_status_local = CoreChecks(vm_name=_vm).vm_is_live
-        if (vm_prod_status_local == "production") and (vm_live_status_local == True):
+        vm_prod_status_local = CoreChecks(vm_name=_vm).vm_in_production()
+        vm_live_status_local = CoreChecks(vm_name=_vm).vm_is_live()
+        if vm_prod_status_local and vm_live_status_local:
             Operation.snapshot(vm_name=_vm, keep=keep, stype=stype)
 
 
