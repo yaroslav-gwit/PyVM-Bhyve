@@ -1127,7 +1127,10 @@ class ZFSReplication:
                     shell_output = subprocess.check_output(command, shell=True)
                     shell_output = shell_output.decode("UTF-8").strip("\n").split()[-1]
                     print(" 🔷 DEBUG: Sending snapshot " + str(snapshot_index + 1) + " out of " + str(len(vm_zfs_snapshot_list)-1) + " (size: " + shell_output + ")")
-                    shell_output = float(shell_output.strip("G")) * 1024 * 1024 * 1024
+                    if re.match(".*G", shell_output):
+                        shell_output = float(shell_output.strip("G")) * 1024 * 1024 * 1024
+                    else:
+                        shell_output = float(shell_output)
                     if snapshot_index == 0:
                         # print("DEBUG FISRT SNAP TO SEND!")
                         zfs_receive_command = " zfs receive -F "
