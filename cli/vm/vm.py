@@ -1143,9 +1143,9 @@ class ZFSReplication:
                     # SIZE CONVERSION TO BYTES
                     if re.match(".*G", shell_output):
                         shell_output = float(shell_output.strip("G")) * 1024 * 1024 * 1024
-                    if re.match(".*M", shell_output):
+                    elif re.match(".*M", shell_output):
                         shell_output = float(shell_output.strip("M")) * 1024 * 1024
-                    if re.match(".*K", shell_output):
+                    elif re.match(".*K", shell_output):
                         shell_output = float(shell_output.strip("K")) * 1024
                     else:
                         shell_output = float(shell_output)
