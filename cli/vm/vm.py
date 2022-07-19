@@ -1038,6 +1038,7 @@ class ZFSReplication:
         shell_output = subprocess.check_output(command, shell=True).decode("UTF-8").split()[0]
         if shell_output == "2":
             print(" 🚫 FATAL: Sorry can't reach the endpoint specified!")
+            sys.exit(1)
 
         # Check if VM is from this host:
         vm_config_dict = VmConfigs(vm_name).vm_config_read()
