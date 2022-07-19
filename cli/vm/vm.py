@@ -1123,8 +1123,8 @@ class ZFSReplication:
             print(" 🔷 DEBUG: Starting the replication operation for: '" + vm_dataset + "'")
             for snapshot_index, snapshot_value in enumerate(vm_zfs_snapshot_list):
                 if snapshot_index != len(vm_zfs_snapshot_list)-1:
+                    # FIND OUT THE SIZE OF A SNAPSHOT TO TRANSFER
                     command = "zfs send -nvi " + snapshot_value + " " + vm_zfs_snapshot_list[snapshot_index + 1]
-                    print(command)
                     shell_output = subprocess.check_output(command, shell=True)
                     shell_output = shell_output.decode("UTF-8").strip("\n").split()[-1]
                     
@@ -1166,6 +1166,7 @@ class ZFSReplication:
                     #         print(line.decode("UTF-8").strip("\n"))
             print(" 🟢 INFO: Replication operation: done sending '" + vm_dataset + "'")
         else:
+            # FIND OUT THE SIZE OF A SNAPSHOT TO TRANSFER
             command = "zfs send -nv " + vm_zfs_snapshot_list[0]
             shell_output = subprocess.check_output(command, shell=True)
             shell_output = shell_output.decode("UTF-8").strip("\n").split()[-1]
@@ -1533,8 +1534,9 @@ def snapshot_all(stype:str = typer.Option("custom", help="Snapshot type: daily, 
     """
     vm_list = VmList().plainList
     for _vm in vm_list:
-        _vm_live_status = CoreChecks(vm_name=_vm).vm_cpus()["live_status"]
-        if _vm_live_status == "production":
+        vm_prod_status_local = CoreChecks(vm_name=_vm).vm_cpus()["live_status"]
+        vm_live_status_local = CoreChecks(vm_name=_vm).vm_is_live
+        if (vm_prod_status_local == "production") and (vm_live_status_local == True):
             Operation.snapshot(vm_name=_vm, keep=keep, stype=stype)
 
 
