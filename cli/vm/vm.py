@@ -1130,11 +1130,11 @@ class ZFSReplication:
                     
                     # SIZE CONVERSION TO PRINT
                     if re.match(".*G", shell_output):
-                        pass
+                        str_shell_output = shell_output
                     elif re.match(".*M", shell_output):
-                        pass
+                        str_shell_output = shell_output
                     elif re.match(".*K", shell_output):
-                        pass
+                        str_shell_output = shell_output
                     else:
                         str_shell_output = shell_output + "B"
                     
