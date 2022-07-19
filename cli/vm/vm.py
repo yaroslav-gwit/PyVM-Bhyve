@@ -1127,7 +1127,7 @@ class ZFSReplication:
                     command = "zfs send -nv " + vm_zfs_snapshot_list[snapshot_index + 1]
                     print(" 🔷 DEBUG: Sending snapshot " + str(snapshot_index + 1) + " out of " + str(len(vm_zfs_snapshot_list)-1))
                     shell_output = subprocess.check_output(command, shell=True)
-                    print(shell_output.decode("UTF-8").strip("\n"))
+                    print(shell_output.decode("UTF-8").strip("\n").split())
                     # with subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, bufsize=2) as sp:
                     #     for line in sp.stdout:
                     #         print("Python Line! ")
