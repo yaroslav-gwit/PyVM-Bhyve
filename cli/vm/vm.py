@@ -1124,6 +1124,7 @@ class ZFSReplication:
             for snapshot_index, snapshot_value in enumerate(vm_zfs_snapshot_list):
                 if snapshot_index != len(vm_zfs_snapshot_list)-1:
                     command = "zfs send -nvi " + snapshot_value + " " + vm_zfs_snapshot_list[snapshot_index + 1]
+                    print(command)
                     shell_output = subprocess.check_output(command, shell=True)
                     shell_output = shell_output.decode("UTF-8").strip("\n").split()[-1]
                     
