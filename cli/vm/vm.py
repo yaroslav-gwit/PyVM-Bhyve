@@ -1126,16 +1126,26 @@ class ZFSReplication:
                     command = "zfs send -nvi " + snapshot_value + " " + vm_zfs_snapshot_list[snapshot_index + 1]
                     shell_output = subprocess.check_output(command, shell=True)
                     shell_output = shell_output.decode("UTF-8").strip("\n").split()[-1]
-                    print(" 🔷 DEBUG: Sending snapshot " + str(snapshot_index + 1) + " out of " + str(len(vm_zfs_snapshot_list)-1) + " (size: " + shell_output + ")")
+                    
+                    # SIZE CONVERSION TO PRINT
+                    if not re.match(".*G", shell_output):
+                        str_shell_output = shell_output + "B"
+                    
+                    print(" 🔷 DEBUG: Sending snapshot " + str(snapshot_index + 1) + " out of " + str(len(vm_zfs_snapshot_list)-1) + " (size: " + str_shell_output + ")")
+                    
+                    # SIZE CONVERSION
                     if re.match(".*G", shell_output):
                         shell_output = float(shell_output.strip("G")) * 1024 * 1024 * 1024
                     else:
                         shell_output = float(shell_output)
+                    
+                    # FORCE RECEIVE IF IT'S THE FIRST SNAPSHOT IN THIS ITERATION
                     if snapshot_index == 0:
                         # print("DEBUG FISRT SNAP TO SEND!")
                         zfs_receive_command = " zfs receive -F "
                     else:
                         zfs_receive_command = " zfs receive "
+                    
                     command = "zfs send -i " + snapshot_value + " " + vm_zfs_snapshot_list[snapshot_index + 1] + " | pv -p -e -r -W -t -s " + str(round(shell_output)) + " | ssh " + ep_address + zfs_receive_command + vm_dataset
                     # print(command)
                     subprocess.run(command, shell=True)
