@@ -1129,7 +1129,13 @@ class ZFSReplication:
                     shell_output = shell_output.decode("UTF-8").strip("\n").split()[-1]
                     
                     # SIZE CONVERSION TO PRINT
-                    if not re.match(".*G", shell_output) or not re.match(".*M", shell_output) or not re.match(".*K", shell_output):
+                    if re.match(".*G", shell_output):
+                        pass
+                    elif re.match(".*M", shell_output):
+                        pass
+                    elif re.match(".*K", shell_output):
+                        pass
+                    else:
                         str_shell_output = shell_output + "B"
                     
                     print(" 🔷 DEBUG: Sending snapshot " + str(snapshot_index + 1) + " out of " + str(len(vm_zfs_snapshot_list)-1) + " (size: " + str_shell_output + ")")
