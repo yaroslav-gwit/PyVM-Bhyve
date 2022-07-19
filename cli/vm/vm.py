@@ -1130,7 +1130,8 @@ class ZFSReplication:
                     #         print("Line from Python3! : " + line, end='')
                     with subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, bufsize=2) as sp:
                         for line in sp.stdout:
-                            print("Python Line! : " + line)
+                            print("Python Line! ")
+                            print(line.decode("UTF-8").strip("\n"))
                 # subprocess.run(command, shell=True)
             print(" 🟢 INFO: Replication operation: done sending '" + vm_dataset + "'")
         else:
