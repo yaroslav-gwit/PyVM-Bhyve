@@ -1124,7 +1124,7 @@ class ZFSReplication:
             for snapshot_index, snapshot_value in enumerate(vm_zfs_snapshot_list):
                 if snapshot_index != len(vm_zfs_snapshot_list)-1:
                     # command = "zfs send -vi " + snapshot_value + " " + vm_zfs_snapshot_list[snapshot_index + 1] + " | ssh " + ep_address + " zfs receive " + vm_dataset
-                    command = "zfs send -nP " + snapshot_value + " " + vm_zfs_snapshot_list[snapshot_index + 1] + " | ssh " + ep_address + " zfs receive " + vm_dataset
+                    command = "zfs send -nP " + snapshot_value + " " + vm_zfs_snapshot_list[snapshot_index + 1]
                     print(" 🔷 DEBUG: Sending snapshot " + str(snapshot_index + 1) + " out of " + str(len(vm_zfs_snapshot_list)-1))
                     shell_output = subprocess.check_output(command, shell=True)
                     print(shell_output)
