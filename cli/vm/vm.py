@@ -613,7 +613,7 @@ class VmDeploy:
         output_dict["root_password"] = VmDeploy.random_password_generator(lenght=41, capitals=True, numbers=True)
         output_dict["user_password"] = VmDeploy.random_password_generator(lenght=41, capitals=True, numbers=True)
         output_dict["vnc_port"] = VmDeploy.vm_vnc_port_generator(vnc_port=self.vnc_port)
-        output_dict["vnc_password"] = VmDeploy.random_password_generator(lenght=20, capitals=True, numbers=True)
+        output_dict["vnc_password"] = VmDeploy.random_password_generator(lenght=8, capitals=True, numbers=True)
         output_dict["mac_address"] = VmDeploy.mac_address_generator()
         network0 = self.networks
         network_bridge_name = network0["bridge_name"]

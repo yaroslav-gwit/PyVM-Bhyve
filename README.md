@@ -11,30 +11,29 @@ I personally use PyVM Bhyve on all of my hosting nodes for its portability, reli
 1. Install FreeBSD, use ZFS as a file system (leave zroot as a pool name), enable Unbound as your local DNS resolver.
 2. Install required software:
 ```
-pkg update
-pkg install git nano python3 
-# Install this as well, if you'd be deploying PyVM from the same machine:
-pkg install py38-ansible
+pkg update -y
+pkg upgrade -y
+pkg install bash python3
 ```
-3. Clone the repo and create inventory file for ansible to use:
+3. Set bash as a default shell:
 ```
-mkdir /root/pyVM/ && git clone https://github.com/yaroslav-gwit/PyVM-Bhyve.git /root/pyVM/
-cp /root/pyVM/ansible_deployment_scripts/example_inventory_pyvm.yml /root/pyVM/ansible_deployment_scripts/inventory_pyvm.yml
+chsh -s /usr/local/bin/bash root
 ```
-4. Adjust values in the inventory file, and run the Ansible playbook to install PyVM Bhyve.
+4. Execute the deployment script
 ```
-cd /root/pyVM/ansible_deployment_scripts/
-ansible-playbook playbook_pyvm.yml
+# or pipe into bash -x to enable debug
+curl https://raw.githubusercontent.com/yaroslav-gwit/PyVM-Bhyve/development/deploy.sh | bash
 ```
- > NOTE! This type of installtion is not recommended, but can give you an idea of what PyVM is, and if it is something you are intererted in.
-
-### Production deployment would look something like this:
-#### 1. Prepare a machine that will control your fleet of nodes.
-This will be an Ansible "controller" machine. It might be your personal laptop, or a VM somewhere remote, just keep in mind: it will hold all of your ZFS encryption keys. If you lose it - game over, your data is gone.
-#### 2. Encrypt inventory file.
-This is self explanatory - use Ansible Vault to keep your inventory file safe, because it has all of your encryption keys in it.
-#### 3. Distribute your SSH keys and start deploying!
-Once inventory file is in order, you can start deploying PyVM Bhyve to a large fleet of machines.
+5. Save the ZFS encryption password at the end of the installation!!! If you forget to do it, the data on the encrypted ZFS dataset will be lost!
+6. Reboot the system
+```
+reboot
+```
+7. After the system was rebooted unlock the encrypted ZFS dataset and initialize the kernel modules (this needs to be done on every reboot)
+```
+zfs mount -a -l
+hoster init
+```
 
 # Documentation
 Would like to try out PyVM? Check out the docs: https://github.com/yaroslav-gwit/PyVM-Bhyve/wiki
