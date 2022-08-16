@@ -776,7 +776,7 @@ class Operation:
 
                     if not quiet:
                         print(" 🔶 INFO: Could not find the PID file for: " + vm_name)
-                    command = "top -b -d1 -a all | grep \"" + "/" + vm_name + "/" + "\" | grep bash | awk '{print $1}'"
+                    command = "top -b -d1 -a all | grep \"/" + vm_name + "/\" | grep bash | awk '{print $1}'"
                     shell_command = subprocess.check_output(command, shell=True)
                     console_list = shell_command.decode("utf-8").split()
                     command = "kill -s SIGKILL " + console_list[0]
@@ -788,7 +788,7 @@ class Operation:
                 else:
                     if not quiet:
                         print(" 🔶 INFO: Could not find the PID file for: " + vm_name)
-                    command = "top -b -d1 -a all | grep \"" + "/" + vm_name + "/" + "\" | grep bash | awk '{print $1}'"
+                    command = "top -b -d1 -a all | grep \"/" + vm_name + "/\" | grep bash | awk '{print $1}'"
                     shell_command = subprocess.check_output(command, shell=True)
                     console_list = shell_command.decode("utf-8").split()
                     command = "kill -s SIGKILL " + console_list[0]
