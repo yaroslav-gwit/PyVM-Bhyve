@@ -826,6 +826,14 @@ class Operation:
                         subprocess.run(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             if not quiet:
                 print(" 🔶 INFO: VM is already dead: " + vm_name + "!")
+        
+        # Remove PID file if it still exists
+        try:
+            command= "rm /var/run/" + vm_name + ".pid"
+            subprocess.run(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        except:
+            pass
+
 
     @staticmethod
     def start(vm_name:str):
