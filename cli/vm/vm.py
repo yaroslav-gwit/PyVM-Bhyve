@@ -1055,7 +1055,7 @@ class Operation:
             # Kill the zombie process if any are found
             Operation.kill(vm_name=vm_name, quiet=True)
 
-            print(" 🟢 INFO: The VM is fully stopped now: " + vm_name)
+            print(" 🔶 INFO: The VM is fully stopped now: " + vm_name)
         else:
             print(" 🔶 INFO: VM is already stopped: " + vm_name)
 
