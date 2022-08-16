@@ -21,6 +21,14 @@ chsh -s /usr/local/bin/bash root
 ```
 4. Execute the deployment script
 ```
+# Set internal network name
+export DEF_NETWORK_NAME="internal"
+# Set internal network address (must be unique for every node in the cluster)
+export DEF_NETWORK_BR_ADDR="10.0.101.254"
+# Set the default interface that is connected to the internet
+export DEF_PUBLIC_INTERFACE="igb0"
+# (Optional) -> Set the ZFS encryption password, or the script will generate it automatically
+export DEF_ZFS_ENCRYPTION_PASSWORD="zfsEncryptionPassword"
 # or pipe into bash -x to enable debug
 curl https://raw.githubusercontent.com/yaroslav-gwit/PyVM-Bhyve/development/deploy.sh | bash
 ```

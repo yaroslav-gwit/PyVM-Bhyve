@@ -744,7 +744,7 @@ class Operation:
             print(" 🔶 INFO: The VM was destroyed: " + command)
 
     @staticmethod
-    def kill(vm_name:str):
+    def kill(vm_name:str, quiet:bool = False):
         """
         Function that forcefully kills the VM
         """
@@ -773,13 +773,20 @@ class Operation:
                     # print(command)
                     shell_command = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
                 else:
-                    print(" 🔶 INFO: Could not find the PID file for: " + vm_name)
+                    if not quiet:
+                        print(" 🔶 INFO: Could not find the PID file for: " + vm_name)
             except Exception as e:
-                print(" 🔶 INFO: Could not find the process for the VM: " + vm_name)
-                # pass
+                command = "top -b -d1 -a all | grep " + "\"" + "\/" + vm_name + "\/" + "\"" + " | grep bash | awk '{print $1}'"
+                shell_command = subprocess.check_output(command, shell=True)
+                console_list = shell_command.decode("utf-8").split()
+                command = "kill -s SIGKILL " + console_list[0]
+                subprocess.run(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                print(" 🔶 INFO: Forcefully killed the VM process: " + console_list[0] + " " + vm_name)
+                if not quiet:
+                    print(" 🔶 INFO: Forcefully killed the VM process: " + console_list[0] + " " + vm_name)
                 # print(e)
-            
-            
+
+
             # command = "ps axf | grep -v grep | grep " + vm_name + " | grep bhyve: | awk '{ print $1 }'"
             # shell_command = subprocess.check_output(command, shell=True)
             # try:
@@ -805,7 +812,8 @@ class Operation:
                     if tap:
                         command = "ifconfig " + tap + " destroy"
                         subprocess.run(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-            print(" 🔶 INFO: Killed the VM: " + vm_name)
+            if not quiet:
+                print(" 🔶 INFO: Killed the VM: " + vm_name)
         else:
             # This block is a duplicate. Creating a function would be a good idea for the future!
             command = "ifconfig | grep " + vm_name + " | awk '{ print $2 }'"
@@ -816,7 +824,8 @@ class Operation:
                     if tap:
                         command = "ifconfig " + tap + " destroy"
                         subprocess.run(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-            print(" 🔶 INFO: VM is already dead: " + vm_name + "!")
+            if not quiet:
+                print(" 🔶 INFO: VM is already dead: " + vm_name + "!")
 
     @staticmethod
     def start(vm_name:str):
@@ -1014,6 +1023,9 @@ class Operation:
             for tap in tap_interface_list:
                 command = "ifconfig " + tap + " destroy"
                 subprocess.run(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+            # Kill the zombie process if any are found
+            Operation.kill(vm_name=vm_name, quiet=True)
 
             print(" 🟢 INFO: The VM is fully stopped now: " + vm_name)
         else:
