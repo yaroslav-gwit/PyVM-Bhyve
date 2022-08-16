@@ -318,5 +318,11 @@ The installation is now finished.
 Your ZFS encryption password: ${ZFS_RANDOM_PASSWORD}
 Please save your password! If you lose it, your VMs on the encrypted dataset will be lost!
 
+Reboot the system now to apply changes.
+
+After the reboot mount the encrypted ZFS dataset and initialize HosterRed (these 2 steps are required after each reboot):
+zfs mount -a -l
+hoster init
+
 #####  END  #####
 EOF
