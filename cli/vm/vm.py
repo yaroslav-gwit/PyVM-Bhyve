@@ -1018,16 +1018,13 @@ class Operation:
                     except Exception as e:
                         pass
                         # print("The error is: " + str(e))
-
-            # command = "ps axf | grep -v grep | grep " + vm_name + " | grep bhyve: | awk '{ print $1 }'"
-            command = "cat /var/run/" + vm_name + ".pid"
-            shell_command = subprocess.check_output(command, shell=True)
-            parent_pid = int(shell_command.decode("utf-8").split()[0])
-            child_pid = psutil.Process(parent_pid).children()[-1].pid
-            running_vm_pid = str(child_pid)
-            command = "kill -s SIGTERM " + running_vm_pid
-            # print(command)
             try:
+                command = "cat /var/run/" + vm_name + ".pid"
+                shell_command = subprocess.check_output(command, shell=True)
+                parent_pid = int(shell_command.decode("utf-8").split()[0])
+                child_pid = psutil.Process(parent_pid).children()[-1].pid
+                running_vm_pid = str(child_pid)
+                command = "kill -s SIGTERM " + running_vm_pid
                 shell_command = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
             except Exception as e:
                 pass
