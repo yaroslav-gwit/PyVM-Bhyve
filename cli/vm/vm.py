@@ -1036,7 +1036,6 @@ class Operation:
             command = "ifconfig | grep " + vm_name + " | awk '{ print $2 }'"
             shell_command = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
             running_tap_adaptor = shell_command.decode("utf-8").split()[0]
-            tap_interface_list = shell_command.decode("utf-8").split()
 
             running_tap_adaptor_status = "active"
             while running_tap_adaptor_status == "active":
