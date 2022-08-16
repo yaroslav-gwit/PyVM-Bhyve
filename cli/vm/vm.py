@@ -772,9 +772,20 @@ class Operation:
                     command = "kill -s SIGKILL " + running_vm_pid
                     # print(command)
                     shell_command = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
+                
                 else:
                     if not quiet:
                         print(" 🔶 INFO: Could not find the PID file for: " + vm_name)
+                    command = "top -b -d1 -a all | grep " + "\"" + "\/" + vm_name + "\/" + "\"" + " | grep bash | awk '{print $1}'"
+                    print(command)
+                    shell_command = subprocess.check_output(command, shell=True)
+                    console_list = shell_command.decode("utf-8").split()
+                    command = "kill -s SIGKILL " + console_list[0]
+                    subprocess.run(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                    print(" 🔶 INFO: Forcefully killed the VM process: " + console_list[0] + " " + vm_name)
+                    if not quiet:
+                        print(" 🔶 INFO: Forcefully killed the VM process: " + console_list[0] + " " + vm_name)
+            
             except Exception as e:
                 command = "top -b -d1 -a all | grep " + "\"" + "\/" + vm_name + "\/" + "\"" + " | grep bash | awk '{print $1}'"
                 print(command)
