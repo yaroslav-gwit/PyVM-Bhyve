@@ -1033,20 +1033,20 @@ class Operation:
                 pass
                 # print(e)
 
+            command = "ifconfig | grep " + vm_name + " | awk '{ print $2 }'"
+            shell_command = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
+            running_tap_adaptor = shell_command.decode("utf-8").split()[0]
+            tap_interface_list = shell_command.decode("utf-8").split()
+
+            running_tap_adaptor_status = "active"
+            while running_tap_adaptor_status == "active":
+                command = "ifconfig " + running_tap_adaptor + " | grep status | sed s/.status:.//"
+                shell_command = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
+                running_tap_adaptor_status = shell_command.decode("utf-8").split("\n")[0]
+                time.sleep(2)
+
             # Kill the zombie process if any are found
             Operation.kill(vm_name=vm_name, quiet=True)
-            
-            # command = "ifconfig | grep " + vm_name + " | awk '{ print $2 }'"
-            # shell_command = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
-            # running_tap_adaptor = shell_command.decode("utf-8").split()[0]
-            # tap_interface_list = shell_command.decode("utf-8").split()
-
-            # running_tap_adaptor_status = "active"
-            # while running_tap_adaptor_status == "active":
-            #     command = "ifconfig " + running_tap_adaptor + " | grep status | sed s/.status:.//"
-            #     shell_command = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
-            #     running_tap_adaptor_status = shell_command.decode("utf-8").split("\n")[0]
-            #     time.sleep(2)
 
             # command = "bhyvectl --destroy --vm=" + vm_name
             # subprocess.run(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
