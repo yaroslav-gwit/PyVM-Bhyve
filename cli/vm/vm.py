@@ -1048,7 +1048,7 @@ class Operation:
                 if iteration >= 10:
                     print(" 🔶 INFO: Wait time is over, killing the VM: " + vm_name)
                     Operation.kill(vm_name=vm_name, quiet=True)
-                time.sleep(5)
+                time.sleep(10)
 
             # Kill the zombie process if any are found
             Operation.kill(vm_name=vm_name, quiet=True)
