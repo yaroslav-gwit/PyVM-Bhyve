@@ -772,7 +772,6 @@ class Operation:
                     command = "kill -s SIGKILL " + running_vm_pid
                     shell_command = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
 
-                    print(" 🔶 INFO: Could not find the PID file for: " + vm_name)
                     if not quiet:
                         print(" 🔶 INFO: Could not find the PID file for: " + vm_name)
                     command = "top -b -d1 -a all | grep \"/" + vm_name + "/\" | grep bash | awk '{print $1}'"
@@ -785,7 +784,6 @@ class Operation:
 
 
                 else:
-                    print(" 🔶 INFO: Could not find the PID file for: " + vm_name)
                     if not quiet:
                         print(" 🔶 INFO: Could not find the PID file for: " + vm_name)
                     command = "top -b -d1 -a all | grep \"/" + vm_name + "/\" | grep bash | awk '{print $1}'"
