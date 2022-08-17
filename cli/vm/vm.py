@@ -1042,7 +1042,8 @@ class Operation:
                 command = "ifconfig " + running_tap_adaptor + " | grep status | sed s/.status:.//"
                 shell_command = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
                 running_tap_adaptor_status = shell_command.decode("utf-8").split("\n")[0]
-                time.sleep(2)
+                print(" 🔶 INFO: Network adaptor is still active: " + vm_name)
+                time.sleep(5)
 
             # Kill the zombie process if any are found
             Operation.kill(vm_name=vm_name, quiet=True)
