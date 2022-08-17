@@ -1038,11 +1038,16 @@ class Operation:
             running_tap_adaptor = shell_command.decode("utf-8").split()[0]
 
             running_tap_adaptor_status = "active"
+            iteration = 1
             while running_tap_adaptor_status == "active":
                 command = "ifconfig " + running_tap_adaptor + " | grep status | sed s/.status:.//"
                 shell_command = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
                 running_tap_adaptor_status = shell_command.decode("utf-8").split("\n")[0]
                 print(" 🔶 INFO: Network adaptor is still active: " + vm_name)
+                iteration = iteration + 1
+                if iteration >= 10:
+                    print(" 🔶 INFO: Wait time is over, killing the VM: " + vm_name)
+                    Operation.kill(vm_name=vm_name, quiet=True)
                 time.sleep(5)
 
             # Kill the zombie process if any are found
