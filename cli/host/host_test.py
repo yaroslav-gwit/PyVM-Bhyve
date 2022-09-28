@@ -1,42 +1,3 @@
-#!bin/python
-import typer
-
-
-def json_output():
-    import json
-
-    json_d = {}
-    zfs_pool_stats = get_zfs_pool_stats()
-    ram_info = get_ram_info(table_output = False)
-    swap_info = get_swap_info(table_output = False)
-    zfs_arc_size = get_arc_size(table_output = False)
-    
-    json_d["hostname"] = get_hostname()
-    json_d["uptime"] = get_system_uptime()
-    json_d["number_of_running_vms"] = get_number_of_live_vms()
-    json_d["zfs_arc_size"] = zfs_arc_size["zfs_arc_size"]
-    json_d["zfs_arc_size_h"] = zfs_arc_size["zfs_arc_size_h"]
-    json_d["zroot_space_overall"] = zfs_pool_stats["pool_full_size"]
-    json_d["zroot_space_overall_h"] = zfs_pool_stats["pool_full_size_h"]
-    json_d["zroot_space_used"] = zfs_pool_stats["pool_used"]
-    json_d["zroot_space_used_h"] = zfs_pool_stats["pool_used_h"]
-    json_d["zroot_space_free"] = zfs_pool_stats["pool_free"]
-    json_d["zroot_space_free_h"] = zfs_pool_stats["pool_free_h"]
-    json_d["zroot_status"] = zfs_pool_stats["pool_status"]
-    json_d["real_memory"] = ram_info["real_memory"]
-    json_d["real_memory_h"] = ram_info["real_memory_h"]
-    json_d["used_memory"] = ram_info["used_memory"]
-    json_d["used_memory_h"] = ram_info["used_memory_h"]
-    json_d["free_memory"] = ram_info["free_memory"]
-    json_d["free_memory_h"] = ram_info["free_memory_h"]
-    json_d["swap_used"] = swap_info["swap_used"]
-    json_d["swap_used_h"] = swap_info["swap_used_h"]
-    json_d["swap_overall"] = swap_info["swap_overall"]
-    json_d["swap_overall_h"] = swap_info["swap_overall_h"]
-
-    return json.dumps(json_d, indent=3)
-
-
 def byte_converter(bytes:int = 1) -> str:
     # B
     iteration = bytes
@@ -58,8 +19,7 @@ def byte_converter(bytes:int = 1) -> str:
     return str(round(float(iteration), 2)) + value_type
 
 
-# Returns Dict or Str depending if "table_output" is True
-def get_ram_info(table_output:bool = True):
+def get_ram_info() -> str:
     import subprocess
 
     def get_page_size() -> str:
@@ -91,18 +51,8 @@ def get_ram_info(table_output:bool = True):
     real_memory_h = byte_converter(bytes=real_memory)
     used_memory_h = byte_converter(bytes=used_memory)
 
-    memory_dict = {}
-    memory_dict["free_memory"] = free_memory
-    memory_dict["free_memory_h"] = free_memory_h
-    memory_dict["real_memory"] = real_memory
-    memory_dict["real_memory_h"] = real_memory_h
-    memory_dict["used_memory"] = used_memory
-    memory_dict["used_memory_h"] = used_memory_h
-
-    if table_output:
-        return used_memory_h + "/" + real_memory_h
-    else:
-        return memory_dict
+    final_result = used_memory_h + "/" + real_memory_h
+    return final_result
 
 
 def get_number_of_live_vms() -> str:
@@ -120,24 +70,16 @@ def get_number_of_live_vms() -> str:
     return result
 
 
-# Returns Dict or Str depending if "table_output" is True
-def get_arc_size(table_output:bool = True):
+def get_arc_size() -> str:
     import subprocess
     
     command = "sysctl -nq kstat.zfs.misc.arcstats.size"
     shell_command = subprocess.check_output(command, shell=True)
     shell_output = shell_command.decode("utf-8").split()[0]
 
-    zfs_arc_size = int(shell_output)
-    zfs_arc_size_h = byte_converter(bytes = int(shell_output))
+    result = byte_converter(bytes = int(shell_output))
 
-    if table_output:
-        return zfs_arc_size_h
-    else:
-        arc_size_d = {}
-        arc_size_d["zfs_arc_size"] = zfs_arc_size
-        arc_size_d["zfs_arc_size_h"] = zfs_arc_size_h
-        return arc_size_d
+    return result
 
 
 def get_zfs_pool_stats(pool:str = "zroot") -> dict:
@@ -147,12 +89,9 @@ def get_zfs_pool_stats(pool:str = "zroot") -> dict:
     shell_command = subprocess.check_output(command, shell=True)
     shell_output = shell_command.decode("utf-8").split()
 
-    pool_full_size = int(shell_output[1])
-    pool_full_size_h = byte_converter(bytes = int(shell_output[1]))
-    pool_used = int(shell_output[2])
-    pool_used_h = byte_converter(bytes = int(shell_output[2]))
-    pool_free = int(shell_output[3])
-    pool_free_h = byte_converter(bytes = int(shell_output[3]))
+    pool_full_size = byte_converter(bytes = int(shell_output[1]))
+    pool_used = byte_converter(bytes = int(shell_output[2]))
+    pool_free = byte_converter(bytes = int(shell_output[3]))
 
     pool_status = shell_output[9]
     if pool_status == "ONLINE":
@@ -162,11 +101,8 @@ def get_zfs_pool_stats(pool:str = "zroot") -> dict:
 
     result = {}
     result["pool_full_size"] = pool_full_size
-    result["pool_full_size_h"] = pool_full_size_h
     result["pool_used"] = pool_used
-    result["pool_used_h"] = pool_used_h
     result["pool_free"] = pool_free
-    result["pool_free_h"] = pool_free_h
     result["pool_status"] = pool_status
 
     return result
@@ -181,7 +117,7 @@ def get_hostname() -> str:
     return shell_output
 
 
-def human_readable_uptime(seconds_since_boot:int) -> str:
+def human_readable_uptime(seconds_since_boot:float) -> str:
     seconds_mod = seconds_since_boot % 60
     result = str(int(seconds_mod)) + "s"
     
@@ -217,8 +153,7 @@ def get_system_uptime() -> str:
     return human_readable_uptime(seconds_since_boot)
 
 
-# Returns Dict or Str depending if "table_output" is True
-def get_swap_info(table_output:bool = True):
+def get_swap_info() -> str:
     import subprocess
     command = "swapinfo"
     shell_command = subprocess.check_output(command, shell=True)
@@ -228,27 +163,17 @@ def get_swap_info(table_output:bool = True):
     swap_overall = shell_output[8]
     if int(swap_used) > 0:
         swap_used = int(swap_used) * 1024
-        swap_used_h = byte_converter(bytes = swap_used)
+        swap_used = byte_converter(bytes = swap_used)
     else:
-        swap_used = 0
-        swap_used_h = "0B"
+        swap_used = "0B"
 
     if int(swap_overall) > 0:
         swap_overall = int(swap_overall) * 1024
-        swap_overall_h = byte_converter(bytes = swap_overall)
+        swap_overall = byte_converter(bytes = swap_overall)
     else:
-        swap_overall = 0
-        swap_overall_h = "0B"
-
-    if table_output:
-        return swap_used_h + "/" + swap_overall_h
-    else:
-        swap_dict = {}
-        swap_dict["swap_used"] = swap_used
-        swap_dict["swap_used_h"] = swap_used_h
-        swap_dict["swap_overall"] = swap_overall
-        swap_dict["swap_overall_h"] = swap_overall_h
-        return swap_dict
+        swap_overall = "0B"
+        
+    return swap_used + "/" + swap_overall
 
 
 def table_output(table_title:bool = False) -> None:
@@ -256,7 +181,7 @@ def table_output(table_title:bool = False) -> None:
     from rich.table import Table
     from rich import box
 
-    if not table_title:
+    if not show_title:
         table = Table(box=box.ROUNDED)
     else:
         table = Table(title = "Host Information", box=box.ROUNDED)
@@ -266,48 +191,18 @@ def table_output(table_title:bool = False) -> None:
     table.add_column("Uptime", justify="center", style="bright_cyan", no_wrap=True)
     table.add_column("RAM (Used/Overall)", justify="center", style="bright_cyan", no_wrap=True)
     table.add_column("Swap (Used/Overall)", justify="center", style="bright_cyan", no_wrap=True)
-    table.add_column("Zroot (Used/Overall)", justify="center", style="bright_cyan", no_wrap=True)
     table.add_column("ZFS Arc Size", justify="center", style="bright_cyan", no_wrap=True)
-    zfs_pool_stats = get_zfs_pool_stats()
-    zroot_status = zfs_pool_stats["pool_status"]
-    if zroot_status != "Online":
-        table.add_column("Zroot Status", justify="center", style="red", no_wrap=True)
-    else:
-        table.add_column("Zroot Status", justify="center", style="bright_cyan", no_wrap=True)
+    table.add_column("Zroot Free", justify="center", style="bright_cyan", no_wrap=True)
+    table.add_column("Zroot Status", justify="center", style="bright_cyan", no_wrap=True)
 
-    zroot_free = zfs_pool_stats["pool_used_h"] + "/" + zfs_pool_stats["pool_full_size_h"]
-    table.add_row(get_hostname(), get_number_of_live_vms() , get_system_uptime(), get_ram_info(), get_swap_info(), zroot_free, get_arc_size(), zroot_status)
+    zfs_pool_stats = get_zfs_pool_stats()
+    zroot_free = zfs_pool_stats["pool_used"] + "/" + zfs_pool_stats["pool_full_size"]
+    zroot_status = zfs_pool_stats["pool_status"]
+    table.add_row(get_hostname(), get_number_of_live_vms() , get_system_uptime(), get_ram_info(), get_swap_info(), get_arc_size(), zroot_free, zroot_status)
 
     console = Console()
     console.print(table)
 
 
-""" Section below is responsible for the CLI input/output """
-app = typer.Typer(context_settings=dict(max_content_width=800))
-
-
-@app.command()
-def info(
-    json:bool = typer.Option(False, help="Output json instead of a table"),
-    table_title:bool = typer.Option(False, help="Show table title (useful when showing multiple tables)")
-    ):
-    """
-    Print out the host related info
-    """
-    if json:
-        print(json_output())
-    else:
-        table_output(table_title = table_title)
-
-@app.command()
-def init():
-    """
-    Initialise Kernel modules and required services
-    """
-    IC.LoadKernelModules().init()
-
-
-
-""" If this file is executed from the command line, activate Typer """
 if __name__ == "__main__":
-    app()
+    table_output()

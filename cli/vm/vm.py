@@ -12,11 +12,10 @@ import json
 import time
 import random
 import re
-import shlex
 
 # Installed packages/modules
 # from ipaddress import ip_address
-import yaml
+# import yaml
 from tabulate import tabulate
 from natsort import natsorted
 from generate_mac import generate_mac
@@ -294,7 +293,7 @@ class VmList:
             vm_config = VmConfigs(vm_name).vm_config_read()
             if CoreChecks(vm_name).vm_is_live():
                 state = "🟢"
-            elif vm_config.get("parent_host") != host.HostInfo().hostName:
+            elif vm_config.get("parent_host") != host.get_hostname():
                 state = "💾"
             else:
                 state = "🔴"
@@ -398,7 +397,7 @@ class VmList:
         vmColumnDescription = []
         for vm_name in vmColumnNames:
             vm_config = VmConfigs(vm_name).vm_config_read()
-            if vm_config.get("parent_host") != host.HostInfo().hostName:
+            if vm_config.get("parent_host") != host.get_hostname():
                 vm_config = vm_config.get("parent_host", "-")
                 vmColumnDescription.append("💾⏩ " + vm_config)
             else:
@@ -857,10 +856,11 @@ class Operation:
 
 
     @staticmethod
-    def start(vm_name:str):
+    def start(vm_name:str) -> None:
         vm_config = VmConfigs(vm_name).vm_config_read()
-        if vm_config["parent_host"] != host.HostInfo().hostName:
-            sys.exit(" 🚦 ERROR: VM is a backup from another host: " + vm_config["parent_host"] + ". Run 'hoster vm cireset " + vm_name + "' first!")
+        if vm_config["parent_host"] != host.get_hostname():
+            print(" 🚦 ERROR: VM is a backup from another host: " + vm_config["parent_host"] + ". Run 'hoster vm cireset " + vm_name + "' if you want to use it on this host!")
+            return
         elif CoreChecks(vm_name).vm_is_live():
             print(" 🔶 INFO: VM is already live: " + vm_name)
         elif vm_name in VmList().plainList:
