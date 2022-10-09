@@ -2,8 +2,8 @@
 import sys
 from os.path import exists
 
-if exists("/opt/PyVM-Bhyve/") and exists("/opt/PyVM-Bhyve/hoster"):
-    sys.path.insert(1, "/opt/PyVM-Bhyve/")
+if exists("/opt/hoster-red/") and exists("/opt/hoster-red/hoster"):
+    sys.path.insert(1, "/opt/hoster-red/")
 else:
     print("SysChecks is not installed properly!", file=sys.stderr)
     sys.exit(1)
@@ -11,6 +11,6 @@ else:
 from main import app
 
 import os
-os.chdir("/opt/PyVM-Bhyve/")
+os.chdir("/opt/hoster-red/")
 
 app()

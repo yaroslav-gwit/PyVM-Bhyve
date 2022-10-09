@@ -1,5 +1,3 @@
-#!bin/python
-
 # Native Python functions
 import psutil
 import typer
@@ -393,7 +391,6 @@ class VmList:
             else:
                 vmColumnUptime.append("-")
 
-
         vmColumnDescription = []
         for vm_name in vmColumnNames:
             vm_config = VmConfigs(vm_name).vm_config_read()
@@ -405,12 +402,9 @@ class VmList:
                 vm_config = vm_config.get("description", "-")
                 vmColumnDescription.append(vm_config)
 
-
-        vmTableHeader = [ ["Name", "State", "CPUs", "RAM", "Main IP", "VNC Port", "VNC Password", "OS Disk", "OS Comment", "Uptime", "Description", ] ]
-
+        vmTableHeader = []
         for vm_index in range(len(vmColumnNames)):
             vmTableHeader.append([ vmColumnNames[vm_index], vmColumnState[vm_index], vmColumnCPU[vm_index], vmColumnRAM[vm_index], vmColumnIpAddress[vm_index], vmColumnVncPort[vm_index], vmColumnVncPassword[vm_index], vmColumnOsDisk[vm_index], vmColumnOsType[vm_index], vmColumnUptime[vm_index], vmColumnDescription[vm_index], ])
-
 
         from rich.console import Console
         from rich.table import Table
@@ -427,9 +421,9 @@ class VmList:
         table.add_column("CPUs", justify="center", style="bright_cyan", no_wrap=True)
         table.add_column("RAM", justify="center", style="bright_cyan", no_wrap=True)
         table.add_column("Main IP", justify="center", style="bright_cyan", no_wrap=True)
-        table.add_column("VNC Port", justify="center", style="bright_cyan", no_wrap=True)
-        table.add_column("VNC Password", justify="center", style="bright_cyan", no_wrap=True)
-        table.add_column("OS Disk", justify="center", style="bright_cyan", no_wrap=True)
+        table.add_column("VNC\nPort", justify="center", style="bright_cyan", no_wrap=True)
+        table.add_column("VNC\nPassword", justify="center", style="bright_cyan", no_wrap=True)
+        table.add_column("OS Disk\n(Used/Total)", justify="center", style="bright_cyan", no_wrap=True)
         table.add_column("OS Comment", justify="left", style="bright_cyan", no_wrap=True)
         table.add_column("Uptime", justify="center", style="bright_cyan", no_wrap=True)
         table.add_column("Description", justify="center", style="bright_cyan", no_wrap=True)

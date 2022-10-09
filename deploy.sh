@@ -18,6 +18,9 @@ pkg install -y rsync gnu-watch tmux fping qemu-utils python39 py39-devtools
 pkg install -y htop curl wget gtar unzip pv sanoid cdrkit-genisoimage openssl
 pkg install -y bhyve-firmware bhyve-rc grub2-bhyve uefi-edk2-bhyve uefi-edk2-bhyve-csm
 
+if [[ -f /bin/bash ]]; then rm /bin/bash; fi
+ln $(which bash) /bin/bash
+
 
 #_ SET ENCRYPTED ZFS PASSWORD _#
 if [ -z "${DEF_ZFS_ENCRYPTION_PASSWORD}" ]; then 
@@ -73,37 +76,26 @@ fi
 
 #_ BOOTLOADER OPTIMISATIONS _#
 BOOTLOADER_FILE="/boot/loader.conf"
-CMD_LINE='fusefs_load="YES"'
-if [[ `grep -c ${CMD_LINE} ${BOOTLOADER_FILE}` < 1 ]]; then echo ${CMD_LINE} >> ${BOOTLOADER_FILE}; fi
-CMD_LINE='vm.kmem_size="330M"'
-if [[ `grep -c ${CMD_LINE} ${BOOTLOADER_FILE}` < 1 ]]; then echo ${CMD_LINE} >> ${BOOTLOADER_FILE}; fi
-CMD_LINE='vm.kmem_size_max="330M"'
-if [[ `grep -c ${CMD_LINE} ${BOOTLOADER_FILE}` < 1 ]]; then echo ${CMD_LINE} >> ${BOOTLOADER_FILE}; fi
-CMD_LINE='vfs.zfs.arc_max="40M"'
-if [[ `grep -c ${CMD_LINE} ${BOOTLOADER_FILE}` < 1 ]]; then echo ${CMD_LINE} >> ${BOOTLOADER_FILE}; fi
-CMD_LINE='vfs.zfs.vdev.cache.size="5M"'
-if [[ `grep -c ${CMD_LINE} ${BOOTLOADER_FILE}` < 1 ]]; then echo ${CMD_LINE} >> ${BOOTLOADER_FILE}; fi
+CMD_LINE='fusefs_load="YES"' && if [[ `grep -c ${CMD_LINE} ${BOOTLOADER_FILE}` < 1 ]]; then echo ${CMD_LINE} >> ${BOOTLOADER_FILE}; fi
+CMD_LINE='vm.kmem_size="330M"' && if [[ `grep -c ${CMD_LINE} ${BOOTLOADER_FILE}` < 1 ]]; then echo ${CMD_LINE} >> ${BOOTLOADER_FILE}; fi
+CMD_LINE='vm.kmem_size_max="330M"' && if [[ `grep -c ${CMD_LINE} ${BOOTLOADER_FILE}` < 1 ]]; then echo ${CMD_LINE} >> ${BOOTLOADER_FILE}; fi
+CMD_LINE='vfs.zfs.arc_max="40M"' && if [[ `grep -c ${CMD_LINE} ${BOOTLOADER_FILE}` < 1 ]]; then echo ${CMD_LINE} >> ${BOOTLOADER_FILE}; fi
+CMD_LINE='vfs.zfs.vdev.cache.size="5M"' && if [[ `grep -c ${CMD_LINE} ${BOOTLOADER_FILE}` < 1 ]]; then echo ${CMD_LINE} >> ${BOOTLOADER_FILE}; fi
 
 
 #_ PF CONFIG BLOCK IN rc.conf _#
 RC_CONF_FILE="/etc/rc.conf"
-CMD_LINE='pf_enable="yes"'
-if [[ `grep -c ${CMD_LINE} ${RC_CONF_FILE}` < 1 ]]; then echo ${CMD_LINE} >> ${RC_CONF_FILE}; fi
-CMD_LINE='pf_rules="/etc/pf.conf"'
-if [[ `grep -c ${CMD_LINE} ${RC_CONF_FILE}` < 1 ]]; then echo ${CMD_LINE} >> ${RC_CONF_FILE}; fi
-CMD_LINE='pflog_enable="yes"'
-if [[ `grep -c ${CMD_LINE} ${RC_CONF_FILE}` < 1 ]]; then echo ${CMD_LINE} >> ${RC_CONF_FILE}; fi
-CMD_LINE='pflog_logfile="/var/log/pflog"'
-if [[ `grep -c ${CMD_LINE} ${RC_CONF_FILE}` < 1 ]]; then echo ${CMD_LINE} >> ${RC_CONF_FILE}; fi
-CMD_LINE='pflog_flags=""'
-if [[ `grep -c ${CMD_LINE} ${RC_CONF_FILE}` < 1 ]]; then echo ${CMD_LINE} >> ${RC_CONF_FILE}; fi
+CMD_LINE='pf_enable="yes"' && if [[ `grep -c ${CMD_LINE} ${RC_CONF_FILE}` < 1 ]]; then echo ${CMD_LINE} >> ${RC_CONF_FILE}; fi
+CMD_LINE='pf_rules="/etc/pf.conf"' && if [[ `grep -c ${CMD_LINE} ${RC_CONF_FILE}` < 1 ]]; then echo ${CMD_LINE} >> ${RC_CONF_FILE}; fi
+CMD_LINE='pflog_enable="yes"' && if [[ `grep -c ${CMD_LINE} ${RC_CONF_FILE}` < 1 ]]; then echo ${CMD_LINE} >> ${RC_CONF_FILE}; fi
+CMD_LINE='pflog_logfile="/var/log/pflog"' && if [[ `grep -c ${CMD_LINE} ${RC_CONF_FILE}` < 1 ]]; then echo ${CMD_LINE} >> ${RC_CONF_FILE}; fi
+CMD_LINE='pflog_flags=""' && if [[ `grep -c ${CMD_LINE} ${RC_CONF_FILE}` < 1 ]]; then echo ${CMD_LINE} >> ${RC_CONF_FILE}; fi
 
 
 #_ SET CORRECT PROFILE FILE _#
 cat << 'EOF' | cat > /root/.profile
 # $FreeBSD$
 # This is a .profile template for FreeBSD Bhyve Hosters
-
 PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin:~/bin
 export PATH
 HOME=/root
@@ -122,17 +114,11 @@ if [ -x /usr/bin/resizewin ] ; then /usr/bin/resizewin -z ; fi
 # Uncomment to display a random cookie on each login.
 # if [ -x /usr/bin/fortune ] ; then /usr/bin/fortune -s ; fi
 
-EDITOR=micro
-export EDITOR
-
+export EDITOR=micro
 EOF
 
 cat << EOF | cat >> /root/.profile
-HOSTER_RED_WD=${HOSTER_WD}
-export HOSTER_RED_WD
-
-VENV="yes"
-export VENV
+export EDITOR=micro
 EOF
 
 
@@ -198,11 +184,10 @@ EOF
 
 #_ INIT PYTHON ENV _#
 cd ${HOSTER_WD}
-python3 -m venv .
-source bin/activate
-python3 -m ensurepip
-python3 -m pip install --upgrade pip
-python3 -m pip install -r requirements.txt
+if [[ ! -d venv ]]; then python3 -m venv venv; fi
+${HOSTER_WD}venv/bin/python3 -m ensurepip
+${HOSTER_WD}venv/bin/python3 -m pip install --upgrade pip
+${HOSTER_WD}venv/bin/python3 -m pip install -r requirements.txt --upgrade
 
 
 #_ COPY OVER UNBOUND CONFIG _#
@@ -301,11 +286,9 @@ EOF
 
 #_ CREATE AN EXECUTABLE HOSTER FILE _#
 cd ${HOSTER_WD}
-cat hoster.sh > /bin/hoster
+if [[ -f /bin/hoster ]]; then rm -f /bin/hoster; fi
+ln hoster /bin/hoster
 chmod +x /bin/hoster
-# VM LIST GO REPLACEMENT
-chmod +x bin/hoster
-chmod -w bin/hoster
 
 
 #_ LET USER KNOW THE STATE OF DEPLOYMENT _#
@@ -325,4 +308,5 @@ zfs mount -a -l
 hoster init
 
 #####  END  #####
+
 EOF
