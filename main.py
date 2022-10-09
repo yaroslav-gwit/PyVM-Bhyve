@@ -1,8 +1,4 @@
-#!/usr/bin/env python3
 import typer
-# import sys
-# import os
-# import subprocess
 
 # Own libraries
 from cli.vm import vm

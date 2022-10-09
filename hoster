@@ -1,4 +1,4 @@
-#!/opt/PyVM-Bhyve/venv/bin/python3
+#!/opt/hoster-red/venv/bin/python3
 import sys
 from os.path import exists
 
