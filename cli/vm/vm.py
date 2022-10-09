@@ -280,7 +280,7 @@ class VmList:
         self.plainList = vmColumnNames.copy()
         self.vmColumnNames = natsorted(vmColumnNames)
 
-    def table_output(self):
+    def table_output(self, table_title:bool = False):
         vmColumnNames = self.vmColumnNames
 
         if len(vmColumnNames) < 1:
@@ -411,19 +411,39 @@ class VmList:
         for vm_index in range(len(vmColumnNames)):
             vmTableHeader.append([ vmColumnNames[vm_index], vmColumnState[vm_index], vmColumnCPU[vm_index], vmColumnRAM[vm_index], vmColumnIpAddress[vm_index], vmColumnVncPort[vm_index], vmColumnVncPassword[vm_index], vmColumnOsDisk[vm_index], vmColumnOsType[vm_index], vmColumnUptime[vm_index], vmColumnDescription[vm_index], ])
 
-        return tabulate(vmTableHeader, headers="firstrow", tablefmt="fancy_grid", showindex=range(1, len(vmColumnNames) + 1))
+
+        from rich.console import Console
+        from rich.table import Table
+        from rich import box
+
+        if not table_title:
+            table = Table(box = box.ROUNDED, show_lines = True,)
+        else:
+            table = Table(title = " VM List", box = box.ROUNDED, show_lines = True, title_justify = "left")
+
+        table.add_column("#", justify="center", style="bright_cyan", no_wrap=True)
+        table.add_column("Name", justify="left", style="bright_cyan", no_wrap=True)
+        table.add_column("State", justify="center", style="bright_cyan", no_wrap=True)
+        table.add_column("CPUs", justify="center", style="bright_cyan", no_wrap=True)
+        table.add_column("RAM", justify="center", style="bright_cyan", no_wrap=True)
+        table.add_column("Main IP", justify="center", style="bright_cyan", no_wrap=True)
+        table.add_column("VNC Port", justify="center", style="bright_cyan", no_wrap=True)
+        table.add_column("VNC Password", justify="center", style="bright_cyan", no_wrap=True)
+        table.add_column("OS Disk", justify="center", style="bright_cyan", no_wrap=True)
+        table.add_column("OS Comment", justify="left", style="bright_cyan", no_wrap=True)
+        table.add_column("Uptime", justify="center", style="bright_cyan", no_wrap=True)
+        table.add_column("Description", justify="center", style="bright_cyan", no_wrap=True)
+
+        for n, a in enumerate(vmColumnNames):
+            table.add_row(str(n+1), vmColumnNames[n], vmColumnState[n], vmColumnCPU[n], vmColumnRAM[n], vmColumnIpAddress[n], vmColumnVncPort[n], vmColumnVncPassword[n], vmColumnOsDisk[n], vmColumnOsType[n], vmColumnUptime[n], vmColumnDescription[n])
+        Console().print(table)
 
 
     def json_output(self):
-        # vm_list_dict = {}
-        # vm_list_dict["vm_list"] = self.vmColumnNames
         vm_list_dict = self.vmColumnNames
         vm_list_json = json.dumps(vm_list_dict, indent=2)
+
         return vm_list_json
-
-
-# class Generators:
-
 
 
 class VmDeploy:
@@ -686,9 +706,7 @@ class VmDeploy:
 class Operation:
     @staticmethod
     def snapshot(vm_name:str, stype:str="custom", keep:int=3) -> None:
-        """
-        Function responsible for taking VM Snapshots
-        """
+        """ Function responsible for taking VM Snapshots """
 
         snapshot_type = stype
         snapshots_to_keep = keep
@@ -1432,20 +1450,16 @@ app = typer.Typer(context_settings=dict(max_content_width=800))
 
 @app.command()
 def list(json:bool = typer.Option(False, help="Output json instead of a table")):
-    """
-    List the VMs using table or JSON output
-    """
+    """ List the VMs using table or JSON output """
     if json:
         print(VmList().json_output())
     else:
-        print(VmList().table_output())
+        VmList().table_output()
 
 
 @app.command()
 def info(vm_name:str = typer.Argument(..., help="Print VM config file to the screen")):
-    """
-    Show VM info in the form of JSON output
-    """
+    """ Show VM info in the form of JSON output """
     vm_info_dict = VmConfigs(vm_name).vm_config_read()
     vm_info_json = json.dumps(vm_info_dict, indent=2)
     print(vm_info_json)
@@ -1453,9 +1467,7 @@ def info(vm_name:str = typer.Argument(..., help="Print VM config file to the scr
 
 @app.command()
 def edit(vm_name:str = typer.Argument(..., help="Edit VM config file with nano")):
-    """
-    Manually edit the VM config file (with 'nano')
-    """
+    """ Manually edit the VM config file (with 'nano') """
     VmConfigs(vm_name).vm_config_manual_edit()
 
 
@@ -1464,9 +1476,8 @@ def diskexpand(vm_name:str = typer.Argument(..., help="VM name"),
         size:int = typer.Option(10, help="Number or Gigabytes to add"),
         disk:str = typer.Option("disk0.img", help="Disk image file name"),
     ):
-    """
-    Expand VM drive. Example: hoster vm diskexpand test-vm-1 --disk disk1.img --size 100
-    """
+    """ Expand VM drive. Example: hoster vm diskexpand test-vm-1 --disk disk1.img --size 100 """
+
     if vm_name in VmList().plainList:
         # DEBUG
         # print("All good. VM exists.")
@@ -1485,11 +1496,10 @@ def diskexpand(vm_name:str = typer.Argument(..., help="VM name"),
 
 @app.command()
 def rename(vm_name:str = typer.Argument(..., help="VM Name"),
-    new_name:str = typer.Option(..., help="New VM Name"),
+        new_name:str = typer.Option(..., help="New VM Name"),
     ):
-    """
-    Rename the VM
-    """
+    """ Rename the VM """
+
     if vm_name not in VmList().plainList:
         sys.exit(" 🚦 ERROR: This VM doesn't exist: " + vm_name)
     elif CoreChecks(vm_name=vm_name).vm_is_live():
@@ -1523,9 +1533,8 @@ def rename(vm_name:str = typer.Argument(..., help="VM Name"),
 
 @app.command()
 def console(vm_name:str = typer.Argument(..., help="VM Name")):
-    """
-    Connect to VM's console
-    """
+    """ Connect to VM's console """
+
     if vm_name not in VmList().plainList:
         sys.exit("VM doesn't exist on this system.")
     elif CoreChecks(vm_name).vm_is_live():
@@ -1545,21 +1554,18 @@ def console(vm_name:str = typer.Argument(..., help="VM Name")):
 
 @app.command()
 def destroy(vm_name:str = typer.Argument(..., help="VM Name"),
-    force:bool = typer.Option(False, help="Kill and destroy the VM, even if it's running"),
+        force:bool = typer.Option(False, help="Kill and destroy the VM, even if it's running"),
     ):
-    """
-    Completely remove the VM from this system!
-    """
+    """ Completely remove the VM from this system! """
     Operation.destroy(vm_name=vm_name)
 
     # Reload DNS
     VmDeploy().dns_registry()
 
+
 @app.command()
 def destroy_all(force:bool = typer.Option(False, help="Kill and destroy all VMs, even if they are running")):
-    """
-    Completely remove all VMs from this system!
-    """
+    """ Completely remove all VMs from this system! """
     vm_list = VmList().plainList
     for _vm in vm_list:
         Operation.destroy(vm_name=_vm, force=force)
@@ -1578,22 +1584,23 @@ def destroy_all(force:bool = typer.Option(False, help="Kill and destroy all VMs,
 
 @app.command()
 def snapshot(vm_name:str = typer.Argument(..., help="VM Name"),
-    stype:str = typer.Option("custom", help="Snapshot type: daily, weekly, etc"),
-    keep:int = typer.Option(3, help="How many snapshots to keep")
+        stype:str = typer.Option("custom", help="Snapshot type: daily, weekly, etc"),
+        keep:int = typer.Option(3, help="How many snapshots to keep")
     ):
     """
     Snapshot the VM (RAM snapshots are not supported). Snapshot will be taken at the storage level: ZFS or GlusterFS.
     Example: hoster vm snapshot test-vm-1 --type weekly --keep 5
     """
+
     Operation.snapshot(vm_name=vm_name, stype=stype, keep=keep)
+
 
 @app.command()
 def snapshot_all(stype:str = typer.Option("custom", help="Snapshot type: daily, weekly, etc"),
-    keep:int = typer.Option(3, help="How many snapshots to keep")
+        keep:int = typer.Option(3, help="How many snapshots to keep")
     ):
-    """
-    Snapshot all VMs
-    """
+    """ Snapshot all VMs """
+
     vm_list = VmList().plainList
     for _vm in vm_list:
         vm_prod_status_local = CoreChecks(vm_name=_vm).vm_in_production()
@@ -1604,16 +1611,14 @@ def snapshot_all(stype:str = typer.Option("custom", help="Snapshot type: daily, 
 
 @app.command()
 def kill(vm_name:str = typer.Argument(..., help="VM Name")):
-    """
-    Kill the VM immediately!
-    """
+    """ Kill the VM immediately! """
     Operation.kill(vm_name=vm_name)
+
 
 @app.command()
 def kill_all():
-    """
-    Kill all VMs on this system!
-    """
+    """ Kill all VMs on this system! """
+
     vm_list = VmList().plainList
     for _vm in vm_list:
         Operation.kill(vm_name=_vm)
@@ -1622,17 +1627,15 @@ def kill_all():
 @app.command()
 def start(vm_name:str = typer.Argument(..., help="VM name"),
     ):
-    """
-    Power on the VM
-    """
+    """ Power on the VM """
+
     Operation.start(vm_name=vm_name)
 
 @app.command()
 def start_all(wait:int = typer.Option(5, help="Seconds to wait before starting the next VM on the list")
     ):
-    """
-    Power on all production VMs
-    """
+    """ Power on all production VMs """
+
     vm_list = VmList().plainList
     for _vm in vm_list:
         if not CoreChecks(vm_name=_vm).vm_is_live():
@@ -1643,28 +1646,27 @@ def start_all(wait:int = typer.Option(5, help="Seconds to wait before starting t
         else:
             print("VM is already live: " + _vm)
 
+
 @app.command()
 def stop(vm_name:str = typer.Argument(..., help="VM name"),
+    ):
+    """ Gracefully stop the VM """
+    Operation.stop(vm_name=vm_name)
 
-        ):
-        """
-        Gracefully stop the VM
-        """
-        Operation.stop(vm_name=vm_name)
 
 @app.command()
 def stop_all(wait:int = typer.Option(5, help="Seconds to wait before stopping the next VM on the list")
     ):
-    """
-    Gracefully stop all VMs running on this system
-    """
+    """ Gracefully stop all VMs running on this system """
+
     vm_list = VmList().plainList
-    for _vm in vm_list:
-        if CoreChecks(vm_name=_vm).vm_is_live():
-            Operation.stop(vm_name=_vm)
+    for vm in vm_list:
+        if CoreChecks(vm_name=vm).vm_is_live():
+            Operation.stop(vm_name=vm)
             time.sleep(wait)
         else:
-            print("VM is already stopped: " + _vm)
+            print("VM is already stopped: " + vm)
+
 
 @app.command()
 def deploy(vm_name:str = typer.Argument("test-vm", help="New VM name"),
@@ -1672,37 +1674,31 @@ def deploy(vm_name:str = typer.Argument("test-vm", help="New VM name"),
         # ip_address:str = typer.Option("10.0.0.0", help="Specify the IP address or leave at default to generate a random address"),
         ds_id:int = typer.Option(0, help="Dataset ID to which this VM will be deployed"),
     ):
-    """
-    New VM deployment
-    """
-    deployment_output = VmDeploy(vm_name=vm_name, os_type=os_type, dataset_id=ds_id).deploy()
+    """ New VM deployment """
 
+    deployment_output = VmDeploy(vm_name=vm_name, os_type=os_type, dataset_id=ds_id).deploy()
     # Reload DNS
     VmDeploy().dns_registry()
-
     # Let user know, that everything went well
     print (" 🟢 INFO: VM was deployed successfully: " + deployment_output["vm_name"])
+
 
 @app.command()
 def cireset(vm_name:str = typer.Argument(..., help="VM name"),
     ):
-    """
-    Reset the VM settings, including passwords, network settings, user keys, etc.
-    """
+    """ Reset the VM settings, including passwords, network settings, user keys, etc. """
     if vm_name not in VmList().plainList:
         sys.exit(" 🚦 ERROR: This VM doesn't exist: " + vm_name)
     elif CoreChecks(vm_name=vm_name).vm_is_live():
         sys.exit(" 🚦 ERROR: VM is live! Please turn it off first: hoster vm stop " + vm_name)
-
     vm_config_dict = VmConfigs(vm_name).vm_config_read()
     # print(vm_config_dict)
-
     vm_folder = CoreChecks(vm_name=vm_name).vm_folder()
     # print(vm_folder)
-
     #_ Load host config _#
     with open("./configs/host.json", "r") as file:
         host_file = file.read()
+
     host_dict = json.loads(host_file)
     # print(host_dict)
 
@@ -1828,9 +1824,8 @@ def replicate(vm_name:str = typer.Argument(..., help="VM name"),
         ep_port:str = typer.Option("22", help="Endpoint server SSH port"),
         direction:str = typer.Option("push", help="Direction of the replication: push or pull")
     ):
-    """
-    Replicate the VM to another host
-    """
+    """ Replicate the VM to another host """
+
     if direction == "push":
         ZFSReplication.push(vm_name=vm_name, ep_address=ep_address, ep_port=ep_port)
     elif direction == "pull":
@@ -1845,9 +1840,8 @@ def replicate_all(vm_name:str = typer.Argument(..., help="VM name"),
         ep_port:str = typer.Option("22", help="Endpoint server SSH port"),
         direction:str = typer.Option("push", help="Direction of the replication: push or pull")
     ):
-    """
-    Replicate all production VMs to another host
-    """
+    """ Replicate all production VMs to another host """
+
     vm_list = VmList().plainList
     for _vm in vm_list:
         _vm_live_status = CoreChecks(vm_name=_vm).vm_cpus()["live_status"]

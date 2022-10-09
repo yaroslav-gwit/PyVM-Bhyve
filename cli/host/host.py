@@ -1,4 +1,4 @@
-#!bin/python
+import re
 import typer
 
 
@@ -259,14 +259,14 @@ def table_output(table_title:bool = False) -> None:
     if not table_title:
         table = Table(box=box.ROUNDED)
     else:
-        table = Table(title = "Host Information", box=box.ROUNDED)
+        table = Table(title = " Host Information", box=box.ROUNDED, title_justify = "left")
 
     table.add_column("Host", justify="center", style="bright_cyan", no_wrap=True)
     table.add_column("Live VMs", justify="center", style="bright_cyan", no_wrap=True)
     table.add_column("Uptime", justify="center", style="bright_cyan", no_wrap=True)
-    table.add_column("RAM (Used/Overall)", justify="center", style="bright_cyan", no_wrap=True)
-    table.add_column("Swap (Used/Overall)", justify="center", style="bright_cyan", no_wrap=True)
-    table.add_column("Zroot (Used/Overall)", justify="center", style="bright_cyan", no_wrap=True)
+    table.add_column("RAM (Used/Total)", justify="center", style="bright_cyan", no_wrap=True)
+    table.add_column("Swap (Used/Total)", justify="center", style="bright_cyan", no_wrap=True)
+    table.add_column("Zroot (Used/Total)", justify="center", style="bright_cyan", no_wrap=True)
     table.add_column("ZFS Arc Size", justify="center", style="bright_cyan", no_wrap=True)
     zfs_pool_stats = get_zfs_pool_stats()
     zroot_status = zfs_pool_stats["pool_status"]
@@ -288,24 +288,69 @@ app = typer.Typer(context_settings=dict(max_content_width=800))
 
 @app.command()
 def info(
-    json:bool = typer.Option(False, help="Output json instead of a table"),
-    table_title:bool = typer.Option(False, help="Show table title (useful when showing multiple tables)")
+        json:bool = typer.Option(False, help="Output json instead of a table"),
+        table_title:bool = typer.Option(False, help="Show table title (useful when showing multiple tables)")
     ):
-    """
-    Print out the host related info
-    """
+
+    """ Print out the host related info """
+
     if json:
         print(json_output())
     else:
         table_output(table_title = table_title)
 
+
 @app.command()
 def init():
-    """
-    Initialise Kernel modules and required services
-    """
-    IC.LoadKernelModules().init()
+    """ Initialise Kernel modules and required services """
 
+    #_ LIST OF MODULES TO LOAD _#
+    """
+    kldstat -m $MODULE
+    kldstat -mq $MODULE
+
+    kldload vmm
+    kldload nmdm
+    kldload if_bridge
+    kldload if_tuntap
+    kldload if_tap
+
+    sysctl net.link.tap.up_on_open=1
+
+    13.0-RELEASE-p11
+    """
+
+    import invoke
+
+    result = invoke.run("kldstat -v", hide=True)
+    kld_stat_lines = result.stdout.splitlines()
+
+    module_list = ["vmm", "nmdm", "if_tap", "if_bridge", "if_tuntap"]
+    modules_loaded = []
+
+    for module in module_list:
+        module_str = ".*" + module + ".*"
+        module_str_ko = ".*" + module + ".ko.*"
+        re_match_1 = re.compile(module_str_ko)
+        re_match_2 = re.compile(module_str)
+
+        for line in kld_stat_lines:
+            if re_match_1.match(line) or re_match_2.match(line):
+                modules_loaded.append(module)
+                continue
+
+    modules_loaded = set(modules_loaded); modules_loaded = list(modules_loaded)
+    for module in modules_loaded:
+        if module in module_list:
+            module_list.remove(module)
+
+    if len(module_list) > 0:
+        for module in module_list:
+            kldload = "kldload " + module
+            result = invoke.run(kldload, hide=True)
+            print("Module loaded: " + module)
+
+    result = invoke.run("sysctl net.link.tap.up_on_open=1", hide=True)
 
 
 """ If this file is executed from the command line, activate Typer """

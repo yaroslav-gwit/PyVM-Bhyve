@@ -8,3 +8,5 @@ configs/datasets.json
 configs/host.json
 configs/networks.json
 configs/supervisord.conf
+venv
+__pycache__

@@ -1,38 +1,16 @@
-#!/usr/bin/env python3
-import typer
-# import sys
-# import os
-# import subprocess
+#!/opt/PyVM-Bhyve/venv/bin/python3
+import sys
+from os.path import exists
 
-# Own libraries
-from cli.vm import vm
-from cli.host import host
-from cli.network import network
+if exists("/opt/PyVM-Bhyve/") and exists("/opt/PyVM-Bhyve/hoster"):
+    sys.path.insert(1, "/opt/PyVM-Bhyve/")
+else:
+    print("SysChecks is not installed properly!", file=sys.stderr)
+    sys.exit(1)
 
-""" Section below is responsible for the CLI input/output """
-app = typer.Typer(context_settings=dict(max_content_width=800))
-app.add_typer(vm.app, name="vm", help="List, Create, Remove or any other VM related operations")
-app.add_typer(host.app, name="host", help="Show or modify host related information")
-app.add_typer(network.app, name="network", help="Show or modify network related information")
+from main import app
 
+import os
+os.chdir("/opt/PyVM-Bhyve/")
 
-@app.command()
-def version(json: bool = typer.Option(False, help="JSON output")):
-    """
-    Show version and exit
-    """
-
-    print("Version: development-0.1-alpha")
-
-@app.command()
-def init():
-    """
-    Initialise all modules and services required by 'hoster'
-    """
-
-    print("Please use shell executor!")
-
-
-""" If this file is executed from the command line, activate Typer """
-if __name__ == "__main__":
-    app()
+app()
