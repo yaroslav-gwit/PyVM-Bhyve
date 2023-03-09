@@ -1,6 +1,10 @@
-# Important notice!
- > This repository will be archived as soon as HosterRed is released. Please keep an eye out for that.
-<br>https://github.com/yaroslav-gwit/HosterRed-HyperVisor
+# New version available!
+This version is now archived due to new version available, which was written in Go to improve performance and developer experience.
+<br>
+<br>
+You can a new version here:
+<br>
+https://github.com/yaroslav-gwit/HosterCore
 
 # Welcome to the PyVM Bhyve community!
  > WARNING! Software is in alpha release state. Use at your own risk and don't blame me if something breaks :) This is my first Python project, and there are a lot of hardcoded values, mainly Python dev environment and system paths. Keep these default for now, I'll clean up everything eventually. Stick to version v0.01-alpha for now, because there would be breaking changes coming! For example, typer integration will remove/change old cli flags, all config files would now be converted to pure JSON.
